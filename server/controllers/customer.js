@@ -13,19 +13,26 @@ exports.createCustomer = function(req, res, next) {
 
     customer.save(function(err){
         if (err) { return next(err); }
-
+        next();
         res.setHeader('Content-Type', 'application/json');
         res.json(customer);
     });
 };
 
-exports.updateCustomer = function(req, res) {
-    //console.log(req.body);
-    const customer = new Customer( req.body );
-    customer.update({_id: req.params.id}, { status: 1 }, { multi: false }, function(err, numAffected) {
+exports.updateCustomer = function(req, res, next) {
+    Customer.update({_id: req.params.id}, { status: req.params.newStatus }, { multi: false }, function(err, numAffected) {
         if (err) { return next(err); }
-        res.json('Got a PUT request at customer ' + numAffected);
+        next();
+        res.json(req.body);
     });
+    // Customer.findById( req.params.id, function(err, doc) {
+    //     doc.status = 1;
+    //     doc.save(function(err){
+    //         if (err) console.log(err)
+    //         else console.log("success");
+    //         res.json("done");
+    //     });
+    // });
 };
 
 exports.getAll = function(req, res, next) {
@@ -38,8 +45,9 @@ exports.getAll = function(req, res, next) {
 
 exports.getAllByStatus = function(req, res, next) {
     const status = req.params.status;   // e.g. 0 = issue, 1 = Kitchen finished, 2 = devliered
-    Customer.find({ $or: [{status: 0}, {status: 1}] }, function(err, customers){
+    Customer.find({ $or: [{status: 0}, {status: 1}, {status: 2}] }, {}, { sort : {created: 1} }, function(err, customers){
         if (err) { return next(err); }
+        next();
         res.setHeader('Content-Type', 'application/json');
         res.json(customers);
     });

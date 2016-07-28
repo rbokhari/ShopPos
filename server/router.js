@@ -5,7 +5,7 @@ const Category = require('./controllers/category');
 const Product = require('./controllers/product');
 const Customer = require('./controllers/customer');
 
-module.exports = function(app) {
+module.exports = function(app, io) {
 
     // Company Routes
     app.post('/company/create', Company.createCompany);
@@ -39,9 +39,9 @@ module.exports = function(app) {
     app.get('/category/:id', Category.getById);
 
     // Customer Routes
-    app.post('/customer/create', Customer.createCustomer);
-    app.put('/customer/:id/update', Customer.updateCustomer);
-    app.get('/customer/:status', Customer.getAllByStatus);
+    app.post('/customer/create', Customer.createCustomer, (req, res, next) => { console.log("socket emit here"); io.sockets.emit('customer', '1'); });
+    app.put('/customer/:id/:newStatus', Customer.updateCustomer, (req, res, next) => { console.log("socket emit here"); io.sockets.emit('customer', '1'); });
+    app.get('/customer/:status', Customer.getAllByStatus); //, (req, res) => { console.log("socket emit here"); io.sockets.emit('customer', '1'); } );
     app.get('/customer/:id', Customer.getById);
 
 
