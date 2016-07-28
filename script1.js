@@ -1,0 +1,1 @@
+module.export = 'Hi there from module 1';
