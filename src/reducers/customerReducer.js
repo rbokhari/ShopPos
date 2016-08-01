@@ -13,6 +13,14 @@ export default function(state = initialState.customers, action) {
                 Object.assign({}, action.customer)
             ];
 
+        case types.UPDATE_CUSTOMER_ITEMS_SUCCESS:
+            const cust = action.payload.customer;
+            // cust.status = action.payload.newStatus;
+
+            return [
+                ...state.filter( customer => customer._id !== cust._id ),
+                Object.assign( {}, cust, { status: action.payload.newStatus} )
+            ];
         default:
             return state;
     }

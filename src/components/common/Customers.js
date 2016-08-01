@@ -1,7 +1,16 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import _ from 'lodash';
+
+import ContentClear from 'material-ui/svg-icons/content/clear';
+import ActionDone from 'material-ui/svg-icons/action/done';
+import ActionDoneAll from 'material-ui/svg-icons/action/done-all';
+import DeviceAccessTime from 'material-ui/svg-icons/device/access-time';
+
 import * as actions from '../../actions';
+import { CUSTOMER_STATUS } from '../../utils/constant';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
@@ -15,15 +24,16 @@ import Divider from 'material-ui/Divider';
 
 const style = {
     card: {
-        width: 270,
-        maxWidth: 270,
+        width: 290,
+        maxWidth: 290,
         marginTop: 10,
         marginRight: 10,
-        display: 'inline-block'
+        display: 'inline-block',
+        verticalAlign:'top'
     },
     div: {
-        width: 1400,
-        maxWidth: 1400
+        width: 1495,
+        maxWidth: 1495
     }
 };
 
@@ -34,31 +44,49 @@ class Customers extends React.Component {
     }
 
     handleUpdate(customer, status) {
-        console.log(customer._id);
-        this.props.updateCustomerStatus( customer );
+        this.props.updateCustomerStatus( customer, status );
     }
 
     render() {
+        const statusId = this.props.status;
+
+        const statusCheck = (customer) => {
+            if (statusId === CUSTOMER_STATUS.ISSUED) {
+                return customer.status == CUSTOMER_STATUS.ISSUED || customer.status == CUSTOMER_STATUS.START;
+            } else if (statusId === CUSTOMER_STATUS.FINISH) {
+                return customer.status == statusId;
+            }
+        };
+
+        const listItem = (product, index) => {
+            return (
+                <ListItem key={index} leftCheckbox={<Checkbox />}
+                    rightIcon={<Badge badgeContent={product.qty} secondary={true} />}
+                    primaryText={product.productName} secondaryText={product.categoryName} >
+                </ListItem>
+            );
+        }
+
         return (
             <div style={style.div}>
-                {this.props.customers.filter(customer=> customer.status === this.props.status).map(customer=>
+                {_.sortBy(this.props.customers.filter(statusCheck), ['created']).map(customer=>
                     <Card key={customer._id} style={style.card}>
                         <CardHeader
                             title={customer.carNumber} subtitle={customer.mobileNumber} />
                         <List>
                             <Subheader>Order List</Subheader>
-                            {customer.products.map((product,index)=> 
-                                <ListItem key={index}
-                                    leftCheckbox={<Checkbox />}
-                                    rightIcon={<Badge badgeContent={product.qty} secondary={true} />}
-                                    primaryText={product.productName} secondaryText={product.categoryName} >
-                                </ListItem>
+                            {customer.products.map((product,index) => 
+                                listItem(product, index)
                             )}
                         </List>
                         <CardActions>
-                            { customer.status ===0 && <RaisedButton label="Finished" primary={true} onTouchTap={this.handleUpdate.bind(this, customer, 1)} />}
-                            { customer.status ===1 && <RaisedButton label="Dispatch" primary={true} onTouchTap={this.handleUpdate.bind(this, customer, 2)} />}
-                            <RaisedButton label="Discard" secondary={true} onTouchTap={this.handleUpdate.bind(this, customer, -1)} />
+                            { customer.status === CUSTOMER_STATUS.ISSUED && 
+                                <RaisedButton label="Start" icon={<ActionDone />} onTouchTap={this.handleUpdate.bind(this, customer, CUSTOMER_STATUS.START)} />}
+                            { customer.status === CUSTOMER_STATUS.START && 
+                                <RaisedButton label="Finish" icon={<ActionDoneAll />} primary={true} onTouchTap={this.handleUpdate.bind(this, customer, CUSTOMER_STATUS.FINISH)} />}
+                            { customer.status === CUSTOMER_STATUS.FINISH && 
+                                <RaisedButton label="Dispatch" icon={<ActionDone />} primary={true} onTouchTap={this.handleUpdate.bind(this, customer, CUSTOMER_STATUS.DELIVERED)} />}
+                            <RaisedButton label="Discard" icon={<ContentClear />} secondary={true} onTouchTap={this.handleUpdate.bind(this, customer, CUSTOMER_STATUS.DISCARD)} />
                         </CardActions>
                     </Card>
                 )}
@@ -118,3 +146,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Customers);
+
+//export default connect(mapStateToProps, { updateCustomerStatus : actions.updateCustomerStatus })(Customers);       can be written as with shortcut

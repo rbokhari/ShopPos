@@ -3,7 +3,11 @@ import {Link} from 'react-router';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
-import CategoryListRow from './CategoryListRow';
+import ActionNotInterested from 'material-ui/svg-icons/av/not-interested';
+import ActionDone from 'material-ui/svg-icons/action/done';
+import {red500, greenA700} from 'material-ui/styles/colors';
+
+//import CategoryListRow from './CategoryListRow';
 
 const cardStyle = {
   display: 'inline-block',
@@ -27,7 +31,7 @@ const CategoryList = ({categories}) => {
                         {categories.map( category =>
                             <TableRow key={category._id}>
                                 <TableRowColumn>{category.name}</TableRowColumn>
-                                <TableRowColumn>{category.status}</TableRowColumn>
+                                <TableRowColumn>{category.status ? <ActionDone color={greenA700} /> : <ActionNotInterested color={red500} />}</TableRowColumn>
                                 <TableRowColumn>
                                     <Link to={'category/'+category._id+'/edit'}> Edit</Link>&nbsp;&nbsp;
                                 </TableRowColumn>

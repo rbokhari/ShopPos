@@ -32,5 +32,8 @@ module.exports = {
                 loader: 'style!css!sass'
             }
         ]
-    }
-}
+    },
+    devServer: {
+      historyApiFallback: true
+  }
+};

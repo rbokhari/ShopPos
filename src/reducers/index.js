@@ -6,6 +6,7 @@ import items from './itemReducer';
 import categories from './categoryReducer';
 import products from './productReducer';
 import customers from './customerReducer';
+import purchaseOrders from './purchaseOrderReducer';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 
 const rootReducer = combineReducers({
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   items,
   categories,
   products,
-  customers
+  customers,
+  purchaseOrders
 });
 
 export default rootReducer;

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {TableRow, TableRowColumn} from 'material-ui/Table';
 
 const ItemListRow = ({item}) => {
     return (

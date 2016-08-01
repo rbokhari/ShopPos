@@ -7,6 +7,7 @@ import itemApi from '../api/ItemApi';
 import categoryApi from '../api/CategoryApi';
 import productApi from '../api/ProductApi';
 import customerApi from '../api/CustomerApi';
+import purchaseOrderApi from '../api/PurchaseOrderApi';
 
 export function loadBranch() {
     return function( dispatch ) {
@@ -184,6 +185,16 @@ export function createCustomerSuccess( customer ) {
     };
 }
 
+export function updateCustomerStatusSuccess (customer, newStatus) {
+    return {
+        type: types.UPDATE_CUSTOMER_ITEMS_SUCCESS,
+        payload: {
+            customer: customer.data,
+            newStatus
+        }
+    };
+}
+
 export function loadCustomersSuccess( customers ) {
     return {
         type: types.LOAD_CUSTOMER_ITEMS_SUCCESS,
@@ -205,14 +216,14 @@ export function createCustomer( customer ) {  // this becomes action to send to 
     };
 }
 
-export function updateCustomerStatus( customer ) {  // this becomes action to send to reducer
+export function updateCustomerStatus( customer, newStatus ) {  // this becomes action to send to reducer
 
     customer.companyId = localStorage.getItem('companyId');
     customer.officeId = localStorage.getItem('officeId');
     return function( dispatch, getState ) {
         dispatch( beginAjaxCall() );
-        return customerApi.updateCustomerStatus( customer ).then( customer => {
-            customer._id ? dispatch( updateCustomerSuccess( customer ) ) : dispatch( createCustomerSuccess( customer ) );
+        return customerApi.updateCustomerStatus( customer, newStatus ).then( customer => {
+            dispatch( updateCustomerStatusSuccess( customer, newStatus ) );
         }).catch( error => {
             throw( error );
         });
@@ -224,6 +235,44 @@ export function loadCustomers() {
         dispatch( beginAjaxCall() );
         return customerApi.getIssueCustomers().then( customers => {
             dispatch( loadCustomersSuccess( customers ) );
+        }).catch( error => {
+            throw( error );
+        });
+    };
+}
+ 
+// Purchase Order Actions
+export function createPurchaseOrderSuccess( po ) {
+    return {
+        type: types.CREATE_PURCHASE_ORDER_SUCCESS,
+        purchaseOrders: po.data
+    };
+}
+
+export function loadPurchasesSuccess( purchases ) {
+    return {
+        type: types.LOAD_PURCHASE_ORDER_SUCCESS,
+        payload: purchases.data
+    };
+}
+
+export function createPurchaseOrder( po ) {  // this becomes action to send to reducer
+
+    return function( dispatch, getState ) {
+        dispatch( beginAjaxCall() );
+        return purchaseOrderApi.savePurchaseOrder( po ).then( po => {
+            dispatch( createPurchaseOrderSuccess( po ) );
+        }).catch( error => {
+            throw( error );
+        });
+    };
+}
+
+export function loadPurchaseOrders() {
+    return function( dispatch ) {
+        dispatch( beginAjaxCall() );
+        return purchaseOrderApi.getAll().then( purchases => {
+            dispatch( loadPurchasesSuccess( purchases ) );
         }).catch( error => {
             throw( error );
         });

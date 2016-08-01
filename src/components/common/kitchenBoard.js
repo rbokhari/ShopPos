@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as actions from '../../actions';
+import { CUSTOMER_STATUS } from '../../utils/constant';
 import Customers from './Customers';
 
 class KitchenBoard extends Component {
@@ -18,7 +19,7 @@ class KitchenBoard extends Component {
                     display: 'flex',
                     flexFlow: 'row wrap'                 
                 }}>
-                    <Customers customers={this.props.customers} status={0} />
+                    <Customers customers={this.props.customers} status={CUSTOMER_STATUS.ISSUED} />
                 </div>
             </div>
         );

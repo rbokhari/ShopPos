@@ -1,26 +1,18 @@
-import delay from './delay';
-import axios from 'axios';
+import Api from './Api';
 
 const products = [];
-
-//This would be performed on the server in a real app. Just stubbing in.
-const generateId = (product) => {
-  return product.length + 1;
-};
 
 class ProductApi {
     
   static getAllProducts() {
-    return axios.get('http://localhost:3090/product');
+    return Api.get('product');
   }
 
   static saveProduct(product) {
-    product = Object.assign({}, product); // to avoid manipulating object passed in.
-    console.log(typeof product._id ===  'undefined');
     if (typeof product._id ===  'undefined') {
-      return axios.post('http://localhost:3090/product/create', product);
+      return Api.post('product/create', product);
     }else {
-      return axios.post('http://localhost:3090/product/edit', product);
+      return Api.post('product/edit', product);
     }
 
   }

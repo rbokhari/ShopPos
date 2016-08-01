@@ -1,10 +1,14 @@
 import React from 'react';
 import {Link} from 'react-router';
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
-import ProductListRow from './ProductListRow';
+import ActionNotInterested from 'material-ui/svg-icons/av/not-interested';
+import ActionDone from 'material-ui/svg-icons/action/done';
+import {red500, greenA700} from 'material-ui/styles/colors';
+
+//import ProductListRow from './ProductListRow';
 
 const cardStyle = {
   display: 'inline-block',
@@ -33,7 +37,7 @@ const ProductList = ({products}) => {
                                 <TableRowColumn>{product.name}</TableRowColumn>
                                 <TableRowColumn>{product.categoryName}</TableRowColumn>
                                 <TableRowColumn>{product.price}</TableRowColumn>
-                                <TableRowColumn>{product.status}</TableRowColumn>
+                                <TableRowColumn>{product.status ? <ActionDone color={greenA700} /> : <ActionNotInterested color={red500} />}</TableRowColumn>
                                 <TableRowColumn>
                                     <Link to={'product/'+product._id+'/edit'}> Edit</Link>
                                 </TableRowColumn>

@@ -4,6 +4,7 @@ const Office = require('./controllers/office');
 const Category = require('./controllers/category');
 const Product = require('./controllers/product');
 const Customer = require('./controllers/customer');
+const Purchase = require('./controllers/purchase');
 
 module.exports = function(app, io) {
 
@@ -39,11 +40,18 @@ module.exports = function(app, io) {
     app.get('/category/:id', Category.getById);
 
     // Customer Routes
-    app.post('/customer/create', Customer.createCustomer, (req, res, next) => { console.log("socket emit here"); io.sockets.emit('customer', '1'); });
-    app.put('/customer/:id/:newStatus', Customer.updateCustomer, (req, res, next) => { console.log("socket emit here"); io.sockets.emit('customer', '1'); });
+    app.post('/customer/create', Customer.createCustomer, (req, res, next) => { io.sockets.emit('customer', '1'); });
+    app.put('/customer/:id/:newStatus', Customer.updateCustomer, (req, res, next) => { io.sockets.emit('customer', '1'); });
     app.get('/customer/:status', Customer.getAllByStatus); //, (req, res) => { console.log("socket emit here"); io.sockets.emit('customer', '1'); } );
     app.get('/customer/:id', Customer.getById);
 
+    // Purchase Routes
+    app.post('/purchase/create', Purchase.createPurchase);
+    //app.put('/purchase/:id/update', Purchase.updatePurchase);
+    app.get('/purchase/', Purchase.getAll);
+    app.get('/purchase/item/:itemId', Purchase.getAllByItemId); 
+    app.get('/purchase/:id', Purchase.getById);
+    
 
 
     // app.get('/', function(req, res, next) {

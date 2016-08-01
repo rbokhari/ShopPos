@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as actions from '../../actions';
+import { CUSTOMER_STATUS } from '../../utils/constant';
 import Customers from './Customers';
 
 class DispatchBoard extends Component {
@@ -18,7 +19,7 @@ class DispatchBoard extends Component {
                     display: 'flex',
                     flexFlow: 'row wrap'                 
                 }}>
-                    <Customers customers={this.props.customers} status={1} />
+                    <Customers customers={this.props.customers} status={CUSTOMER_STATUS.FINISH} />
                 </div>
             </div>
         );

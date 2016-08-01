@@ -54,10 +54,11 @@ exports.getAllByStatus = function(req, res, next) {
 };
 
 exports.getById = function(req, res, next) {
-    Customer.find({ _id: req.params.id }, function(err, customer){
-        if (err) { return next(err); }
+    console.log("customer getById");
+    // Customer.find({ _id: req.params.id }, function(err, customer){
+    //     if (err) { return next(err); }
 
-        res.setHeader('Content-Type', 'application/json');
-        res.json(customer);
-    });
+    //     res.setHeader('Content-Type', 'application/json');
+    //     res.json(customer);
+    // });
 };

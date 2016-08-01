@@ -5,7 +5,11 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import Checkbox from 'material-ui/Checkbox';
-import FlatButton from 'material-ui/FlatButton';
+//import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+
+import ContentSave from 'material-ui/svg-icons/content/save';
+import ContentClear from 'material-ui/svg-icons/content/clear';
 
 const styles = {
   block: {
@@ -26,13 +30,14 @@ const ItemForm = ( {item, onSave, onChange, loading, errors} ) => {
                     <Divider />
                     <TextField name='name' hintText="Name" floatingLabelText="Item Name" onChange={onChange} value={item.name} underlineShow={false} />
                     <Divider />
-                    <TextField name='description' hintText="Description" floatingLabelText="Description" onChange={onChange} value={item.description} underlineShow={false} />
+                    <TextField name='description' hintText="Description" multiLine={true} rows={2} rowsMax={4} 
+                        floatingLabelText="Description" onChange={onChange} value={item.description} underlineShow={false} />
                     <Divider />
                     <Checkbox label="Status" style={styles.checkbox}  />
                 </CardText>
                 <CardActions>
-                    <FlatButton label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></FlatButton>
-                    <FlatButton label="Cancel" linkButton containerElement={<Link to="/item" />} />
+                    <RaisedButton icon={<ContentSave />} label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></RaisedButton>
+                    <RaisedButton icon={<ContentClear />} label="Cancel" secondary={true} linkButton containerElement={<Link to="/item" />} />
                 </CardActions>
             </Card>
         </form>

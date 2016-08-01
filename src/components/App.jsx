@@ -22,6 +22,11 @@ import ContentLink from 'material-ui/svg-icons/content/link';
 import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 import Person from 'material-ui/svg-icons/social/person';
 import ActionReceipt from 'material-ui/svg-icons/action/receipt';
+import ActionShopping from 'material-ui/svg-icons/action/shopping-cart';
+import ActionShoppingBasket from 'material-ui/svg-icons/action/shopping-basket';
+import ActionAssignment from 'material-ui/svg-icons/action/assignment';
+import ActionAssignmentDone from 'material-ui/svg-icons/action/assignment-turned-in';
+import ActionAssignmentReturned from 'material-ui/svg-icons/action/assignment-returned';
 
 import MenuList from './common/Menu.jsx';
 import BranchListDialog from './branch/BranchListDialog.js';
@@ -73,7 +78,6 @@ class App extends React.Component {
     }
 
     _loadBranch() {
-        console.log("load branch");
         this.props.loadBranch();
     }
 
@@ -108,15 +112,17 @@ class App extends React.Component {
                                 onLeftIconButtonTouchTap={this._handleClose}
                                 onTitleTouchTap={this._handleClose} />
 
-                            <MenuItem checked={true} primaryText="Sales Board" leftIcon={<ActionDashboard />} 
+                            <MenuItem checked={true} primaryText="Sales Board" leftIcon={<ActionAssignment />} 
                                 linkButton containerElement={<Link to="/" />} onTouchTap={this._handleClose}  />
-                            <MenuItem checked={true} primaryText="Kitchen Board" leftIcon={<ActionDashboard />} 
+                            <MenuItem checked={true} primaryText="Kitchen Board" leftIcon={<ActionAssignmentReturned />} 
                                 linkButton containerElement={<Link to="/kitchen" />} onTouchTap={this._handleClose}  />
-                            <MenuItem checked={true} primaryText="Dispatch Board" leftIcon={<ActionDashboard />} 
+                            <MenuItem checked={true} primaryText="Dispatch Board" leftIcon={<ActionAssignmentDone />} 
                                 linkButton containerElement={<Link to="/dispatch" />} onTouchTap={this._handleClose}  />
                             <Divider />
-                            <MenuItem checked={true} primaryText="Items" leftIcon={<ContentLink />} 
+                            <MenuItem checked={true} primaryText="Items" leftIcon={<ActionShoppingBasket />} 
                                 linkButton containerElement={<Link to={'/item'} />} onTouchTap={this._handleClose}  />
+                            <MenuItem checked={true} primaryText="Purchase Order" leftIcon={<ActionShopping />} 
+                                linkButton containerElement={<Link to={'/purchase'} />} onTouchTap={this._handleClose}  />
                             <Divider />
                             <MenuItem primaryText="Category" leftIcon={<DeviceHub />} 
                                 linkButton containerElement={<Link to={'/category'} />} onTouchTap={this._handleClose} />

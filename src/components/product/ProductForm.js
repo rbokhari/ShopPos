@@ -30,7 +30,7 @@ const ProductForm = ( {product, categories, onSave, onChange, onSelectChange, on
                     <Divider />
                     <TextField name='nameAr' hintText="NameAr" floatingLabelText="Name Arabic" onChange={onChange} value={product.nameAr} underlineShow={false} />
                     <Divider />
-                    <SelectField name='categoryId' hintText="Category" floatingLabelText="Category" onChange={onSelectChange} value={product.categoryId}  underlineShow={false}>
+                    <SelectField name='categoryId' hintText="Category" floatingLabelText="Category" onChange={onSelectChange} value={product.categoryId} underlineShow={false}>
                     {categories.map(category=>
                         <MenuItem key={category._id} value={category._id} primaryText={category.name} />
                     )}

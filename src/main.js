@@ -4,12 +4,16 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import reduxThunk from 'redux-thunk';
+import io from 'socket.io-client';
 
 import App from './components/App.jsx';
 import ItemPage from './components/item/ItemPage.js';
 import ItemNew from './components/item/ItemNew.js';
 
-import PurchaseOrder from './components/product/PurchaseOrder.js';
+import StockNew from './components/purchase/StockNew';
+import PurchasePage from './components/purchase/PurchasePage';
+
+//import PurchaseOrder from './components/product/PurchaseOrder.js';
 import CategoryType from './components/category/CategoryType.js';
 import CategoryPage from './components/category/CategoryPage.js';
 import CategoryNew from './components/category/CategoryNew.js';
@@ -36,6 +40,12 @@ store.dispatch(loadCategories());
 store.dispatch(loadProducts());
 store.dispatch(loadCustomers());
 
+const socket = io('http://localhost:3090');
+//var socket = io('http://localhost', {transports: ['websocket', 'polling', 'flashsocket']});
+socket.on('customer', function(data) {
+    store.dispatch(loadCustomers());
+});
+
 ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
@@ -46,7 +56,9 @@ ReactDOM.render(
                 <Route path="item/new" component={ItemNew} />
                 <Route path="item/:id/edit" component={ItemNew} />
 
-                <Route path="item/:id/stock" component={PurchaseOrder} />
+                <Route path="purchase" component={PurchasePage} />
+                <Route path="purchase/new" component={StockNew} />
+                <Route path="purchase/:id/edit" component={StockNew} />
 
                 <Route path="type" component={CategoryType} />
                 

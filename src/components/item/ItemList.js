@@ -1,10 +1,16 @@
 import React from 'react';
 import {Link} from 'react-router';
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import ContentBlock from 'material-ui/svg-icons/content/block';
+import ImageEdit from 'material-ui/svg-icons/image/edit';
+
+import ActionDone from 'material-ui/svg-icons/action/done';
+import {blueA700, red500, greenA700} from 'material-ui/styles/colors';
+
+import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
-import ItemListRow from './ItemListRow';
+//import ItemListRow from './ItemListRow';
 
 const cardStyle = {
   display: 'inline-block',
@@ -30,10 +36,9 @@ const ItemList = ({items}) => {
                             <TableRow key={item._id} >
                                 <TableRowColumn>{item.name}</TableRowColumn>
                                 <TableRowColumn>{item.stock}</TableRowColumn>
-                                <TableRowColumn>{item.status}</TableRowColumn>
+                                <TableRowColumn>{item.status ? <ActionDone color={greenA700} /> : <ContentBlock color={red500} />}</TableRowColumn>
                                 <TableRowColumn>
-                                    <Link to={'item/'+item._id+'/edit'}> Edit</Link>&nbsp;&nbsp;
-                                    <Link to={'item/'+item._id+'/stock'}> Add Stock</Link>
+                                    <Link to={'item/'+item._id+'/edit'}> <ImageEdit color={blueA700} /></Link>
                                 </TableRowColumn>
                             </TableRow>
                         )}

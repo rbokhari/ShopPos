@@ -6,6 +6,7 @@ import TextField from 'material-ui/TextField';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import ContentSend from 'material-ui/svg-icons/content/send';
+import ContentClear from 'material-ui/svg-icons/content/clear';
 
 const styles = {
     margin: 20
@@ -23,12 +24,10 @@ const CustomerForm = ( { customer, onChange, onSubmit, onCancel, errors } ) => {
                 onChange={onChange} value={customer.carNumber} />
             <TextField name="mobileNumber" style={styles} floatingLabelText="Mobile No" hintText="Mobile No" 
                 onChange={onChange} value={customer.mobileNumber} />
-            <RaisedButton backgroundColor="#a4c639" style={styles} label="Send To Kitchen" labelPosition="before" secondary={true}
-                icon={<ContentSend />} 
-                onTouchTap={onSubmit} />
-            <RaisedButton backgroundColor="#aaaa39" label="Cancel" labelPosition="before" primary={true}
-                icon={<ContentSend />} 
-                onTouchTap={onCancel} />
+            <RaisedButton backgroundColor="#a4c639" style={styles} label="Send To Kitchen" primary={true}
+                icon={<ContentSend />} onTouchTap={onSubmit} />
+            <RaisedButton backgroundColor="#aaaa39" label="Cancel" secondary={true}
+                icon={<ContentClear />} onTouchTap={onCancel} />
         </Card>
     );
 }
