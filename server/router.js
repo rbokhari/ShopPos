@@ -1,3 +1,7 @@
+const Authentication = require('./controllers/authentication');
+const passportService = require('./services/passport');
+const passport = require('passport');
+
 const Item = require('./controllers/item');
 const Company = require('./controllers/company');
 const Office = require('./controllers/office');
@@ -6,7 +10,14 @@ const Product = require('./controllers/product');
 const Customer = require('./controllers/customer');
 const Purchase = require('./controllers/purchase');
 
+
+const requireAuth = passport.authenticate('jwt', { session: false });   // deafult is cookie based, which we turn false
+const requireLocal = passport.authenticate('local', { session: false });
+
 module.exports = function(app, io) {
+
+    app.post('/signup', Authentication.signup);
+    app.post('/signin', requireLocal, Authentication.signin);
 
     // Company Routes
     app.post('/company/create', Company.createCompany);
@@ -21,9 +32,9 @@ module.exports = function(app, io) {
     app.get('/office/:id', Office.getById);
 
     // Item Routes
-    app.post('/item/create', Item.createItem);
-    app.put('/item/:id/update', Item.updateItem);
-    app.get('/item/', Item.getAll);
+    app.post('/item/create', requireAuth, Item.createItem);
+    app.put('/item/:id/update', requireAuth, Item.updateItem);
+    app.get('/item/', requireAuth, Item.getAll);
     app.get('/item/:id', Item.getById);
 
     // Product Routes
