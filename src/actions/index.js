@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 
 import { beginAjaxCall } from './ajaxStatusActions';
 
+import authApi from '../api/AuthApi';
 import itemApi from '../api/ItemApi';
 import categoryApi from '../api/CategoryApi';
 import productApi from '../api/ProductApi';
@@ -14,6 +15,65 @@ export function loadBranch() {
         dispatch({ type: types.LOAD_BRANCH }); // this is redux-thunk in action 
     }
 }
+
+export function authError(error) {
+    return {
+        type: types.AUTH_ERROR,
+        payload: error
+    };
+}
+
+export function signinUser( {email, password }) {
+    // submit email/password to server
+    return function(dispatch) {
+        return authApi.signIn(email, password)
+            .then(response => {
+                // update state to indicate user is authenticated
+                dispatch( { type: types.AUTH_USER } );
+                // save the JWT token
+                localStorage.setItem('token', response.data.token);
+                // redirect to dashboard
+                browserHistory.push('/');
+            })
+            .catch((error) => {
+                dispatch(authError(`Bad login info ${error}`));
+            });
+    };
+}
+
+export function signoutUser() {
+    localStorage.removeItem('token');
+    return { type : types.UNAUTH_USER };
+}
+
+export function CompanyExists() {
+    return authApi.companyExists( 'company')
+        .then(response=>{
+
+        })
+        .catch((error)=> {return {name: error.response.data.error}});
+}
+
+export function AccountCreate({ name, displayName, location, contactNo, email, password, confirmPassword}) {
+    const data = {
+        name, displayName, location, contactNo, email, password
+    };
+    return function(dispatch){
+        return authApi.createAccount(data)
+            .then(res => {
+                dispatch( { type: types.AUTH_USER } );
+                localStorage.setItem('companyId', res.data.companyId);
+                localStorage.setItem('token', response.data.token);
+                // redirect to dashboard
+                browserHistory.push('/');                
+            })
+            .catch((error) => {
+                //console.error("error",error.response);
+                dispatch(authError(error.response.data.error));
+            });
+    };
+}
+
 
 // Item's Actions 
 export function loadItemsSuccess( items ) {

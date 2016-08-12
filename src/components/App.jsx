@@ -81,6 +81,52 @@ class App extends React.Component {
         this.props.loadBranch();
     }
 
+    renderDrawerMenu() {
+        if (this.props.authenticated) {
+            return (
+                <Drawer open={this.state.open} docked={true} onRequestChange={(open) => this.setState({open})}>
+                    <AppBar title="Menu" showMenuIconButton={true} 
+                        iconElementLeft={<IconButton><NavigationClose /></IconButton>}
+                        onLeftIconButtonTouchTap={this._handleClose}
+                        onTitleTouchTap={this._handleClose} />
+
+                    <MenuItem checked={true} primaryText="Sales Board" leftIcon={<ActionAssignment />} 
+                        linkButton containerElement={<Link to="/" />} onTouchTap={this._handleClose}  />
+                    <MenuItem checked={true} primaryText="Kitchen Board" leftIcon={<ActionAssignmentReturned />} 
+                        linkButton containerElement={<Link to="/kitchen" />} onTouchTap={this._handleClose}  />
+                    <MenuItem checked={true} primaryText="Dispatch Board" leftIcon={<ActionAssignmentDone />} 
+                        linkButton containerElement={<Link to="/dispatch" />} onTouchTap={this._handleClose}  />
+                    <Divider />
+                    <MenuItem checked={true} primaryText="Items" leftIcon={<ActionShoppingBasket />} 
+                        linkButton containerElement={<Link to={'/item'} />} onTouchTap={this._handleClose}  />
+                    <MenuItem checked={true} primaryText="Purchase Order" leftIcon={<ActionShopping />} 
+                        linkButton containerElement={<Link to={'/purchase'} />} onTouchTap={this._handleClose}  />
+                    <Divider />
+                    <MenuItem primaryText="Category" leftIcon={<DeviceHub />} 
+                        linkButton containerElement={<Link to={'/category'} />} onTouchTap={this._handleClose} />
+                    <MenuItem primaryText="Products" leftIcon={<ActionReceipt />} 
+                        linkButton containerElement={<Link to={'/product'} />} onTouchTap={this._handleClose} />
+                    <Divider />
+                    <MenuItem primaryText="Users" leftIcon={<Person />} 
+                        linkButton containerElement={<Link to={'/users'} />} onTouchTap={this._handleClose} />
+                </Drawer>
+            );
+        } else {
+            return (
+                <Drawer open={this.state.open} docked={true} onRequestChange={(open) => this.setState({open})}>
+                    <AppBar title="Menu" showMenuIconButton={true} 
+                        iconElementLeft={<IconButton><NavigationClose /></IconButton>}
+                        onLeftIconButtonTouchTap={this._handleClose}
+                        onTitleTouchTap={this._handleClose} />
+
+                    <MenuItem checked={true} primaryText="Create Account" leftIcon={<ActionAssignment />} 
+                        linkButton containerElement={<Link to="/createAccount" />} onTouchTap={this._handleClose}  />
+                    
+                </Drawer>
+            );
+        }
+    }
+
     render() {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
@@ -102,37 +148,12 @@ class App extends React.Component {
                                 <MenuItem primaryText="Switch Branch" onTouchTap={this._loadBranch} />
                                 <MenuItem primaryText="Create Branch" />
                                 <Divider />
-                                <MenuItem primaryText="Sign out" />
+                                <MenuItem primaryText="Sign out" linkButton containerElement={<Link to={'/signout'} />} />
                             </IconMenu>
                         } >
 
-                        <Drawer open={this.state.open} docked={true} onRequestChange={(open) => this.setState({open})}>
-                            <AppBar title="Menu" showMenuIconButton={true} 
-                                iconElementLeft={<IconButton><NavigationClose /></IconButton>}
-                                onLeftIconButtonTouchTap={this._handleClose}
-                                onTitleTouchTap={this._handleClose} />
-
-                            <MenuItem checked={true} primaryText="Sales Board" leftIcon={<ActionAssignment />} 
-                                linkButton containerElement={<Link to="/" />} onTouchTap={this._handleClose}  />
-                            <MenuItem checked={true} primaryText="Kitchen Board" leftIcon={<ActionAssignmentReturned />} 
-                                linkButton containerElement={<Link to="/kitchen" />} onTouchTap={this._handleClose}  />
-                            <MenuItem checked={true} primaryText="Dispatch Board" leftIcon={<ActionAssignmentDone />} 
-                                linkButton containerElement={<Link to="/dispatch" />} onTouchTap={this._handleClose}  />
-                            <Divider />
-                            <MenuItem checked={true} primaryText="Items" leftIcon={<ActionShoppingBasket />} 
-                                linkButton containerElement={<Link to={'/item'} />} onTouchTap={this._handleClose}  />
-                            <MenuItem checked={true} primaryText="Purchase Order" leftIcon={<ActionShopping />} 
-                                linkButton containerElement={<Link to={'/purchase'} />} onTouchTap={this._handleClose}  />
-                            <Divider />
-                            <MenuItem primaryText="Category" leftIcon={<DeviceHub />} 
-                                linkButton containerElement={<Link to={'/category'} />} onTouchTap={this._handleClose} />
-                            <MenuItem primaryText="Products" leftIcon={<ActionReceipt />} 
-                                linkButton containerElement={<Link to={'/product'} />} onTouchTap={this._handleClose} />
-                            <Divider />
-                            <MenuItem primaryText="Users" leftIcon={<Person />} 
-                                linkButton containerElement={<Link to={'/users'} />} onTouchTap={this._handleClose} />
-                        </Drawer>
-
+                        {this.renderDrawerMenu()}
+                        
                     </AppBar>
                     <BranchListDialog open={false} />
                     <div style={{
@@ -153,6 +174,7 @@ class App extends React.Component {
 
 function mapStateToProps(state, ownProps) {
     return {
+        authenticated: state.auth.authenticated,
         loading: state.ajaxCallsInProgress > 0
     };
 }

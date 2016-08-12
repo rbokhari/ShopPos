@@ -18,8 +18,10 @@ module.exports = function(app, io) {
 
     app.post('/signup', Authentication.signup);
     app.post('/signin', requireLocal, Authentication.signin);
+    app.post('/account/create', Authentication.createAccount);
 
     // Company Routes
+    app.post('/company/exists', Company.companyExists);
     app.post('/company/create', Company.createCompany);
     app.put('/company/:id/update', Company.updateCompany);
     app.get('/company/', Company.getAll);

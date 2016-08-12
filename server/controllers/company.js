@@ -1,14 +1,27 @@
 const Company = require('../models/company');
 
+exports.companyExists = function(req, res, next) {
+    const name = req.body.name;
+
+    Company.findOne( { name: name }, function(err, existingCompany) {
+        if (err) { return next(err); }
+
+        if (existingCompany) {
+            return res.status(422).send({error: 'Company already exists !'});
+        }else{
+            return res.status(200).send( { message: 'Name available'});
+        }
+    });
+};
+
 exports.createCompany = function(req, res, next) {
-    const code = '001';
     const name = 'Coffee Shop';
     const displayName = 'My Shop';
     const location = 'Al Khud';
     const status = 1;
 
     // check if Company code is already assigned
-    Company.findOne( { code: code }, function(err, existingCompany) {
+    Company.findOne( { name: name }, function(err, existingCompany) {
         if (err) { return next(err); }
 
         if (existingCompany) {
@@ -16,7 +29,6 @@ exports.createCompany = function(req, res, next) {
         }
 
         const company = new Company({
-            code: code,
             name: name,
             displayName: displayName,
             location: location,

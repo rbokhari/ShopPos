@@ -27,6 +27,10 @@ import UserList from './components/user/UserList.js';
 import KitchenBoard from './components/common/kitchenBoard';
 import DispatchBoard from './components/common/DispatchBoard';
 
+import SignIn from './components/auth/signin';
+import Signout from './components/auth/signout';
+import CreateAccount from './components/auth/createAccount';
+
 import {loadItems, loadCategories, loadProducts, loadCustomers} from './actions/index';
 
 import reducers from './reducers';
@@ -52,6 +56,10 @@ ReactDOM.render(
             <Route path="/" component={App}>
                 <IndexRoute component={Dashboard} />
                 
+                <Route path="signin" component={SignIn} />
+                <Route path="signout" component={Signout} />
+                <Route path="createAccount" component={CreateAccount} />
+
                 <Route path="item" component={ItemPage} />
                 <Route path="item/new" component={ItemNew} />
                 <Route path="item/:id/edit" component={ItemNew} />

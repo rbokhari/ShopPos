@@ -4,6 +4,10 @@ export const CREATE_BRANCH = 'CREATE_BRANCH';
 
 export const BEGIN_AJAX_CALL = 'BEGIN_AJAX_CALL';
 
+export const AUTH_USER = 'AUTH_USER';
+export const UNAUTH_USER = 'UNAUTH_USER';
+export const AUTH_ERROR = 'AUTH_ERROR';
+
 export const LOAD_ITEMS = 'LOAD_ITEMS';
 export const LOAD_ITEMS_SUCCESS = 'LOAD_ITEMS_SUCCESS';
 export const CREATE_ITEM = 'CREATE_ITEM';

@@ -4,10 +4,10 @@ const Schema = mongoose.Schema;
 // Define a model
 
 const companySchema = new Schema({
-    code: { type: String, unique: true, lowercase: true },
     name: { type: String, unique: true, lowercase: true },
     displayName: String,
     location: String,
+    contactNo: String,
     status: {type : Number}
 });
 
