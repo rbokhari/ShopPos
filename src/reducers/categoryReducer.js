@@ -1,9 +1,10 @@
 import * as types from '../actions/types';
+import initialState from './initialState';
 
 export default function( state = [], action ) {
     switch( action.type ) {
         case types.LOAD_CATEGORY_SUCCESS:
-            //return [...state, ...action.items];
+            //return { ...state, categories: action.payload};
             return action.categories;
 
         case types.CREATE_CATEGORY_SUCCESS:

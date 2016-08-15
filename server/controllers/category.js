@@ -3,8 +3,10 @@ const Category = require('../models/category');
 exports.createCategory = function(req, res, next) {
     const name = req.body.name;
     const status = req.body.status;
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
 
-    Category.findOne( { name: name }, function(err, existingName) {
+    Category.findOne( { $and: [ { name: name }, { companyId: companyId }] }, function(err, existingName) {
         if (err) { return next(err); }
 
         if (existingName) {
@@ -13,7 +15,9 @@ exports.createCategory = function(req, res, next) {
 
         const category = new Category({
             name: name,
-            status: status
+            status: status,
+            companyId: companyId,
+            officeId: officeId
         });
 
         category.save(function(err){
@@ -55,7 +59,14 @@ exports.updateCategory = function(req, res) {
 };
 
 exports.getAll = function(req, res, next) {
-    Category.find({}, function(err, categories){
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+    Category.find({ 
+        $and: [ 
+            { companyId: companyId }, 
+            { officeId: officeId }
+        ]}, function(err, categories){
+            
         if (err) { return next(err); }
         res.setHeader('Content-Type', 'application/json');
         res.json(categories);
@@ -63,7 +74,15 @@ exports.getAll = function(req, res, next) {
 };
 
 exports.getById = function(req, res, next) {
-    Category.find({ _id: req.params.id }, function(err, category){
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+    Category.find({ 
+            $and: [ 
+                    { companyId: companyId }, 
+                    { officeId: officeId }, 
+                    {_id: req.params.id}
+                ]}, function(err, category){
+
         if (err) { return next(err); }
 
         res.setHeader('Content-Type', 'application/json');

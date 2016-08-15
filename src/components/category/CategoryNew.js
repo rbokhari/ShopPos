@@ -29,7 +29,7 @@ class CategoryNew extends Component {
         this.saveCategory = this.saveCategory.bind( this );
     }
 
-        componentWillReceiveProps( nextProps ) {
+    componentWillReceiveProps( nextProps ) {
         if ( this.props.category.id != nextProps.category.id ) {
             this.setState( { category: Object.assign( {}. nextProps.category ) } );
         }

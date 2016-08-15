@@ -1,6 +1,7 @@
 const jwt = require('jwt-simple');
 const User = require('../models/user');
 const Company = require('../models/company');
+const Office = require('../models/office');
 const config = require('../config');
 
 
@@ -12,6 +13,52 @@ function tokenForUser(user) {
 exports.signin = function(req, res, next) {
     // user already authenticated, just give token now
     res.send( { token: tokenForUser(req.user) });
+};
+
+exports.user = function(req, res, next) {
+    const user = req.user;
+    var result = {
+        userId: user._id,
+        name: user.email,
+        roleId: user.roleId,
+        companyId: user.companyId,
+        officeId: user.officeId ? user.officeId : 0
+    };
+    if (user) {
+        if (user.companyId) {
+            Company.findById(user.companyId, function(err,company) {
+                if (err) { return next(err); }
+                if (company) {
+                    //result = { ...result, { companyName: company.name, companyDisplay: company.displayName }  } ;
+                    result = Object.assign({}, result, { company: { name: company.name, display: company.displayName} });
+
+                    if (user.branchId) {
+                        Office.findById(user.branchId, function(err, branch) {
+                            if (err) { return next(err); }
+                            if (branch) {
+                                result = Object.assign({}, result, { branch: { name: branch.name, display: branch.displayName, office: branch.officeNo, mobile: branch.mobileNo} });
+                                res.send({ user: result });
+                            }
+                        });
+                    }else {
+                        if (user.roleId == config.role.ADMIN) {
+                            Office.find({companyId: user.companyId}, function(err, branches) {
+                                if (err) { return next(err); }
+
+                                if (branches) {
+                                    result = Object.assign({}, result, { branchCount: branches.length });
+                                    res.send( { user: result });
+                                }
+                            });
+                        }else {
+                            res.send({ user: result });
+                        }
+                    }
+                }
+            });
+        }
+    }
+    //res.send( {user: req.user });
 };
 
 exports.createAccount = function(req, res, next) {
@@ -59,7 +106,8 @@ exports.createAccount = function(req, res, next) {
                 const user = new User({
                     email: email,
                     password: password,
-                    companyId: company._id
+                    companyId: company._id,
+                    roleId: config.role.ADMIN
                 });
 
                 user.save(function(err) {

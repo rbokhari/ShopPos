@@ -26,6 +26,8 @@ class ProductPage extends Component {
 
     constructor(props, context) {
         super(props, context);
+
+        this.props.loadProducts();
     }
 
     getCategoryNameById(id) {

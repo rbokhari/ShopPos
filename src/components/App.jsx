@@ -29,12 +29,9 @@ import ActionAssignmentDone from 'material-ui/svg-icons/action/assignment-turned
 import ActionAssignmentReturned from 'material-ui/svg-icons/action/assignment-returned';
 
 import MenuList from './common/Menu.jsx';
-import BranchListDialog from './branch/BranchListDialog.js';
+import BranchListDialog from './branch/BranchListDialog';
+import BranchCreateDialog from './branch/BranchNew';
 import LoadingDots from './common/LoadingDots';
-
-//import MessageList from './MessageList.jsx';
-//import ChannelList from './ChannelList.jsx';
-//import MessageBox from './MessageBox.jsx';
 
 //var ThemeManager = new mui.styles.getMuiTheme();
 //var Colors = mui.Styles.Colors
@@ -63,6 +60,7 @@ class App extends React.Component {
         this._handleClick = this._handleClick.bind(this);
         this._handleClose = this._handleClose.bind(this);
         this._loadBranch = this._loadBranch.bind(this);
+        this._showCreateBranch = this._showCreateBranch.bind(this);
     }
 
     _handleClick() {
@@ -79,6 +77,10 @@ class App extends React.Component {
 
     _loadBranch() {
         this.props.loadBranch();
+    }
+
+    _showCreateBranch() {
+        this.props.showCreateBranch();
     }
 
     renderDrawerMenu() {
@@ -131,7 +133,7 @@ class App extends React.Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
-                    <AppBar title="Coffee Shop - [ Al Khuwair ]"
+                    <AppBar title={this.props.branchName}
                         showMenuIconButton={true}
                         onLeftIconButtonTouchTap={this._handleClick}
                         onTitleTouchTap={this._handleClick} 
@@ -146,7 +148,7 @@ class App extends React.Component {
                                 anchorOrigin={{horizontal: 'right', vertical: 'top'}} >
 
                                 <MenuItem primaryText="Switch Branch" onTouchTap={this._loadBranch} />
-                                <MenuItem primaryText="Create Branch" />
+                                <MenuItem primaryText="Create Branch" onTouchTap={this._showCreateBranch} />
                                 <Divider />
                                 <MenuItem primaryText="Sign out" linkButton containerElement={<Link to={'/signout'} />} />
                             </IconMenu>
@@ -156,6 +158,7 @@ class App extends React.Component {
                         
                     </AppBar>
                     <BranchListDialog open={false} />
+                    <BranchCreateDialog open={false} />
                     <div style={{
                             border: '1px thick', 
                             display: 'flex',
@@ -173,7 +176,9 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
+    const branch = state.branch.current;
     return {
+        branchName: branch ? branch.name : '',
         authenticated: state.auth.authenticated,
         loading: state.ajaxCallsInProgress > 0
     };

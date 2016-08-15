@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 import * as types from './types';
 import { browserHistory } from 'react-router';
 
@@ -13,7 +15,66 @@ import purchaseOrderApi from '../api/PurchaseOrderApi';
 export function loadBranch() {
     return function( dispatch ) {
         dispatch({ type: types.LOAD_BRANCH }); // this is redux-thunk in action 
+    };
+}
+
+export function loadBranches() {
+    return function(dispatch) {
+        return authApi.loadBranches()
+            .then(response=> {
+                dispatch( {
+                    type: types.LOAD_BRANCH_SUCCESS,
+                    payload: response.data
+                });
+            })
+            .catch(error=> {
+
+            });
     }
+}
+
+export function changeBranch(branch) {
+    return function( dispatch ) {
+        localStorage.setItem('officeId', branch._id);
+        dispatch({ 
+            type: types.SWITCH_BRANCH,
+            payload: branch
+        }); // this is redux-thunk in action 
+    };
+}
+
+export function showCreateBranch() {
+    return function( dispatch ) {
+        dispatch({ type: types.SHOW_CREATE_BRANCH }); // this is redux-thunk in action 
+    };
+}
+
+export function closeBranchDialog() {
+    return function(dispatch) {
+        dispatch( { type: types.CLOSE_BRANCH_DIALOG} );
+    }
+} 
+
+export function createBranch({name, displayName, location, officeNo, mobileNo, status}) {
+    return function(dispatch) {
+        return authApi.createBranch( {name, displayName, location, officeNo, mobileNo, status})
+            .then(response => {
+                // update state to indicate user is authenticated
+                localStorage.setItem('officeId', response.data._id);
+                dispatch({ 
+                    type: types.CREATE_BRANCH_SUCCESS,
+                    payload: response.data 
+                });
+                dispatch({ 
+                    type: types.SWITCH_BRANCH,
+                    payload: response.data._id 
+                });
+                // save the JWT token
+            })
+            .catch((error) => {
+                dispatch(authError(error));
+            });
+    };
 }
 
 export function authError(error) {
@@ -26,7 +87,7 @@ export function authError(error) {
 export function signinUser( {email, password }) {
     // submit email/password to server
     return function(dispatch) {
-        return authApi.signIn(email, password)
+        return authApi.signIn({email:email, password: password})
             .then(response => {
                 // update state to indicate user is authenticated
                 dispatch( { type: types.AUTH_USER } );
@@ -41,8 +102,34 @@ export function signinUser( {email, password }) {
     };
 }
 
+export function userInfo() {
+    return function(dispatch) {
+        return authApi.userInfo()
+                .then(response => {
+                    localStorage.setItem('companyId', response.data.user.companyId);
+                    localStorage.setItem('officeId', response.data.user.officeId);
+                    
+                    if (response.data.user.roleId == 1){
+                        if (response.data.user.branchCount > 0) {
+                            dispatch({ type: types.LOAD_BRANCH });
+                        }else {
+                            dispatch({ type: types.SHOW_CREATE_BRANCH });
+                        }
+                    }
+                    if (response.data.user.officeId === 0) {
+                                                    
+                    }
+                })
+                .catch(error => {
+
+                });
+    };
+}
+
 export function signoutUser() {
     localStorage.removeItem('token');
+    localStorage.removeItem('companyId');
+    localStorage.removeItem('officeId');
     return { type : types.UNAUTH_USER };
 }
 

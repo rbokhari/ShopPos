@@ -1,25 +1,21 @@
 const Office = require('../models/office');
 
 exports.createOffice = function(req, res, next) {
-    console.log('--------------');
-    console.log(req.headers);
-    const code = '001';
-    const name = 'Al Khud Branch';
-    const displayName = 'Al Khud';
-    const location = 'Al Khud';
-    const officeNo = '2424524';
-    const mobileNo = '958774';
+    const name = req.body.name;
+    const displayName = req.body.displayName;
+    const location = req.body.location;
+    const officeNo = req.body.officeNo;
+    const mobileNo = req.body.mobileNo;
     const companyId = req.headers.companyid;
     const status = 1;
 
     // check if Office code is already assigned
-    Office.findOne( { code: code }, function(err, existing) {
+    Office.findOne( { name: name }, function(err, existing) {
         if (err) { return next(err); }
         if (existing) {
             return res.status(422).send({ error: 'Code is in use !'});
         }
         const office = new Office({
-            code: code,
             name: name,
             displayName: displayName,
             location: location,
@@ -68,7 +64,9 @@ exports.updateOffice = function(req, res) {
 };
 
 exports.getAll = function(req, res, next) {
-    Office.find({}, function(err, offices){
+    const companyId = req.headers.companyid;
+
+    Office.find({companyId: companyId}, function(err, offices){
         if (err) { return next(err); }
         res.setHeader('Content-Type', 'application/json');
         res.json(offices);

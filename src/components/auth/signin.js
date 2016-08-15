@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import {reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import TextField from 'material-ui/TextField';
-import Divider from 'material-ui/Divider';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import * as actions from '../../actions';
 
 class SignIn extends Component {
 
     handleFormSubmit ( {email, password} ) {
-        console.log(email, password);
         this.props.signinUser({ email, password});
     }
 
@@ -27,22 +26,16 @@ class SignIn extends Component {
     }
 
     render() {
-
         const { handleSubmit, fields: {email, password}} = this.props;
-
         return (
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                 <div>Signin</div>
-                <TextField name="name" hintText="Name"
-                        floatingLabelText="Email" {...email}
-                        underlineShow={false} />
-                    <Divider />
-                    <TextField name="password" hintText="password"
-                        floatingLabelText="Password" {...password}
-                        underlineShow={false} />
-                    <Divider />
-                    {this.renderAlert()}
-                    <button action="submit"  >Sign in</button>
+                <TextField name="name" floatingLabelText="Email" {...email} />
+                <br />
+                <TextField type="password" name="password" floatingLabelText="Password" {...password} />
+                <br />
+                {this.renderAlert()}
+                <RaisedButton type="submit" primary={true} label='Sigin' ></RaisedButton>
             </form>
         );
     }

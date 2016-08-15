@@ -30,19 +30,26 @@ import DispatchBoard from './components/common/DispatchBoard';
 import SignIn from './components/auth/signin';
 import Signout from './components/auth/signout';
 import CreateAccount from './components/auth/createAccount';
+import RequireAuth from './components/auth/requireAuth';
 
-import {loadItems, loadCategories, loadProducts, loadCustomers} from './actions/index';
-
+import { userInfo, loadCustomers} from './actions/index';
+import { AUTH_USER } from './actions/types';
 import reducers from './reducers';
 
 require('./main.scss');
 
 const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
 const store = createStoreWithMiddleware(reducers);
-store.dispatch(loadItems());
-store.dispatch(loadCategories());
-store.dispatch(loadProducts());
-store.dispatch(loadCustomers());
+
+const token = localStorage.getItem('token');
+
+if (token) {
+    store.dispatch(userInfo());
+    store.dispatch({ type: AUTH_USER });
+
+    //store.dispatch(loadProducts());
+    store.dispatch(loadCustomers());
+}
 
 const socket = io('http://localhost:3090');
 //var socket = io('http://localhost', {transports: ['websocket', 'polling', 'flashsocket']});
@@ -54,7 +61,7 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route path="/" component={App}>
-                <IndexRoute component={Dashboard} />
+                <IndexRoute component={RequireAuth(Dashboard)} />
                 
                 <Route path="signin" component={SignIn} />
                 <Route path="signout" component={Signout} />

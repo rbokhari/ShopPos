@@ -26,7 +26,14 @@ exports.createPurchase = function(req, res, next) {
 };
 
 exports.getAll = function(req, res, next) {
-    Purchase.find({}, {}, { sort : {created: -1} }, function(err, purchases){
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+    Purchase.find({
+        $and: [ 
+            { companyId: companyId }, 
+            { officeId: officeId }
+        ]
+    }, {}, { sort : {created: -1} }, function(err, purchases){
         if (err) { return next(err); }
         // const data = purchases.map(purchase => {
 

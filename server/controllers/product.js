@@ -90,7 +90,14 @@ function getCategoryname(categories, id) {
 }
 
 exports.getAll = function(req, res, next) {
-    Product.find({}, function(err, products){
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+    Product.find({
+        $and: [ 
+            { companyId: companyId }, 
+            { officeId: officeId }
+        ]
+    }, function(err, products){
         if (err) { return next(err); }
 
         Category.find({}, function(err, categories) {

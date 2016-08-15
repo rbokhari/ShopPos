@@ -22,12 +22,12 @@ const CategoryForm = ( { category, onSave, onChange, loading, errors } ) => {
             <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
                 <CardHeader title="Category" subtitle="Add New" />
                 <CardText>
-                    <TextField name="name" hintText="Name"
+                    <TextField name="name"
                         floatingLabelText="Category Name"
                         onChange={onChange} value={category.name}
                         underlineShow={false} />
                     <Divider />
-                    <TextField name="description" hintText="Description"
+                    <TextField name="description" 
                         floatingLabelText="Description"
                         underlineShow={false} />
                     <Divider />

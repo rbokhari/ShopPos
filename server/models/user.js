@@ -8,7 +8,8 @@ const userSchema = new Schema({
     email: { type: String, unique: true, lowercase: true },
     password: String,
     companyId: { type: Schema.ObjectId },
-    officeId: { type: Schema.ObjectId }
+    officeId: { type: Schema.ObjectId },
+    roleId: Number
 });
 
 // on save hook, encrypt password

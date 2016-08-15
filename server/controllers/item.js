@@ -52,7 +52,14 @@ exports.updateItem = function(req, res) {
 };
 
 exports.getAll = function(req, res, next) {
-    Item.find({}, function(err, items){
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+    Item.find({
+        $and: [ 
+            { companyId: companyId }, 
+            { officeId: officeId }
+        ]
+    }, function(err, items){
         if (err) { return next(err); }
         res.setHeader('Content-Type', 'application/json');
         res.json(items);

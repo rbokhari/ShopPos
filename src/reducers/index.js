@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { reducer as form } from 'redux-form';
 
-import branchReducer from './branch_reducer';
+import branchReducer from './branchReducer';
 import authReducer from './authReducer';
 import items from './itemReducer';
 import categories from './categoryReducer';
@@ -12,9 +12,9 @@ import ajaxCallsInProgress from './ajaxStatusReducer';
 
 const rootReducer = combineReducers({
   form,
+  branch: branchReducer,
   auth: authReducer,
   ajaxCallsInProgress, 
-  branch: branchReducer,
   items,
   categories,
   products,

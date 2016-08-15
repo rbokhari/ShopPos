@@ -19,58 +19,49 @@ class BranchListDialog extends Component {
     constructor(props) {
         super(props);
         
-        this.state = {
-            open: false
-        };
-
         this.handleClose = this.handleClose.bind(this);
-        this.handleOpen = this.handleOpen.bind(this);
+        this.props.loadBranches();
     }
 
     componentWillUpdate(nextProps) {
         //console.log("componentWillUpdate", nextProps);
     }
 
-    handleOpen() {
-        this.setState({open: true});
-    };
-
     handleClose() {
-        this.setState({open: false});
-    };
+        this.props.changeBranch(this.refs.branch.getSelectedValue());
+    }
 
     render() {
         const actions = [
-            <FlatButton label="Cancel" primary={true} onTouchTap={this.handleClose} />,
-            <FlatButton label="OK" primary={true} keyboardFocused={true} onTouchTap={this.handleClose} />,
+            <FlatButton label="OK" primary={true} onTouchTap={this.handleClose} />
         ];
 
-    const radios = [
-        <RadioButton key={1} value={'1'} label={'First'} style={styles.radioButton}/>,
-        <RadioButton key={2} value={'2'} label={'Second'} style={styles.radioButton}/>,
-        <RadioButton key={3} value={'3'} label={'Third'} style={styles.radioButton}/>
-    ];
+        const radios = [
+            <RadioButton key={1} value={'1'} label={'First'} style={styles.radioButton} />
+        ];
         return (
-            <div>
-                <Dialog
-                    title="Select Branch"
-                    actions={actions}
-                    modal={true}
-                    open={this.state.open}
-                    onRequestClose={this.handleClose}
-                    autoScrollBodyContent={true} >
-                    <RadioButtonGroup name="shipSpeed" defaultSelected="not_light">
-                        {radios}
-                    </RadioButtonGroup>
-                </Dialog>
-            </div>
+            <Dialog
+                title="Select Branch" actions={actions}
+                modal={true} open={this.props.open}
+                onRequestClose={this.handleClose} autoScrollBodyContent={true} >
+                <RadioButtonGroup name="branch" ref="branch">
+                    {this.props.branches.map(branch => 
+                        <RadioButton key={branch._id} value={branch} 
+                            label={branch.name + ' [ ' + branch.displayName + ' ]'}  
+                            style={styles.radioButton} />
+                    )}                    
+                </RadioButtonGroup>
+            </Dialog>
         );
     }
 
 }
 
 function mapStateToProps(state) {
-    return { open : state.isLoad };
+    return { 
+        open : state.branch.isLoad,
+        branches: state.branch.all 
+    };
 }
 
 export default connect(mapStateToProps, actions)(BranchListDialog);

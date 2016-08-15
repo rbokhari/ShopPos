@@ -36,7 +36,15 @@ exports.updateCustomer = function(req, res, next) {
 };
 
 exports.getAll = function(req, res, next) {
-    Customer.find({}, function(err, customers){
+    const companyId = req.headers.companyid;
+    const officeId = req.header.officeid;
+    
+    Customer.find({
+        $and: [ 
+            { companyId: companyId }, 
+            { officeId: officeId }
+        ]
+    }, function(err, customers){
         if (err) { return next(err); }
         res.setHeader('Content-Type', 'application/json');
         res.json(customers);
@@ -54,7 +62,7 @@ exports.getAllByStatus = function(req, res, next) {
 };
 
 exports.getById = function(req, res, next) {
-    console.log("customer getById");
+    console.log("unnessary load , check this");
     // Customer.find({ _id: req.params.id }, function(err, customer){
     //     if (err) { return next(err); }
 

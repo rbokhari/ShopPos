@@ -24,12 +24,17 @@ const cardStyle = {
 const fabStyle = {
     marginTop: 10,
     marginLeft: '90%'
-}
+};
 
 class CategoryPage extends Component {
 
     constructor(props, context) {
         super(props, context);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        //console.error(nextProps);
+        this.props.loadCategories();
     }
 
     render() {

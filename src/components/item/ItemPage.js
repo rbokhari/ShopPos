@@ -16,6 +16,8 @@ class ItemPage extends Component {
 
     constructor(props, context) {
         super(props, context);
+
+        this.props.loadItems();
     }
 
     render() {

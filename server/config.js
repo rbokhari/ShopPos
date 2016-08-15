@@ -2,5 +2,10 @@
 
 module.exports = {
 
-    secret: 'abcasdfkjaslkdfj'
+    secret: 'abcasdfkjaslkdfj',
+    role: {
+        'ADMIN': 1,
+        'BRANCH_ADMIN': 2,
+        'BRANCH_USER': 3
+    }
 };
