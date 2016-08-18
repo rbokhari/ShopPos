@@ -8,7 +8,7 @@ class ItemApi {
   }
 
   static saveItem( item ) {
-    return Api.post('item/create', itm);
+    return Api.post('item/create', item);
   }
 
   static deleteItem( itemId ) {

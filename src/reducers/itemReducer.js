@@ -4,8 +4,8 @@ import initialState from './initialState';
 export default function(state = initialState.items, action) {
     switch(action.type) {
         case types.LOAD_ITEMS_SUCCESS:
-            //return [...state, ...action.items];
-            return action.items;
+            return [...state, { items: action.payload }];
+            //return action.items;
 
         case types.CREATE_ITEM_SUCCESS:
             return [    

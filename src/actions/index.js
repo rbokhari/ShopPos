@@ -11,6 +11,7 @@ import categoryApi from '../api/CategoryApi';
 import productApi from '../api/ProductApi';
 import customerApi from '../api/CustomerApi';
 import purchaseOrderApi from '../api/PurchaseOrderApi';
+import usersApi from '../api/usersApi';
 
 export function loadBranch() {
     return function( dispatch ) {
@@ -27,10 +28,8 @@ export function loadBranches() {
                     payload: response.data
                 });
             })
-            .catch(error=> {
-
-            });
-    }
+            .catch(error=> { ;});
+    };
 }
 
 export function changeBranch(branch) {
@@ -52,7 +51,7 @@ export function showCreateBranch() {
 export function closeBranchDialog() {
     return function(dispatch) {
         dispatch( { type: types.CLOSE_BRANCH_DIALOG} );
-    }
+    };
 } 
 
 export function createBranch({name, displayName, location, officeNo, mobileNo, status}) {
@@ -90,9 +89,15 @@ export function signinUser( {email, password }) {
         return authApi.signIn({email:email, password: password})
             .then(response => {
                 // update state to indicate user is authenticated
-                dispatch( { type: types.AUTH_USER } );
+                console.error("res", response.data);
+                dispatch( { 
+                    type: types.AUTH_USER,
+                    payload: response.data 
+                } );
                 // save the JWT token
                 localStorage.setItem('token', response.data.token);
+                localStorage.setItem('companyId', response.data.user.companyId);
+                localStorage.setItem('officeId', response.data.user.branchId);
                 // redirect to dashboard
                 browserHistory.push('/');
             })
@@ -166,7 +171,7 @@ export function AccountCreate({ name, displayName, location, contactNo, email, p
 export function loadItemsSuccess( items ) {
     return {
         type: types.LOAD_ITEMS_SUCCESS,
-        items: items.data
+        payload: items.data
     };
 }
 
@@ -186,7 +191,7 @@ export function createItemSuccess( item ) {
 
 export function loadItems() {
     return function( dispatch ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return itemApi.getAllItems().then( items => {
             dispatch( loadItemsSuccess( items ) );
         }).catch( error => {
@@ -212,7 +217,7 @@ export function createItem( item ) {  // this becomes action to send to reducer
     item.companyId = localStorage.getItem('companyId');
     item.officeId = localStorage.getItem('officeId');
     return function( dispatch, getState ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return itemApi.saveItem( item ).then( item => {
             item.id ? dispatch( updateItemSuccess( item ) ) : dispatch( createItemSuccess( item ) );
         }).catch( error => {
@@ -240,13 +245,13 @@ export function createCategorySuccess( category ) {
 export function loadCategoriesSuccess( categories ) {
     return {
         type: types.LOAD_CATEGORY_SUCCESS,
-        categories: categories.data
+        payload: categories.data
     };
 }
 
 export function loadCategories() {
     return function( dispatch ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return categoryApi.getAllCategories().then( categories => {
                 dispatch(loadCategoriesSuccess( categories ) );
             }
@@ -259,7 +264,7 @@ export function loadCategories() {
 
 export function createCategory( category ) {  // this becomes action to send to reducer
     return function( dispatch, getState ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return categoryApi.saveCategory( category ).then( category => {
             category._id ? dispatch( updateCategorySuccess( category ) ) : dispatch( createCategorySuccess( category ) );
         }).catch( error => {
@@ -292,7 +297,7 @@ export function loadProductsSuccess( products ) {
 
 export function loadProducts() {
     return function( dispatch ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return productApi.getAllProducts().then( products => {
             dispatch( loadProductsSuccess( products ) );
         }).catch( error => {
@@ -306,7 +311,7 @@ export function createProduct( product ) {  // this becomes action to send to re
     product.companyId = localStorage.getItem('companyId');
     product.officeId = localStorage.getItem('officeId');
     return function( dispatch, getState ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return productApi.saveProduct( product ).then( product => {
             product._id ? dispatch( updateProductSuccess( product ) ) : dispatch( createProductSuccess( product ) );
 
@@ -354,7 +359,7 @@ export function createCustomer( customer ) {  // this becomes action to send to 
     customer.companyId = localStorage.getItem('companyId');
     customer.officeId = localStorage.getItem('officeId');
     return function( dispatch, getState ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return customerApi.saveCustomer( customer ).then( customer => {
             customer._id ? dispatch( updateCustomerSuccess( customer ) ) : dispatch( createCustomerSuccess( customer ) );
         }).catch( error => {
@@ -368,7 +373,7 @@ export function updateCustomerStatus( customer, newStatus ) {  // this becomes a
     customer.companyId = localStorage.getItem('companyId');
     customer.officeId = localStorage.getItem('officeId');
     return function( dispatch, getState ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return customerApi.updateCustomerStatus( customer, newStatus ).then( customer => {
             dispatch( updateCustomerStatusSuccess( customer, newStatus ) );
         }).catch( error => {
@@ -379,7 +384,7 @@ export function updateCustomerStatus( customer, newStatus ) {  // this becomes a
 
 export function loadCustomers() {
     return function( dispatch ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return customerApi.getIssueCustomers().then( customers => {
             dispatch( loadCustomersSuccess( customers ) );
         }).catch( error => {
@@ -404,9 +409,8 @@ export function loadPurchasesSuccess( purchases ) {
 }
 
 export function createPurchaseOrder( po ) {  // this becomes action to send to reducer
-
     return function( dispatch, getState ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return purchaseOrderApi.savePurchaseOrder( po ).then( po => {
             dispatch( createPurchaseOrderSuccess( po ) );
         }).catch( error => {
@@ -417,11 +421,58 @@ export function createPurchaseOrder( po ) {  // this becomes action to send to r
 
 export function loadPurchaseOrders() {
     return function( dispatch ) {
-        dispatch( beginAjaxCall() );
+        //dispatch( beginAjaxCall() );
         return purchaseOrderApi.getAll().then( purchases => {
             dispatch( loadPurchasesSuccess( purchases ) );
         }).catch( error => {
             throw( error );
         });
+    };
+}
+
+
+// Users's Actions
+export function updateUsersSuccess( user ) {
+    return {
+        type: types.UPDATE_USERS_SUCCESS,
+        payload: user.data
+    };
+}
+
+export function createUsersSuccess( user ) {
+    return {
+        type: types.CREATE_USERS_SUCCESS,
+        payload: user.data
+    };
+}
+
+export function loadUsersSuccess( users ) {
+    return {
+        type: types.LOAD_USERS_SUCCESS,
+        payload: users.data
+    };
+}
+
+export function loadUsers() {
+    return function( dispatch ) {
+        //dispatch( beginAjaxCall() );
+        return usersApi.getAllUsers().then( users => {
+                dispatch(loadUsersSuccess( users ) );
+            }
+        ).catch( error => {
+                console.error( error );
+            }
+        );
+    };
+}
+
+export function createUsers( user ) {  // this becomes action to send to reducer
+    return function( dispatch, getState ) {
+        //dispatch( beginAjaxCall() );
+        return usersApi.saveUsers( user ).then( user => {
+            user._id ? dispatch( updateUsersSuccess( user ) ) : dispatch( createUsersSuccess( user ));
+        }).catch( error => {
+            throw( error );
+        })
     };
 }

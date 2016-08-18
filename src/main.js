@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import reduxThunk from 'redux-thunk';
+import reduxLogger from 'redux-logger';
 import io from 'socket.io-client';
 
 import App from './components/App.jsx';
@@ -14,15 +15,16 @@ import StockNew from './components/purchase/StockNew';
 import PurchasePage from './components/purchase/PurchasePage';
 
 //import PurchaseOrder from './components/product/PurchaseOrder.js';
-import CategoryType from './components/category/CategoryType.js';
-import CategoryPage from './components/category/CategoryPage.js';
-import CategoryNew from './components/category/CategoryNew.js';
+import CategoryType from './components/category/CategoryType';
+import CategoryPage from './components/category/CategoryPage';
+import CategoryNew from './components/category/CategoryNew';
 
-import ProductPage from './components/product/ProductPage.js';
-import ProductNew from './components/product/ProductNew.js';
+import ProductPage from './components/product/ProductPage';
+import ProductNew from './components/product/ProductNew';
 
-import Dashboard from './components/common/Dashboard.js';
-import UserList from './components/user/UserList.js';
+import Dashboard from './components/common/Dashboard';
+import UserPage from './components/user/UserPage';
+import UserNew from './components/user/UserNew';
 
 import KitchenBoard from './components/common/kitchenBoard';
 import DispatchBoard from './components/common/DispatchBoard';
@@ -38,7 +40,7 @@ import reducers from './reducers';
 
 require('./main.scss');
 
-const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
+const createStoreWithMiddleware = applyMiddleware(reduxLogger(), reduxThunk)(createStore);
 const store = createStoreWithMiddleware(reducers);
 
 const token = localStorage.getItem('token');
@@ -48,7 +50,7 @@ if (token) {
     store.dispatch({ type: AUTH_USER });
 
     //store.dispatch(loadProducts());
-    store.dispatch(loadCustomers());
+    //store.dispatch(loadCustomers());
 }
 
 const socket = io('http://localhost:3090');
@@ -87,7 +89,8 @@ ReactDOM.render(
                 <Route path="kitchen" component={KitchenBoard} />
                 <Route path="dispatch" component={DispatchBoard} />
                 
-                <Route path="users" component={UserList} />
+                <Route path="users" component={UserPage} />
+                <Route path="users/new" component={UserNew} />
             </Route>
         </Router>
     </Provider>, 

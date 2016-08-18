@@ -12,7 +12,15 @@ function tokenForUser(user) {
 
 exports.signin = function(req, res, next) {
     // user already authenticated, just give token now
-    res.send( { token: tokenForUser(req.user) });
+    const user = {
+        id: req.user._id,
+        name: req.user.email,
+        roleId: req.user.roleId,
+        branchId: req.user.officeId,
+        companyId: req.user.companyId,
+        status: req.user.status
+    };
+    res.send( { token: tokenForUser(req.user), user });
 };
 
 exports.user = function(req, res, next) {
@@ -107,7 +115,8 @@ exports.createAccount = function(req, res, next) {
                     email: email,
                     password: password,
                     companyId: company._id,
-                    roleId: config.role.ADMIN
+                    roleId: config.role.ADMIN,
+                    status: 1
                 });
 
                 user.save(function(err) {

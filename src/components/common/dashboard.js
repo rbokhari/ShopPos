@@ -15,6 +15,7 @@ class Dashboard extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.error("componentWillReceiveProps");
         this.props.loadCategories();
         this.props.loadProducts();
     }

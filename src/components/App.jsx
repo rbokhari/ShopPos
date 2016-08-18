@@ -123,6 +123,8 @@ class App extends React.Component {
 
                     <MenuItem checked={true} primaryText="Create Account" leftIcon={<ActionAssignment />} 
                         linkButton containerElement={<Link to="/createAccount" />} onTouchTap={this._handleClose}  />
+                    <MenuItem checked={true} primaryText="Login" leftIcon={<ActionAssignment />} 
+                        linkButton containerElement={<Link to="/signin" />} onTouchTap={this._handleClose}  />
                     
                 </Drawer>
             );
@@ -177,7 +179,9 @@ class App extends React.Component {
 
 function mapStateToProps(state, ownProps) {
     const branch = state.branch.current;
+    console.error("user", state.user);
     return {
+        user: state.user,
         branchName: branch ? branch.name : '',
         authenticated: state.auth.authenticated,
         loading: state.ajaxCallsInProgress > 0

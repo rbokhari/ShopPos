@@ -28,7 +28,9 @@ class BranchListDialog extends Component {
     }
 
     handleClose() {
-        this.props.changeBranch(this.refs.branch.getSelectedValue());
+        const branchId = this.refs.branch.getSelectedValue();
+        const currentBranch = this.props.branches.filter(item=> item._id === branchId)[0];
+        this.props.changeBranch(currentBranch);
     }
 
     render() {
@@ -46,7 +48,7 @@ class BranchListDialog extends Component {
                 onRequestClose={this.handleClose} autoScrollBodyContent={true} >
                 <RadioButtonGroup name="branch" ref="branch">
                     {this.props.branches.map(branch => 
-                        <RadioButton key={branch._id} value={branch} 
+                        <RadioButton key={branch._id} value={branch._id} 
                             label={branch.name + ' [ ' + branch.displayName + ' ]'}  
                             style={styles.radioButton} />
                     )}                    

@@ -8,6 +8,7 @@ import categories from './categoryReducer';
 import products from './productReducer';
 import customers from './customerReducer';
 import purchaseOrders from './purchaseOrderReducer';
+import users from './userReducer';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 
 const rootReducer = combineReducers({
@@ -19,7 +20,8 @@ const rootReducer = combineReducers({
   categories,
   products,
   customers,
-  purchaseOrders
+  purchaseOrders,
+  users
 });
 
 export default rootReducer;

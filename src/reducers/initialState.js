@@ -14,5 +14,6 @@ export default {
     products: [],
     customers: [],
     purchaseOrders: [],
+    users : [],
     ajaxCallsInProgress: 0
 };

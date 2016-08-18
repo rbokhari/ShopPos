@@ -20,6 +20,12 @@ class ItemPage extends Component {
         this.props.loadItems();
     }
 
+    componentWillReceiveProps(nextProps) {
+        console.error(nextProps);
+        this.props.loadItems();
+    }
+
+
     render() {
         const {items} = this.props;
 

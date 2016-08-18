@@ -9,7 +9,8 @@ const userSchema = new Schema({
     password: String,
     companyId: { type: Schema.ObjectId },
     officeId: { type: Schema.ObjectId },
-    roleId: Number
+    roleId: Number,
+    status: Number
 });
 
 // on save hook, encrypt password

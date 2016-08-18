@@ -9,6 +9,7 @@ const Category = require('./controllers/category');
 const Product = require('./controllers/product');
 const Customer = require('./controllers/customer');
 const Purchase = require('./controllers/purchase');
+const User = require('./controllers/user');
 
 
 const requireAuth = passport.authenticate('jwt', { session: false });   // deafult is cookie based, which we turn false
@@ -66,7 +67,11 @@ module.exports = function(app, io) {
     app.get('/purchase/item/:itemId', Purchase.getAllByItemId); 
     app.get('/purchase/:id', Purchase.getById);
     
-
+    // User Routes
+    app.post('/users/create', User.createUser);
+    app.put('/users/:id/update', User.updateUser);
+    app.get('/users/', User.getAll);
+    app.get('/users/:id', User.getById);
 
     // app.get('/', function(req, res, next) {
     //     res.send(['a', 'b', 'c']);
