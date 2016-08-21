@@ -2,6 +2,7 @@
 
 import * as types from './types';
 import { browserHistory } from 'react-router';
+import { USER_ROLE } from '../../shared/constants';
 
 import { beginAjaxCall } from './ajaxStatusActions';
 
@@ -28,7 +29,7 @@ export function loadBranches() {
                     payload: response.data
                 });
             })
-            .catch(error=> { ;});
+            .catch(error=> {});
     };
 }
 
@@ -89,15 +90,64 @@ export function signinUser( {email, password }) {
         return authApi.signIn({email:email, password: password})
             .then(response => {
                 // update state to indicate user is authenticated
-                console.error("res", response.data);
-                dispatch( { 
-                    type: types.AUTH_USER,
-                    payload: response.data 
-                } );
+
                 // save the JWT token
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('companyId', response.data.user.companyId);
-                localStorage.setItem('officeId', response.data.user.branchId);
+                localStorage.setItem('officeId', response.data.user.officeId);
+
+                // dispatch({ type: types.AUTH_USER });
+                // dispatch({ 
+                //     type: types.AUTH_USER_INFO, 
+                //     payload: response.data.user
+                // });
+                const data = response.data.user;
+console.error(data);
+                const company = {
+                    companyId: data.company.companyId,
+                    name: data.company.name,
+                    displayName: data.company.displayName
+                };
+                dispatch({ 
+                        type: types.LOAD_COMPANY,
+                        payload: company
+                });
+
+                const user = {
+                    userId: data.userId,
+                    name: data.name,
+                    roleId: data.roleId,
+                    status: data.status,
+                    companyId: data.companyId,
+                    officeId: data.officeId 
+                };
+                dispatch({ 
+                    type: types.AUTH_USER_INFO, 
+                    payload: user
+                });
+                
+                if (data.officeId !== 0 && data.roleId !== USER_ROLE.ADMIN) {
+                    const branch = {
+                        branchId: data.branch.branchId,
+                        name: data.branch.name,
+                        displayName: data.branch.displayName,
+                        office: data.branch.office,
+                        mobile: data.branch.mobile
+                    };
+
+                    dispatch({ 
+                        type: types.SWITCH_BRANCH,
+                        payload: branch
+                    }); // this is redux-thunk in action
+
+                }else if (data.roleId == USER_ROLE.ADMIN){
+                    if (response.data.user.branch.length > 0) {
+                        dispatch({ type: types.LOAD_BRANCH });
+                    }else {
+                        dispatch({ type: types.SHOW_CREATE_BRANCH });
+                    }
+                }                
+
                 // redirect to dashboard
                 browserHistory.push('/');
             })
@@ -111,18 +161,55 @@ export function userInfo() {
     return function(dispatch) {
         return authApi.userInfo()
                 .then(response => {
+                    
                     localStorage.setItem('companyId', response.data.user.companyId);
                     localStorage.setItem('officeId', response.data.user.officeId);
+
+                    const data = response.data.user;
+
+                    const company = {
+                        companyId: data.company.companyId,
+                        name: data.company.name,
+                        displayName: data.company.displayName
+                    };
+                    dispatch({ 
+                            type: types.LOAD_COMPANY,
+                            payload: company
+                    });
+
+                    const user = {
+                        userId: data.userId,
+                        name: data.name,
+                        roleId: data.roleId,
+                        status: data.status,
+                        companyId: data.companyId,
+                        officeId: data.officeId 
+                    };
+                    dispatch({ 
+                        type: types.AUTH_USER_INFO, 
+                        payload: user
+                    });
                     
-                    if (response.data.user.roleId == 1){
-                        if (response.data.user.branchCount > 0) {
+                    if (data.officeId !== 0 && data.roleId !== USER_ROLE.ADMIN) {
+                        const branch = {
+                            branchId: data.branch.branchId,
+                            name: data.branch.name,
+                            displayName: data.branch.displayName,
+                            office: data.branch.office,
+                            mobile: data.branch.mobile
+                        };
+
+                        dispatch({ 
+                            type: types.SWITCH_BRANCH,
+                            payload: branch
+                        }); // this is redux-thunk in action
+
+                    }else if (data.roleId == USER_ROLE.ADMIN){
+                        if (response.data.user.branch.length > 0) {
                             dispatch({ type: types.LOAD_BRANCH });
                         }else {
                             dispatch({ type: types.SHOW_CREATE_BRANCH });
                         }
-                    }
-                    if (response.data.user.officeId === 0) {
-                                                    
                     }
                 })
                 .catch(error => {
@@ -178,14 +265,14 @@ export function loadItemsSuccess( items ) {
 export function updateItemSuccess( item ) {
     return {
         type: types.UPDATE_ITEM_SUCCESS,
-        item: item.data
+        payload: item.data
     };
 }
 
 export function createItemSuccess( item ) {
     return {
         type: types.CREATE_ITEM_SUCCESS,
-        item: item.data
+        payload: item.data
     };
 }
 
@@ -231,14 +318,14 @@ export function createItem( item ) {  // this becomes action to send to reducer
 export function updateCategorySuccess( category ) {
     return {
         type: types.UPDATE_CATEGORY_SUCCESS,
-        category: category.data
+        payload: category.data
     };
 }
 
 export function createCategorySuccess( category ) {
     return {
         type: types.CREATE_CATEGORY_SUCCESS,
-        category: category.data
+        payload: category.data
     };
 }
 
@@ -277,21 +364,21 @@ export function createCategory( category ) {  // this becomes action to send to 
 export function updateProductSuccess( product ) {
     return {
         type: types.UPDATE_PRODUCT_SUCCESS,
-        product: product.data
+        payload: product.data
     };
 }
 
 export function createProductSuccess( product ) {
     return {
         type: types.CREATE_PRODUCT_SUCCESS,
-        product: product.data
+        payload: product.data
     };
 }
 
 export function loadProductsSuccess( products ) {
     return {
         type: types.LOAD_PRODUCT_SUCCESS,
-        products: products.data
+        payload: products.data
     };
 }
 
@@ -308,8 +395,6 @@ export function loadProducts() {
 
 export function createProduct( product ) {  // this becomes action to send to reducer
 
-    product.companyId = localStorage.getItem('companyId');
-    product.officeId = localStorage.getItem('officeId');
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
         return productApi.saveProduct( product ).then( product => {
@@ -355,9 +440,6 @@ export function loadCustomersSuccess( customers ) {
 }
 
 export function createCustomer( customer ) {  // this becomes action to send to reducer
-
-    customer.companyId = localStorage.getItem('companyId');
-    customer.officeId = localStorage.getItem('officeId');
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
         return customerApi.saveCustomer( customer ).then( customer => {
@@ -370,8 +452,6 @@ export function createCustomer( customer ) {  // this becomes action to send to 
 
 export function updateCustomerStatus( customer, newStatus ) {  // this becomes action to send to reducer
 
-    customer.companyId = localStorage.getItem('companyId');
-    customer.officeId = localStorage.getItem('officeId');
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
         return customerApi.updateCustomerStatus( customer, newStatus ).then( customer => {

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as actions from '../../actions';
-import { CUSTOMER_STATUS } from '../../utils/constant';
+import { CUSTOMER_STATUS } from '../../../shared/constants';
 import Customers from './Customers';
 
 class DispatchBoard extends Component {

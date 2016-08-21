@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 // Define a model
 
 const categorySchema = new Schema({
-    name: { type: String, unique: true },
+    name: { type: String },
     status: {type : Number},
     companyId: { type: Schema.ObjectId },
     officeId: { type: Schema.ObjectId }

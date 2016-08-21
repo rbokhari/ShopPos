@@ -1,7 +1,5 @@
 export default {
-    company: {
-        current: {}
-    },
+    company: {},
     branch: {
         isLoad: false,
         isCreateLoad: false,

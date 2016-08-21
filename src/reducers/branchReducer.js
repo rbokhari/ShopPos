@@ -1,5 +1,11 @@
 import initialState from './initialState';
-import { LOAD_BRANCH, LOAD_BRANCH_SUCCESS, CREATE_BRANCH, CREATE_BRANCH_SUCCESS, SWITCH_BRANCH, SHOW_CREATE_BRANCH, CLOSE_BRANCH_DIALOG } from '../actions/types';
+import { LOAD_BRANCH, 
+    LOAD_BRANCH_SUCCESS, 
+    CREATE_BRANCH, 
+    CREATE_BRANCH_SUCCESS, 
+    SWITCH_BRANCH, 
+    SHOW_CREATE_BRANCH, 
+    CLOSE_BRANCH_DIALOG } from '../actions/types';
 
 export default function(state = initialState.branch, action) {
     switch(action.type) {

@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const itemSchema = new Schema({
     companyId: { type: Schema.ObjectId },
     officeId: { type: Schema.ObjectId },
-    code: { type: String, unique: true, lowercase: true },
+    code: { type: String, lowercase: true },    //unique: true,
     name: String,
     description: { type: String },
     stock: { type: Number },

@@ -2,8 +2,8 @@ const Customer = require('../models/customer');
 
 exports.createCustomer = function(req, res, next) {
     const customer = new Customer({
-        companyId: req.body.companyId,
-        officeId: req.body.officeId,
+        companyId: req.headers.companyid,
+        officeId: req.headers.officeid,
         carNumber: req.body.carNumber,
         mobileNumber: req.body.mobileNumber,
         products: req.body.products,
@@ -53,7 +53,17 @@ exports.getAll = function(req, res, next) {
 
 exports.getAllByStatus = function(req, res, next) {
     const status = req.params.status;   // e.g. 0 = issue, 1 = Kitchen finished, 2 = devliered
-    Customer.find({ $or: [{status: 0}, {status: 1}, {status: 2}] }, {}, { sort : {created: 1} }, function(err, customers){
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+
+    Customer.find({ 
+        $and: [
+            {companyId: companyId},
+            {officeId: officeId },
+            { $or: [{status: 0}, {status: 1}, {status: 2}] }
+        ] }, {}, { sort : {created: 1} }, function(err, customers){
+        
+
         if (err) { return next(err); }
         next();
         res.setHeader('Content-Type', 'application/json');

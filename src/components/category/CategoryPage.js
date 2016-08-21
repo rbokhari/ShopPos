@@ -30,10 +30,16 @@ class CategoryPage extends Component {
 
     constructor(props, context) {
         super(props, context);
+
+        this.props.loadCategories();
     }
 
+    // componentWillUpdate(nextProps) {
+    //     this.props.loadCategories();
+    // }
+
     componentWillReceiveProps(nextProps) {
-        if (this.props.branch._id !== localStorage.getItem('officeId')) {
+        if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
             this.props.loadCategories();
         }
     }
@@ -60,7 +66,8 @@ CategoryPage.propTypes = {
 function mapStateToProps(state, ownProps) {
     return { 
         categories: state.categories,
-        branch: state.branch.current 
+        user: state.auth.user ,
+        branch: state.branch.current
     };
 }
 

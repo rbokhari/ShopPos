@@ -10,6 +10,7 @@ import Divider from 'material-ui/Divider';
 import Drawer from 'material-ui/Drawer';
 
 import * as actions from '../actions';
+import { USER_ROLE } from '../../shared/constants';
 
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -57,10 +58,17 @@ class App extends React.Component {
         this.state = {
             open: false
         };
+
+        if (this.props.authenticated) {
+            this.props.userInfo();
+        }
+
         this._handleClick = this._handleClick.bind(this);
         this._handleClose = this._handleClose.bind(this);
         this._loadBranch = this._loadBranch.bind(this);
         this._showCreateBranch = this._showCreateBranch.bind(this);
+
+
     }
 
     _handleClick() {
@@ -109,8 +117,8 @@ class App extends React.Component {
                     <MenuItem primaryText="Products" leftIcon={<ActionReceipt />} 
                         linkButton containerElement={<Link to={'/product'} />} onTouchTap={this._handleClose} />
                     <Divider />
-                    <MenuItem primaryText="Users" leftIcon={<Person />} 
-                        linkButton containerElement={<Link to={'/users'} />} onTouchTap={this._handleClose} />
+                    { this.props.user && this.props.user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Users" leftIcon={<Person />} 
+                        linkButton containerElement={<Link to={'/users'} />} onTouchTap={this._handleClose} /> }
                 </Drawer>
             );
         } else {
@@ -131,11 +139,24 @@ class App extends React.Component {
         }
     }
 
+    // renderSideMenu() {
+    //     const { user } = this.props;
+    //     if (this.props.authenticated) {
+    //         return [
+    //                 { this.props.user.roleId === USER_ROLE.ADMIN && <MenuItem key={1} primaryText="Switch Branch" onTouchTap={this._loadBranch} />},
+    //                 <MenuItem key={2} primaryText="Create Branch" onTouchTap={this._showCreateBranch} />,
+    //                 <Divider key={3} />,
+    //                 <MenuItem key={4} primaryText="Sign out" linkButton containerElement={<Link to={'/signout'} />} />
+    //         ];
+    //     }
+    // }
+
     render() {
+        const { user, branch, displayTitle } = this.props;
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
-                    <AppBar title={this.props.branchName}
+                    <AppBar title={displayTitle}
                         showMenuIconButton={true}
                         onLeftIconButtonTouchTap={this._handleClick}
                         onTitleTouchTap={this._handleClick} 
@@ -149,10 +170,11 @@ class App extends React.Component {
                                 targetOrigin={{horizontal: 'right', vertical: 'top'}}
                                 anchorOrigin={{horizontal: 'right', vertical: 'top'}} >
 
-                                <MenuItem primaryText="Switch Branch" onTouchTap={this._loadBranch} />
-                                <MenuItem primaryText="Create Branch" onTouchTap={this._showCreateBranch} />
-                                <Divider />
-                                <MenuItem primaryText="Sign out" linkButton containerElement={<Link to={'/signout'} />} />
+                            { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Switch Branch" onTouchTap={this._loadBranch} />}
+                            { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Create Branch" onTouchTap={this._showCreateBranch} />}
+                            { user && user.roleId === USER_ROLE.ADMIN && <Divider />}
+                            <MenuItem primaryText="Sign out" linkButton containerElement={<Link to={'/signout'} />} />
+
                             </IconMenu>
                         } >
 
@@ -178,11 +200,14 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-    const branch = state.branch.current;
-    console.error("user", state.user);
+    const branch = state.branch === undefined ? '' : state.branch.current.displayName; 
+  
+    const displayTitle = state.company === undefined ? '' : state.company.displayName + ' - ' + branch;
+
     return {
-        user: state.user,
-        branchName: branch ? branch.name : '',
+        user: state.auth.user,
+        branch: branch,
+        displayTitle,
         authenticated: state.auth.authenticated,
         loading: state.ajaxCallsInProgress > 0
     };

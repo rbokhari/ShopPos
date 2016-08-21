@@ -24,20 +24,23 @@ const ProductForm = ( {product, categories, onSave, onChange, onSelectChange, on
             <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
                 <CardHeader title="Product" subtitle={product._id ? 'Edit' : 'Add New'} />
                 <CardText>
-                    <TextField name='code' hintText="Code" floatingLabelText="Product Code" onChange={onChange} value={product.code} underlineShow={false} />
-                    <Divider />
-                    <TextField name='name' hintText="Name" floatingLabelText="Product Name" onChange={onChange} value={product.name} underlineShow={false} />
-                    <Divider />
-                    <TextField name='nameAr' hintText="NameAr" floatingLabelText="Name Arabic" onChange={onChange} value={product.nameAr} underlineShow={false} />
-                    <Divider />
-                    <SelectField name='categoryId' hintText="Category" floatingLabelText="Category" onChange={onSelectChange} value={product.categoryId} underlineShow={false}>
-                    {categories.map(category=>
-                        <MenuItem key={category._id} value={category._id} primaryText={category.name} />
-                    )}
-                    </SelectField>
-                    <Divider />
-                    <TextField name='price' hintText="Price" floatingLabelText="Price" onChange={onChange} value={product.price} underlineShow={false} />
-                    <Divider />
+                    <div>
+                        <TextField name='code' floatingLabelText="Product Code" onChange={onChange} value={product.code} />
+                    </div>
+                    <div>
+                        <TextField name='name' floatingLabelText="Product Name" onChange={onChange} value={product.name} />
+                    </div>
+                        <TextField name='nameAr' floatingLabelText="Name Arabic" onChange={onChange} value={product.nameAr} />
+                    <div>
+                        <SelectField name='categoryId' floatingLabelText="Category" onChange={onSelectChange} value={product.categoryId} >
+                        {categories.map(category=>
+                            <MenuItem key={category._id} value={category._id} primaryText={category.name} />
+                        )}
+                        </SelectField>
+                    </div>
+                    <div>
+                        <TextField name='price' floatingLabelText="Price" onChange={onChange} value={product.price} />
+                    </div>
                     <Checkbox label="Status" onCheck={onCheckCheck} checked={product.status==1} style={styles.checkbox}  />
                 </CardText>
                 <CardActions>

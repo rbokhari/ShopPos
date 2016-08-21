@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-    devtool: 'eval-source-map',
+    devtool: '#eval-source-map',
     entry: {
         main: [
             'webpack-dev-server/client?http://localhost:8080',
@@ -23,7 +23,10 @@ module.exports = {
         loaders: [
             {
                 test: /\.jsx?$/, 
-                include: path.join(__dirname, 'src'),
+                include: [
+                    path.join(__dirname, 'src'),
+                    path.join(__dirname, 'shared')
+                ],
                 loader: 'react-hot!babel'
             },
             {

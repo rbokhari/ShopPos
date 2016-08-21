@@ -10,7 +10,7 @@ import ItemList from './ItemList';
 const fabStyle = {
     marginTop: 10,
     marginLeft: '90%'
-}
+};
 
 class ItemPage extends Component {
 
@@ -21,14 +21,14 @@ class ItemPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.error(nextProps);
-        this.props.loadItems();
+        if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
+            this.props.loadItems();
+        }
     }
-
 
     render() {
         const {items} = this.props;
-
+        console.error("items", {items});
         return (
             <div>
                 <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to={'/item/new'} />}>
@@ -45,7 +45,10 @@ ItemPage.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
-    return { items: state.items };
+    return { 
+        items: state.items,
+        branch: state.branch.current  
+    };
 }
 
 export default connect(mapStateToProps, actions)(ItemPage);

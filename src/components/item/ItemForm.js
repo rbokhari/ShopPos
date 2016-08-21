@@ -3,9 +3,7 @@ import {Link} from 'react-router';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import Divider from 'material-ui/Divider';
 import Checkbox from 'material-ui/Checkbox';
-//import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import ContentSave from 'material-ui/svg-icons/content/save';
@@ -26,14 +24,19 @@ const ItemForm = ( {item, onSave, onChange, loading, errors} ) => {
             <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
                 <CardHeader title="Item" subtitle="Add New" />
                 <CardText>
-                    <TextField name='code' hintText="code" floatingLabelText="Item Code" onChange={onChange} value={item.code} underlineShow={false} />
-                    <Divider />
-                    <TextField name='name' hintText="Name" floatingLabelText="Item Name" onChange={onChange} value={item.name} underlineShow={false} />
-                    <Divider />
-                    <TextField name='description' hintText="Description" multiLine={true} rows={2} rowsMax={4} 
-                        floatingLabelText="Description" onChange={onChange} value={item.description} underlineShow={false} />
-                    <Divider />
+                    <div>
+                        <TextField name='code' floatingLabelText="Item Code" onChange={onChange} value={item.code} />
+                    </div>
+                    <div>
+                    <TextField name='name' floatingLabelText="Item Name" onChange={onChange} value={item.name} />
+                    </div>
+                    <div>
+                    <TextField name='description' multiLine={true} rows={2} rowsMax={4} 
+                        floatingLabelText="Description" onChange={onChange} value={item.description} />
+                    </div>
+                    <div>
                     <Checkbox label="Status" style={styles.checkbox}  />
+                    </div>
                 </CardText>
                 <CardActions>
                     <RaisedButton icon={<ContentSave />} label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></RaisedButton>

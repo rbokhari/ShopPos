@@ -14,7 +14,6 @@ import ItemNew from './components/item/ItemNew.js';
 import StockNew from './components/purchase/StockNew';
 import PurchasePage from './components/purchase/PurchasePage';
 
-//import PurchaseOrder from './components/product/PurchaseOrder.js';
 import CategoryType from './components/category/CategoryType';
 import CategoryPage from './components/category/CategoryPage';
 import CategoryNew from './components/category/CategoryNew';
@@ -46,11 +45,10 @@ const store = createStoreWithMiddleware(reducers);
 const token = localStorage.getItem('token');
 
 if (token) {
-    store.dispatch(userInfo());
     store.dispatch({ type: AUTH_USER });
-
+    //store.dispatch(userInfo());
     //store.dispatch(loadProducts());
-    //store.dispatch(loadCustomers());
+    store.dispatch(loadCustomers());
 }
 
 const socket = io('http://localhost:3090');

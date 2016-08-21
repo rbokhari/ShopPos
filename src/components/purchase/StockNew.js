@@ -19,6 +19,8 @@ class StockNew extends Component {
             errors: {}
         };
 
+        this.props.loadItems();
+
         this.updateStockState = this.updateStockState.bind(this);
         this.onUpdateStockItem = this.onUpdateStockItem.bind(this);
         this.onUpdateStockQty = this.onUpdateStockQty.bind(this);
@@ -28,9 +30,9 @@ class StockNew extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        // if (this.props.stock.id != nextProps.stock.id) {
-        //     this.setState({stock: Object.assign({}. nextProps.stock)});
-        // }
+        if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
+            this.props.loadItems();
+        }
     }
 
     updateStockState(event) {
@@ -137,7 +139,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        createPurchaseOrder: bindActionCreators(actions.createPurchaseOrder, dispatch)
+        createPurchaseOrder: bindActionCreators(actions.createPurchaseOrder, dispatch),
+        loadItems: bindActionCreators(actions.loadItems, dispatch)
     };
 }
 

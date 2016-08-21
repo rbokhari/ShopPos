@@ -30,6 +30,12 @@ class ProductPage extends Component {
         this.props.loadProducts();
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
+            this.props.loadProducts();
+        }
+    }
+
     getCategoryNameById(id) {
     }
 
@@ -55,6 +61,7 @@ ProductPage.propTypes = {
 function mapStateToProps(state, ownProps) {
     return { 
         products: state.products,
+        branch: state.branch.current,
         categories: state.categories 
     };
 }

@@ -10,7 +10,7 @@ import ActionDoneAll from 'material-ui/svg-icons/action/done-all';
 import DeviceAccessTime from 'material-ui/svg-icons/device/access-time';
 
 import * as actions from '../../actions';
-import { CUSTOMER_STATUS } from '../../utils/constant';
+import { CUSTOMER_STATUS } from '../../../shared/constants';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';

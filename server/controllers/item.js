@@ -7,19 +7,27 @@ exports.createItem = function(req, res, next) {
     const desc = req.body.description;
     const stock = 0;
     const status = req.body.status;
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
 
     //return res.status(422).send({ error: req.headers.companyid});
 
-    if (!req.body.companyId){
+    if (!companyId){
         return res.status(422).send({ error: 'Company is not passed'});
     }
 
-    if (!req.body.officeId){
+    if (!officeId){
         return res.status(422).send({ error: 'office is not passed'});
     }
 
     // check if item code is already assigned
-    Item.findOne( { code: code }, function(err, existingItem) {
+    Item.findOne( { 
+            $and: [
+                { code: code }, 
+                { companyId: companyId }, 
+                { officeId: officeId }
+            ] }, function(err, existingItem) {
+
         if (err) { return next(err); }
 
         if (existingItem) {
@@ -27,8 +35,8 @@ exports.createItem = function(req, res, next) {
         }
 
         const item = new Item({
-            companyId: req.body.companyId,
-            officeId: req.body.officeId,
+            companyId: companyId,
+            officeId: officeId,
             code: code,
             name: name,
             description: desc,

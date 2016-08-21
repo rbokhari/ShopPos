@@ -6,7 +6,7 @@ exports.createCategory = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
 
-    Category.findOne( { $and: [ { name: name }, { companyId: companyId }] }, function(err, existingName) {
+    Category.findOne( { $and: [ { name: name }, { companyId: companyId }, { officeId: officeId }] }, function(err, existingName) {
         if (err) { return next(err); }
 
         if (existingName) {

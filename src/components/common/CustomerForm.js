@@ -20,9 +20,9 @@ const CustomerForm = ( { customer, onChange, onSubmit, onCancel, errors } ) => {
             width: '100%',
             marginTop: 20
         }}>
-            <TextField name="carNumber" style={styles} floatingLabelText="Car Number" hintText="Car Number" 
+            <TextField name="carNumber" style={styles} floatingLabelText="Car Number"  
                 onChange={onChange} value={customer.carNumber} />
-            <TextField name="mobileNumber" style={styles} floatingLabelText="Mobile No" hintText="Mobile No" 
+            <TextField name="mobileNumber" style={styles} floatingLabelText="Mobile No"  
                 onChange={onChange} value={customer.mobileNumber} />
             <RaisedButton backgroundColor="#a4c639" style={styles} label="Send To Kitchen" primary={true}
                 icon={<ContentSend />} onTouchTap={onSubmit} />

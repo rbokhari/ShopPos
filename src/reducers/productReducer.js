@@ -1,20 +1,22 @@
 import * as types from '../actions/types';
+import initialState from './initialState';
 
-export default function(state = [], action) {
+export default function(state = initialState.products, action) {
     switch(action.type) {
         case types.LOAD_PRODUCT_SUCCESS:
             //return [...state, ...action.items];
-            return action.products;
+            return action.payload;
         case types.CREATE_PRODUCT_SUCCESS:
+        console.error("productReducer", action.payload, state);
             return [    
                 ...state, 
-                Object.assign({}, action.product)
+                Object.assign({}, action.payload)
             ];
 
         case types.UPDATE_PRODUCT_SUCCESS:
             return [ 
-                ...state.filter( product => product._id !== action.product._id), 
-                Object.assign({}, action.product)
+                ...state.filter( product => product._id !== action.payload._id), 
+                Object.assign({}, action.payload)
             ];
 
 

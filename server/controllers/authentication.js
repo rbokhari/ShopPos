@@ -3,6 +3,7 @@ const User = require('../models/user');
 const Company = require('../models/company');
 const Office = require('../models/office');
 const config = require('../config');
+const CONSTANT = require('../../shared/constants1');
 
 
 function tokenForUser(user) {
@@ -12,18 +13,14 @@ function tokenForUser(user) {
 
 exports.signin = function(req, res, next) {
     // user already authenticated, just give token now
-    const user = {
-        id: req.user._id,
-        name: req.user.email,
-        roleId: req.user.roleId,
-        branchId: req.user.officeId,
-        companyId: req.user.companyId,
-        status: req.user.status
-    };
-    res.send( { token: tokenForUser(req.user), user });
-};
-
-exports.user = function(req, res, next) {
+    // const user = {
+    //     id: req.user._id,
+    //     name: req.user.email,
+    //     roleId: req.user.roleId,
+    //     branchId: req.user.officeId,
+    //     companyId: req.user.companyId,
+    //     status: req.user.status
+    // };
     const user = req.user;
     var result = {
         userId: user._id,
@@ -38,23 +35,103 @@ exports.user = function(req, res, next) {
                 if (err) { return next(err); }
                 if (company) {
                     //result = { ...result, { companyName: company.name, companyDisplay: company.displayName }  } ;
-                    result = Object.assign({}, result, { company: { name: company.name, display: company.displayName} });
+                    result = Object.assign({}, result, { company: { companyId: company._id, name: company.name, displayName: company.displayName} });
 
-                    if (user.branchId) {
-                        Office.findById(user.branchId, function(err, branch) {
+                    if (result.officeId !== 0) {
+                        Office.findById(result.officeId, function(err, branch) {
                             if (err) { return next(err); }
                             if (branch) {
-                                result = Object.assign({}, result, { branch: { name: branch.name, display: branch.displayName, office: branch.officeNo, mobile: branch.mobileNo} });
+                                result = Object.assign({}, 
+                                    result, 
+                                    { 
+                                        branch: [
+                                            { 
+                                                branchId: branch._id,
+                                                name: branch.name, 
+                                                display: branch.displayName, 
+                                                office: branch.officeNo, 
+                                                mobile: branch.mobileNo
+                                            }
+                                        ] 
+                                    });
+                                //res.send({ user: result });
+                                res.send( { token: tokenForUser(user), user: result });
+                            }
+                        });
+                    }else {
+                        if (user.roleId === CONSTANT.USER_ROLE.ADMIN) {
+
+                            Office.find({companyId: user.companyId}, function(err, existingBranches) {
+                                if (err) { return next(err); }
+                                if (existingBranches) {
+                                    const branches = existingBranches.map(function(branch, i){
+                                        return {
+                                            branchId: branch._id,
+                                            name: branch.name,
+                                            display: branch.display,
+                                            office: branch.officeNo,
+                                            mobile: branch.mobileNo
+                                        }; 
+                                    });
+                                    
+                                    result = Object.assign({}, result, { branch: branches });
+                                    //res.send( { user: result });
+                                    res.send( { token: tokenForUser(user), user: result });
+                                }
+                            });
+                        }else {
+                            res.send( { token: tokenForUser(user), user: result });
+                        }
+                    }
+                }
+            });
+        }
+    }
+    
+};
+
+exports.user = function(req, res, next) {
+    const user = req.user;
+    var result = {
+        userId: user._id,
+        name: user.email,
+        roleId: user.roleId,
+        status: user.status,
+        companyId: user.companyId,
+        officeId: user.officeId ? user.officeId : 0
+    };
+    if (user) {
+        if (user.companyId) {
+            Company.findById(user.companyId, function(err,company) {
+                if (err) { return next(err); }
+                if (company) {
+                    //result = { ...result, { companyName: company.name, companyDisplay: company.displayName }  } ;
+                    result = Object.assign({}, result, { company: { companyId: company._id, name: company.name, displayName: company.displayName} });
+
+                    if (user.officeId) {
+                        Office.findById(user.officeId, function(err, branch) {
+                            if (err) { return next(err); }
+                            if (branch) {
+                                result = Object.assign({}, result, { branch: { branchId: branch._id, name: branch.name, displayName: branch.displayName, office: branch.officeNo, mobile: branch.mobileNo} });
                                 res.send({ user: result });
                             }
                         });
                     }else {
-                        if (user.roleId == config.role.ADMIN) {
-                            Office.find({companyId: user.companyId}, function(err, branches) {
+                        if (user.roleId == CONSTANT.USER_ROLE.ADMIN) {
+                            Office.find({companyId: user.companyId}, function(err, existingBranches) {
                                 if (err) { return next(err); }
-
-                                if (branches) {
-                                    result = Object.assign({}, result, { branchCount: branches.length });
+                                if (existingBranches) {
+                                    const branches = existingBranches.map(function(branch, i){
+                                        return {
+                                            branchId: branch._id,
+                                            name: branch.name,
+                                            displayName: branch.displayName,
+                                            office: branch.officeNo,
+                                            mobile: branch.mobileNo
+                                        }; 
+                                    });
+                                    result = Object.assign({}, result, { branch: branches });
+                                    //res.send( { user: result });
                                     res.send( { user: result });
                                 }
                             });
@@ -115,7 +192,7 @@ exports.createAccount = function(req, res, next) {
                     email: email,
                     password: password,
                     companyId: company._id,
-                    roleId: config.role.ADMIN,
+                    roleId: CONSTANT.USER_ROLE.ADMIN,
                     status: 1
                 });
 

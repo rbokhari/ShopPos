@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const officeSchema = new Schema({
     companyId: { type: Schema.ObjectId },
-    name: { type: String, unique: true, lowercase: true },
+    name: { type: String, lowercase: true },
     displayName: String,
     location: String,
     officeNo: String,

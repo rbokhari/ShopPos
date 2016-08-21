@@ -7,7 +7,6 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import Divider from 'material-ui/Divider';
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
@@ -31,9 +30,10 @@ const StockForm = ( { stock, items, onSave, onChange, onItemSelect, onQuantityCh
             <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
                 <CardHeader title="Stock" subtitle="Add New" />
                 <CardText>
-                    <TextField name='billNo' hintText="Bill No" floatingLabelText="Bill No" onChange={onChange} value={stock.billNo} underlineShow={false} />
-                    <TextField style={{margin:10}} name='billDate' hintText="Bill Date" floatingLabelText="Bill Date" onChange={onChange} value={stock.billDate} underlineShow={false} />
-                    <Divider />
+                    <div>
+                    <TextField name='billNo' floatingLabelText="Bill No" onChange={onChange} value={stock.billNo} />
+                    <TextField style={{margin:10}} name='billDate' floatingLabelText="Bill Date" onChange={onChange} value={stock.billDate} />
+                    </div>
                     <h3>Items</h3>
                     <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 750 }} selectable={false}>
                         <TableHeader displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={false}>

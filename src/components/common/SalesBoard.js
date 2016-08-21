@@ -28,6 +28,9 @@ class SalesBoard extends Component {
             },
             errors: {}
         };
+
+        this.props.loadCategories();
+        this.props.loadProducts();
         
         this.handleCategorySelect = this.handleCategorySelect.bind(this);
         this.handleProductSelect = this.handleProductSelect.bind(this);
@@ -89,11 +92,8 @@ class SalesBoard extends Component {
     }
 
     handleDeleteItem(index) {
-        console.log(index);
         const beforeItems = this.state.customer.products;
-        console.log("before",beforeItems);
         const afterItems = beforeItems.splice(index, 1);
-        console.log("after", afterItems);
         this.setState({ customer: afterItems });
     }
 
@@ -192,7 +192,9 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        createCustomer: bindActionCreators(actions.createCustomer, dispatch)
+        createCustomer: bindActionCreators(actions.createCustomer, dispatch),
+        loadCategories: bindActionCreators(actions.loadCategories, dispatch),
+        loadProducts: bindActionCreators(actions.loadProducts, dispatch)
     };
 }
 

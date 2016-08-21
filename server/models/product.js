@@ -6,9 +6,9 @@ const Schema = mongoose.Schema;
 const productSchema = new Schema({
     companyId: { type: Schema.ObjectId },
     officeId: { type: Schema.ObjectId },
-    code: { type: String, unique: true },
-    name: { type: String, unique: true },
-    nameAr: { type: String, unique: true },
+    code: { type: String },
+    name: { type: String },
+    nameAr: { type: String },
     categoryId: { type: Schema.ObjectId },
     price: { type: Number },
     status: {type : Number}

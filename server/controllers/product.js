@@ -9,14 +9,16 @@ exports.createProduct = function(req, res, next) {
     const categoryId = req.body.categoryId;
     const price = req.body.price;
     const status = req.body.status;
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
 
     //return res.status(422).send({ error: req.headers.companyid});
 
-    if (!req.body.companyId){
+    if (!companyId){
         return res.status(422).send({ error: 'Company is not passed'});
     }
 
-    if (!req.body.officeId){
+    if (!officeId){
         return res.status(422).send({ error: 'office is not passed'});
     }
 
@@ -29,8 +31,8 @@ exports.createProduct = function(req, res, next) {
         }
 
         const product = new Product({
-            companyId: req.body.companyid,
-            officeId: req.body.officeid,
+            companyId: companyId,
+            officeId: officeId,
             code: code,
             name: name,
             nameAr: nameAr,
@@ -46,6 +48,7 @@ exports.createProduct = function(req, res, next) {
             Category.findOne({_id: product.categoryId}, function(err, category) {
                 product.categoryName = category.name;
                 res.setHeader('Content-Type', 'application/json');
+                
                 res.json(product);
             });
         });
