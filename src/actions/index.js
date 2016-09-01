@@ -35,7 +35,7 @@ export function loadBranches() {
 
 export function changeBranch(branch) {
     return function( dispatch ) {
-        localStorage.setItem('officeId', branch._id);
+        localStorage.setItem('officeId', branch.branchId);
         dispatch({ 
             type: types.SWITCH_BRANCH,
             payload: branch
@@ -102,7 +102,7 @@ export function signinUser( {email, password }) {
                 //     payload: response.data.user
                 // });
                 const data = response.data.user;
-console.error(data);
+
                 const company = {
                     companyId: data.company.companyId,
                     name: data.company.name,
@@ -147,7 +147,7 @@ console.error(data);
                         dispatch({ type: types.SHOW_CREATE_BRANCH });
                     }
                 }                
-
+alert("last");
                 // redirect to dashboard
                 browserHistory.push('/');
             })
@@ -491,7 +491,8 @@ export function loadPurchasesSuccess( purchases ) {
 export function createPurchaseOrder( po ) {  // this becomes action to send to reducer
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
-        return purchaseOrderApi.savePurchaseOrder( po ).then( po => {
+        return purchaseOrderApi.savePurchaseOrder( po )
+        .then( po => {
             dispatch( createPurchaseOrderSuccess( po ) );
         }).catch( error => {
             throw( error );

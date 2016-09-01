@@ -64,6 +64,7 @@ CategoryPage.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
+    console.error("branch", state.branch.current);
     return { 
         categories: state.categories,
         user: state.auth.user ,

@@ -7,7 +7,6 @@ export default function( state = initialState.categories, action ) {
             //return [ ...state, { categories: action.payload } ];
             return action.payload;
         case types.CREATE_CATEGORY_SUCCESS:
-            console.error("category reducer", action.payload);
             return [
                 ...state,
                 Object.assign( {}, action.payload )

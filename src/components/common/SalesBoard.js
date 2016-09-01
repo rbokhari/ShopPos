@@ -51,6 +51,10 @@ class SalesBoard extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.initialize();
+        if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
+            this.props.loadCategories();
+            this.props.loadProducts();
+        }        
     }
 
     initialize() {
@@ -186,7 +190,8 @@ SalesBoard.propTypes = {
 function mapStateToProps(state, ownProps) {
     return {
         products: state.products,
-        categories: state.categories
+        categories: state.categories,
+        branch: state.branch.current
     };
 }
 

@@ -51,7 +51,6 @@ class CategoryNew extends Component {
         this.context.router.push( '/category' );
     }
 
-
     render() {
         return (
             <CategoryForm onChange={this.updateCategoryState} onSave={this.saveCategory}

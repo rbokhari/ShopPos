@@ -30,9 +30,9 @@ class StockNew extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
-            this.props.loadItems();
-        }
+        // if (this.props.branch.current.branchId !== localStorage.getItem('officeId')) {
+        //     this.props.loadItems();
+        // }
     }
 
     updateStockState(event) {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -25,12 +25,22 @@ class BranchListDialog extends Component {
 
     componentWillUpdate(nextProps) {
         //console.log("componentWillUpdate", nextProps);
+        if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
+            this.props.loadCustomers();
+        }                
     }
 
     handleClose() {
         const branchId = this.refs.branch.getSelectedValue();
         const currentBranch = this.props.branches.filter(item=> item._id === branchId)[0];
-        this.props.changeBranch(currentBranch);
+        const branch = {
+            branchId: currentBranch._id,
+            name: currentBranch.name,
+            displayName: currentBranch.displayName,
+            office: currentBranch.office,
+            mobile: currentBranch.mobile            
+        };
+        this.props.changeBranch(branch);
     }
 
     render() {
@@ -62,7 +72,8 @@ class BranchListDialog extends Component {
 function mapStateToProps(state) {
     return { 
         open : state.branch.isLoad,
-        branches: state.branch.all 
+        branches: state.branch.all,
+        branch: state.branch.current
     };
 }
 

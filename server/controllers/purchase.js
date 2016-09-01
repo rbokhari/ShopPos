@@ -1,6 +1,12 @@
 const Purchase = require('../models/purchase');
 const Item = require('../models/item');
 
+function updateItemStock(itemId, qty) {
+    Item.update({_id: itemId}, { $inc: {stock: qty} }, function(err) {
+        if (err) { console.error("err", err);}
+    });
+}
+
 exports.createPurchase = function(req, res, next) {
     const purchase = new Purchase({
         companyId: req.headers.companyid,

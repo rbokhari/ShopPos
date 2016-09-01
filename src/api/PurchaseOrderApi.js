@@ -9,7 +9,7 @@ class PurchaseOrderApi {
   }
 
   static savePurchaseOrder( purchaseOrder ) {
-    return Api.post('purchase/create', po, config);
+    return Api.post('purchase/create', purchaseOrder);
   }
 }
 
