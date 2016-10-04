@@ -28,14 +28,14 @@ const ItemForm = ( {item, onSave, onChange, loading, errors} ) => {
                         <TextField name='code' floatingLabelText="Item Code" onChange={onChange} value={item.code} />
                     </div>
                     <div>
-                    <TextField name='name' floatingLabelText="Item Name" onChange={onChange} value={item.name} />
+                        <TextField name='name' floatingLabelText="Item Name" onChange={onChange} value={item.name} />
                     </div>
                     <div>
-                    <TextField name='description' multiLine={true} rows={2} rowsMax={4} 
-                        floatingLabelText="Description" onChange={onChange} value={item.description} />
+                        <TextField name='description' multiLine={true} rows={2} rowsMax={4} 
+                            floatingLabelText="Description" onChange={onChange} value={item.description} />
                     </div>
                     <div>
-                    <Checkbox label="Status" style={styles.checkbox}  />
+                        <Checkbox label="Status" style={styles.checkbox} checked={item.status}  /> {item.status}
                     </div>
                 </CardText>
                 <CardActions>

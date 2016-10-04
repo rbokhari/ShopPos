@@ -28,7 +28,6 @@ class ItemPage extends Component {
 
     render() {
         const {items} = this.props;
-        console.error("items", {items});
         return (
             <div>
                 <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to={'/item/new'} />}>

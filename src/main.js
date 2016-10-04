@@ -28,6 +28,8 @@ import UserNew from './components/user/UserNew';
 import KitchenBoard from './components/common/kitchenBoard';
 import DispatchBoard from './components/common/DispatchBoard';
 
+import Report from './components/report/report';
+
 import SignIn from './components/auth/signin';
 import Signout from './components/auth/signout';
 import CreateAccount from './components/auth/createAccount';
@@ -78,7 +80,8 @@ ReactDOM.render(
                 <Route path="type" component={CategoryType} />
                 
                 <Route path="category" component={CategoryPage} />
-                <Route path="categorynew" component={CategoryNew} />
+                <Route path="category/new" component={CategoryNew} />
+                <Route path="category/:id/edit" component={CategoryNew} />
                 
                 <Route path="product" component={ProductPage} />
                 <Route path="product/new" component={ProductNew} />
@@ -86,6 +89,8 @@ ReactDOM.render(
 
                 <Route path="kitchen" component={KitchenBoard} />
                 <Route path="dispatch" component={DispatchBoard} />
+
+                <Route path="report" component={Report} />
                 
                 <Route path="users" component={UserPage} />
                 <Route path="users/new" component={UserNew} />

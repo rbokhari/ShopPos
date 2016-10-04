@@ -31,30 +31,25 @@ exports.createCategory = function(req, res, next) {
 };
 
 exports.updateCategory = function(req, res) {
-    res.json('Got a PUT request at category');
+    //res.json('Got a PUT request at category');
+    const id = req.body._id;
+    const name = req.body.name;
+    const status = req.body.status;
+    const description = req.body.description;
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
 
-    // const name = req.body.name;
-    // const status = req.body.status;
+    Category.update( { $and: [ { _id: id } , 
+                            { companyId: companyId }, 
+                            { officeId: officeId }
+                        ] }, 
+                    { name: name, status: status }, 
+                        function(err, existingItem) {
 
-    // res.json(name);
-//     Category.findOne( { name: name }, function(err, existingName) {
-//         if (err) { return next(err); }
+        if (err) { return next(err); }
+        res.send('Done Category Update');
+    });
 
-//         if (existingName) {
-//             return res.status(422).send({ error: 'Name is in defined !'});
-//         }
-
-//         const category = new Category({
-//             name: name,
-//             status: status
-//         });
-// res.json(category);
-        // category.findOneAndUpdate( {_id: req.params.id} ,  function(err, category){ 
-        //     if (err) { return next(err); }
-
-        //     res.json(category);
-        // });
-//    });
 
 };
 

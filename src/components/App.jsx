@@ -23,6 +23,7 @@ import ContentLink from 'material-ui/svg-icons/content/link';
 import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 import Person from 'material-ui/svg-icons/social/person';
 import ActionReceipt from 'material-ui/svg-icons/action/receipt';
+import ActionPrint from 'material-ui/svg-icons/action/print';
 import ActionShopping from 'material-ui/svg-icons/action/shopping-cart';
 import ActionShoppingBasket from 'material-ui/svg-icons/action/shopping-basket';
 import ActionAssignment from 'material-ui/svg-icons/action/assignment';
@@ -116,6 +117,9 @@ class App extends React.Component {
                         linkButton containerElement={<Link to={'/category'} />} onTouchTap={this._handleClose} />
                     <MenuItem primaryText="Products" leftIcon={<ActionReceipt />} 
                         linkButton containerElement={<Link to={'/product'} />} onTouchTap={this._handleClose} />
+                    <Divider />
+                    <MenuItem primaryText="Reports" leftIcon={<ActionPrint />} 
+                        linkButton containerElement={<Link to={'/report'} />} onTouchTap={this._handleClose} />
                     <Divider />
                     { this.props.user && this.props.user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Users" leftIcon={<Person />} 
                         linkButton containerElement={<Link to={'/users'} />} onTouchTap={this._handleClose} /> }

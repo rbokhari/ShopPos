@@ -8,7 +8,12 @@ class ItemApi {
   }
 
   static saveItem( item ) {
-    return Api.post('item/create', item);
+    console.info("saveItem", item);
+    if (item._id !== 0) {
+      return Api.put('item/'+item._id+'/update', item);
+    } else {
+      return Api.post('item/create', item);
+    }
   }
 
   static deleteItem( itemId ) {

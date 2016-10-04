@@ -28,12 +28,14 @@ class Api {
     }
 
     static put(url, data) {
-        // const headers = {
-        //     'CompanyId': localStorage.getItem('companyId'),
-        //     'OfficeId': localStorage.getItem('officeId')
-        // };
+        const headers = {
+            'authorization': localStorage.getItem('token'),
+            'CompanyId': localStorage.getItem('companyId'),
+            'OfficeId': localStorage.getItem('officeId')
+        };
+        console.info(`${API_URL}/${url}`);
         const params = Object.assign( {}, data );
-        return axios.put(`${API_URL}/${url}`, params);
+        return axios.put(`${API_URL}/${url}`, params, { headers: headers });
     }
 
 }

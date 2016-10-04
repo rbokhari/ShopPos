@@ -1,12 +1,25 @@
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
+import { reduxForm } from 'redux-form';
+//import { bindActionCreators } from 'redux';
+//import { connect } from 'react-redux';
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as actions from '../../actions';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
+import RaisedButton from 'material-ui/RaisedButton';
 
+import ContentSave from 'material-ui/svg-icons/content/save';
+import ContentClear from 'material-ui/svg-icons/content/clear';
+
+import { createItem } from '../../actions';
 import ItemForm from './ItemForm';
 
 class ItemNew extends Component {
+
+    // static contextTypes = {
+    //     router: PropTypes.object
+    // };
 
     constructor(props, context) {
         super(props, context);
@@ -16,8 +29,8 @@ class ItemNew extends Component {
             errors: {}
         };
 
-        this.updateItemState = this.updateItemState.bind(this);
-        this.saveItem = this.saveItem.bind(this);
+        //this.updateItemState = this.updateItemState.bind(this);
+        //this.saveItem = this.saveItem.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -26,34 +39,52 @@ class ItemNew extends Component {
         }
     }
 
-    updateItemState(event) {
-        const field = event.target.name;
-        const item = this.state.item;
-        item[field] = event.target.value;
-        this.setState({
-            item: item
-        });
-    }
-
-    saveItem(event) {
-        event.preventDefault();
-        //console.log(`new value is ${this.state.item}`);
-        this.props.createItem(this.state.item);
-        this.context.router.push('/item');
+    saveItem(props) {
+        this.props.createItem(props)
+            .then(() => {
+                this.context.router.push('/item');
+            }, (error) => {
+                console.info(error);
+            });
     }
 
     render() {
+        const {handleSubmit, fields: { _id, code, name, description, status } }  = this.props;
+        
         return (
-            <ItemForm onChange={this.updateItemState} onSave={this.saveItem}
-                item={this.state.item} errors={this.state.errors} />
+            <form onSubmit={handleSubmit(this.saveItem.bind(this))}>
+                <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
+                    <CardHeader title="Item" subtitle={ _id.value === 0 ?  'Add New' : 'Edit'} />
+                    <CardText>
+                        <div>
+                            <TextField name='code' floatingLabelText="Item Code" {...code} errorText={code.touched && code.error} />
+                        </div>
+                        <div>
+                            <TextField name='name' floatingLabelText="Item Name" {...name} errorText={name.touched && name.error} />
+                        </div>
+                        <div>
+                            <TextField name='description' multiLine={true} rows={2} rowsMax={4} 
+                                floatingLabelText="Description" {...description} />
+                        </div>
+                        <div>
+                            <Checkbox label="Status" {...status} checked={status.value} onCheck={(e, checked) => status.onChange(checked)}  />
+                        </div>
+                    </CardText>
+                    <CardActions>
+                        <RaisedButton type='submit' icon={<ContentSave />} label={_id.value === 0 ? 'Save' : 'Update'} primary={true} ></RaisedButton>
+                        <RaisedButton icon={<ContentClear />} label="Cancel" secondary={true} linkButton containerElement={<Link to="/item" />} />
+                    </CardActions>
+                </Card>
+            </form>
         );
     }
-
 }
+            // <ItemForm onChange={this.updateItemState} onSave={this.saveItem}
+            //     item={this.state.item} errors={this.state.errors} />
 
 ItemNew.propTypes = {
-    item: PropTypes.object.isRequired,
-    createItem: PropTypes.func.isRequired,
+    //item: PropTypes.object.isRequired,
+    //createItem: PropTypes.func.isRequired,
 }
 
 // Pull in the React Router context so router is available on this.context.router
@@ -67,11 +98,26 @@ function getItemById(items, id) {
     return null;
 }
 
+function validateForm(values) {
+    const errors = {};
+    console.log(values);
+
+    if (!values.code) {
+        errors.code = 'Code required';
+    }
+
+    if (!values.name) {
+        errors.name = 'Name required';
+    }
+
+    return errors;
+}
+
 function mapStateToProps(state, ownProps) {
     const itemId = ownProps.params.id;
 
     let item = {
-        companyId: '', officeId: '', code: '', name: '', description: '', stock: 0, status: 1
+        _id: 0, code: '', name: '', description: '', stock: 0, status: 1
     };
 
     if (itemId && state.items.length > 0 ) {
@@ -79,14 +125,21 @@ function mapStateToProps(state, ownProps) {
     }
 
     return {
-        item: item
+        item: item,
+        initialValues: item
     };
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        createItem: bindActionCreators(actions.createItem, dispatch)
-    };
-}
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         createItem: bindActionCreators(actions.createItem, dispatch)
+//     };
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemNew);
+export default reduxForm({
+    form: 'item',
+    fields: ['_id', 'code', 'name', 'description', 'status' ],
+    validate: validateForm
+}, mapStateToProps, { createItem: createItem } )(ItemNew);
+
+//export default connect(mapStateToProps, mapDispatchToProps)(ItemNew);

@@ -24,6 +24,7 @@ class SalesBoard extends Component {
                 carNumber: '',
                 mobileNumber: '',
                 status: 0,
+                total: 0,
                 products: []   
             },
             errors: {}
@@ -37,6 +38,7 @@ class SalesBoard extends Component {
         this.handleIncreaseQty = this.handleIncreaseQty.bind(this);
         this.handleDecreaseQty = this.handleDecreaseQty.bind(this);
         this.handleDeleteItem = this.handleDeleteItem.bind(this);  
+        //this.calculateTotal = this.calculateTotal.bind(this);
         this.handleCustomerFormChange = this.handleCustomerFormChange.bind(this);
         this.handleCustomerFormSubmit = this.handleCustomerFormSubmit.bind(this);
         this.handleCustomerFormCancel = this.handleCustomerFormCancel.bind(this);
@@ -75,6 +77,17 @@ class SalesBoard extends Component {
         this.setState({ customer: customer });
     }
 
+    calculateTotal() {
+        const items = this.state.customer.products;
+        var total = 0;
+        _.each(items, (item, index) => {
+            total += item.price;
+        });
+        var customer = this.state.customer;
+        customer.total = parseFloat(Math.round(total * 100) / 100).toFixed(3);
+        this.setState({ customer: customer });
+    }
+
     handleCategorySelect(id) {
         //console.info(id);
         this.filterProducts(id);
@@ -83,22 +96,26 @@ class SalesBoard extends Component {
     handleIncreaseQty(index) {
         const customer = this.state.customer;
         customer.products[index].qty +=1;
+        customer.products[index].price = parseFloat((customer.products[index].qty * customer.products[index].unitPrice)*100/100).toFixed(3) ;
         this.setState({ customer: customer });
+        this.calculateTotal();
     }
 
     handleDecreaseQty(index) {
         var customer = this.state.customer;
         customer.products[index].qty -=1;
-        if (customer.products[index].qty == 0){
-            customer.products = customer.products.splice(index, 1);
+        customer.products[index].price = customer.products[index].qty * customer.products[index].unitPrice;
+        if (customer.products[index].qty === 0){
+            customer.products.splice(index, 1);
         }
         this.setState({ customer: customer });
+        this.calculateTotal();
     }
 
     handleDeleteItem(index) {
-        const beforeItems = this.state.customer.products;
-        const afterItems = beforeItems.splice(index, 1);
-        this.setState({ customer: afterItems });
+        const beforeItems = this.state.customer;
+        console.error(beforeItems, index);
+        this.setState({ customer: beforeItems });
     }
 
     handleProductSelect(id, productName, categoryId, categoryName, qty, price) {
@@ -110,6 +127,7 @@ class SalesBoard extends Component {
             categoryId: categoryId,
             categoryName: categoryName,
             qty: qty,
+            unitPrice: price,
             price: price
         };
         const customer = this.state.customer;
@@ -149,7 +167,7 @@ class SalesBoard extends Component {
                         }} >
                         <CardHeader title="Customer"  />
                         
-                        <CustomerItems products={this.state.customer.products} 
+                        <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total}
                             onHandleIncrease={this.handleIncreaseQty} onHandleDecrease={this.handleDecreaseQty} onHandleDelete={this.handleDeleteItem}
                             errors={this.state.errors} />
 

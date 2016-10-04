@@ -7,8 +7,12 @@ class CategoryApi {
     return Api.get('category');
   }
 
-  static saveCategory( category ) {
-    return Api.post('category/create', category);
+  static saveCategory( category ) {    
+    if (category._id !== 0) {
+      return Api.put(`category/${category._id}/update`, category);
+    } else {
+      return Api.post('category/create', category);
+    }
   }
 
   static deleteCategory( categoryId ) {

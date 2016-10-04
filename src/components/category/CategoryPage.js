@@ -49,7 +49,7 @@ class CategoryPage extends Component {
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to="categorynew" />}>
+                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to="/category/new" />}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <CategoryList categories={categories} />
@@ -64,7 +64,6 @@ CategoryPage.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
-    console.error("branch", state.branch.current);
     return { 
         categories: state.categories,
         user: state.auth.user ,

@@ -55,8 +55,24 @@ exports.createItem = function(req, res, next) {
 };
 
 exports.updateItem = function(req, res) {
-    res.send('Got a PUT request at /item');
+    const id = req.body._id;
+    const code = req.body.code;
+    const name = req.body.name;
+    const desc = req.body.description;
+    const status = req.body.status;
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
 
+    Item.update( { $and: [ { _id: id } , 
+                            { companyId: companyId }, 
+                            { officeId: officeId }
+                        ] }, 
+                    { code: code, name: name, description: desc, status: status }, 
+                    function(err, existingItem) {
+
+        if (err) { return next(err); }
+        res.send('Done Item Update');
+    });
 };
 
 exports.getAll = function(req, res, next) {

@@ -12,7 +12,7 @@ import PurchaseList from './PurchaseList';
 const fabStyle = {
     marginTop: 10,
     marginLeft: '90%'
-}
+};
 
 class PurchasePage extends Component {
 

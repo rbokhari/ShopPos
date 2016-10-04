@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
-import { reduxForm } from 'redux-form';     // its like a connect function (container) from redux library
+import { Field, FieldArray, reduxForm } from 'redux-form';     // its like a connect function (container) from redux library
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
@@ -23,6 +23,27 @@ const styles = {
     marginBottom: 16,
   },
 };
+
+const renderFields = ({ items }) => (
+    items.map((item, index) =>
+        <TableRow key={i} >
+            <TableRowColumn style={{width: 5}}>{index+1}</TableRowColumn>
+            <TableRowColumn>
+                <SelectField name='itemId' hintText="select item" value={item.itemId} onChange={onItemSelect.bind(this, i)} underlineShow={false}>
+                    {items.map(item=>
+                        <MenuItem key={item._id} value={item._id} primaryText={item.name} />
+                    )}
+                </SelectField>
+            </TableRowColumn>
+            <TableRowColumn>
+                <TextField name='qty' value={item.qty} underlineShow={true} />
+            </TableRowColumn>
+            <TableRowColumn style={{width: 25}}>
+                <IconButton onClick={onRemoveStock.bind(this, i)}><ActionDelete color={red500} /></IconButton>
+            </TableRowColumn>
+        </TableRow>
+    )
+)
 
 const StockForm = ( { stock, items, onSave, onChange, onItemSelect, onQuantityChange, onAddStock, onRemoveStock, loading, errors } ) => {
     return (
@@ -47,24 +68,7 @@ const StockForm = ( { stock, items, onSave, onChange, onItemSelect, onQuantityCh
                             </TableRow>
                         </TableHeader>
                         <TableBody  displayRowCheckbox={false}>
-                            {stock.items.map((itm, i) =>
-                                <TableRow key={i} >
-                                    <TableRowColumn style={{width: 5}}>{i+1}</TableRowColumn>
-                                    <TableRowColumn>
-                                        <SelectField name='itemId' hintText="select item" value={itm.itemId} onChange={onItemSelect.bind(this, i)} underlineShow={false}>
-                                        {items.map(item=>
-                                            <MenuItem key={item._id} value={item._id} primaryText={item.name} />
-                                        )}
-                                        </SelectField>
-                                    </TableRowColumn>
-                                    <TableRowColumn>
-                                        <TextField name='qty' onChange={onChange} value={itm.qty} onChange={onQuantityChange.bind(this, i)} underlineShow={true} />
-                                    </TableRowColumn>
-                                    <TableRowColumn style={{width: 25}}>
-                                        <IconButton onClick={onRemoveStock.bind(this, i)}><ActionDelete color={red500} /></IconButton>
-                                    </TableRowColumn>
-                                </TableRow>
-                            )}
+                            <FieldArray name="items" component={renderFields} items={items} />
                         </TableBody>
                 </Table>                
                 </CardText>
@@ -90,4 +94,8 @@ StockForm.propTypes = {
     errors: React.PropTypes.object
 }
 
-export default StockForm;
+//export default StockForm;
+export default reduxForm({
+    form: 'stock',
+    fields: ['']
+})(StockForm)

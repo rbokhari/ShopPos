@@ -306,8 +306,10 @@ export function createItem( item ) {  // this becomes action to send to reducer
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
         return itemApi.saveItem( item ).then( item => {
-            item.id ? dispatch( updateItemSuccess( item ) ) : dispatch( createItemSuccess( item ) );
+            console.info("item", item);
+            item._id ? dispatch( updateItemSuccess( item ) ) : dispatch( createItemSuccess( item ) );
         }).catch( error => {
+            console.error("createItem", error);
             throw( error );
         })
     };
