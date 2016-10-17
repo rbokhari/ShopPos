@@ -32,8 +32,7 @@ const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecreas
                                 {index+1}
                             </TableRowColumn>
                             <TableRowColumn style={{width: 200}}>
-                                {item.productName} 
-                                <Badge badgeContent={item.unitPrice} secondary={true} />
+                                {item.productName} ({item.unitPrice})
                             </TableRowColumn>
                             <TableRowColumn style={{width: 100}}>
                                 {item.categoryName}

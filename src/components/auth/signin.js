@@ -31,12 +31,16 @@ class SignIn extends Component {
         return (
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                 <div>Signin</div>
-                <TextField name="name" floatingLabelText="Email" {...email} />
-                <br />
-                <TextField type="password" name="password" floatingLabelText="Password" {...password} />
-                <br />
-                {this.renderAlert()}
-                <RaisedButton type="submit" primary={true} label='Sigin' ></RaisedButton>
+                <div>
+                    <TextField name="name" floatingLabelText="Email" {...email} />
+                </div>
+                <div>
+                    <TextField type="password" name="password" floatingLabelText="Password" {...password} />
+                </div>
+                    {this.renderAlert()}
+                <div>
+                    <RaisedButton type="submit" primary={true} label='Sigin' ></RaisedButton>
+                </div>
             </form>
         );
     }

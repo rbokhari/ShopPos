@@ -21,9 +21,9 @@ class ItemPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
-            this.props.loadItems();
-        }
+        // if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
+        //     this.props.loadItems();
+        // }
     }
 
     render() {

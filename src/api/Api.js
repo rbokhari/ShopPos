@@ -4,16 +4,20 @@ const  API_URL = 'http://localhost:3090';
 
 class Api {
     
-    static get(url) {
+    static get(url, params = {}) {
         const headers = {
             'authorization': localStorage.getItem('token'),
             'CompanyId': localStorage.getItem('companyId'),
             'OfficeId': localStorage.getItem('officeId')
         };
+        const data = params;
+console.info("api", `${API_URL}/${url}`);
+console.info("api", data);
         return axios({
             url: `${API_URL}/${url}`,
             method: 'get',
-            headers: headers
+            headers: headers,
+            params: data
         });
     }
 

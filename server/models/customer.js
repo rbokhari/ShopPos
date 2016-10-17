@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const customerSchema = new Schema({
     companyId: {type: Schema.ObjectId },
     officeId: { type: Schema.ObjectId },
+    billNo: { type: String },
     carNumber: { type: String },
     mobileNumber: String,
     created: { type: Date, default: Date.now },
@@ -15,7 +16,13 @@ const customerSchema = new Schema({
         categoryId: { type: Schema.ObjectId },
         categoryName: String,
         qty: Number,
-        price: Number
+        unitPrice: Number,
+        price: Number,
+        items: [{
+            itemId: { type: Schema.ObjectId },
+            itemName: String,
+            qty: Number
+        }],
     }],
     status: {type : Number}
 });

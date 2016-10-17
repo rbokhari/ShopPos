@@ -10,7 +10,7 @@ const Product = require('./controllers/product');
 const Customer = require('./controllers/customer');
 const Purchase = require('./controllers/purchase');
 const User = require('./controllers/user');
-
+const Expense = require('./controllers/expense');
 
 const requireAuth = passport.authenticate('jwt', { session: false });   // deafult is cookie based, which we turn false
 const requireLocal = passport.authenticate('local', { session: false });
@@ -56,7 +56,10 @@ module.exports = function(app, io) {
 
     // Customer Routes
     app.post('/customer/create', Customer.createCustomer, (req, res, next) => { io.sockets.emit('customer', '1'); });
-    app.put('/customer/:id/:newStatus', Customer.updateCustomer, (req, res, next) => { io.sockets.emit('customer', '1'); });
+    app.put('/customer/:id/:newStatus', 
+                Customer.updateCustomer, 
+                Customer.printReceipt, 
+                (req, res, next) => { io.sockets.emit('customer', '1'); });
     app.get('/customer/:status', Customer.getAllByStatus); //, (req, res) => { console.log("socket emit here"); io.sockets.emit('customer', '1'); } );
     app.get('/customer/:id', Customer.getById);
 
@@ -72,6 +75,16 @@ module.exports = function(app, io) {
     app.put('/users/:id/update', User.updateUser);
     app.get('/users/', User.getAll);
     app.get('/users/:id', User.getById);
+
+    // Expense Routes
+    app.post('/expense/create', Expense.createExpense);
+    app.put('/expense/:id/update', Expense.updateExpense);
+    app.get('/expense/', Expense.getAll);
+    app.get('/expense/:id', Expense.getById);
+
+    // Reports Routes 
+    app.get('/customer/transaction/bydate', Customer.getTransaction);
+    app.get('/expense/transaction/bydate', Expense.getByDate);
 
     // app.get('/', function(req, res, next) {
     //     res.send(['a', 'b', 'c']);

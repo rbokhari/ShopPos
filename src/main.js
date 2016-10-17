@@ -25,10 +25,13 @@ import Dashboard from './components/common/Dashboard';
 import UserPage from './components/user/UserPage';
 import UserNew from './components/user/UserNew';
 
+import ExpensePage from './components/expense/ExpensePage';
+import ExpenseNew from './components/expense/ExpenseNew';
+
 import KitchenBoard from './components/common/kitchenBoard';
 import DispatchBoard from './components/common/DispatchBoard';
 
-import Report from './components/report/report';
+import ReportPage from './components/report/ReportPage';
 
 import SignIn from './components/auth/signin';
 import Signout from './components/auth/signout';
@@ -90,10 +93,14 @@ ReactDOM.render(
                 <Route path="kitchen" component={KitchenBoard} />
                 <Route path="dispatch" component={DispatchBoard} />
 
-                <Route path="report" component={Report} />
+                <Route path="report" component={ReportPage} />
                 
                 <Route path="users" component={UserPage} />
                 <Route path="users/new" component={UserNew} />
+
+                <Route path="expense" component={ExpensePage} />
+                <Route path="expense/new" component={ExpenseNew} />
+                <Route path="expense/:id/edit" component={ExpenseNew} />
             </Route>
         </Router>
     </Provider>, 

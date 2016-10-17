@@ -13,7 +13,7 @@ import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
 import { createItem } from '../../actions';
-import ItemForm from './ItemForm';
+//import ItemForm from './ItemForm';
 
 class ItemNew extends Component {
 
@@ -34,9 +34,9 @@ class ItemNew extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.item.id != nextProps.item.id) {
-            this.setState({item: Object.assign({}. nextProps.item)});
-        }
+        // if (this.props.item.id != nextProps.item.id) {
+        //     this.setState({item: Object.assign({}. nextProps.item)});
+        // }
     }
 
     saveItem(props) {
@@ -72,7 +72,7 @@ class ItemNew extends Component {
                     </CardText>
                     <CardActions>
                         <RaisedButton type='submit' icon={<ContentSave />} label={_id.value === 0 ? 'Save' : 'Update'} primary={true} ></RaisedButton>
-                        <RaisedButton icon={<ContentClear />} label="Cancel" secondary={true} linkButton containerElement={<Link to="/item" />} />
+                        <RaisedButton icon={<ContentClear />} label="Cancel" linkButton containerElement={<Link to="/item" />} />
                     </CardActions>
                 </Card>
             </form>

@@ -8,9 +8,11 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import Checkbox from 'material-ui/Checkbox';
-import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 
+import ContentSave from 'material-ui/svg-icons/content/save';
+import ContentClear from 'material-ui/svg-icons/content/clear';
 import {blue500, red500, greenA200} from 'material-ui/styles/colors';
 import ContentAdd from 'material-ui/svg-icons/content/add-circle';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
@@ -24,25 +26,25 @@ const styles = {
   },
 };
 
-const ProductForm = ( {product, stock, categories, onSave, onChange, onSelectChange, onCheckCheck, loading, errors} ) => {
+const ProductForm = ( {product, stock, categories, items, onSave, onChange, onSelectChange, onCheckCheck, onItemSelect, onUpdateProductQty, onItemAdd, onItemRemove, loading, errors} ) => {
     return (
         <form>
             <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
-                <CardHeader title="Product" subtitle={product._id ? 'Edit' : 'Add New'} />
+                <CardHeader title="Product" subtitle={product._id === '0' ? 'Add New' : 'Edit'} />
                 <CardText>
                     <div>
                         <TextField name='code' floatingLabelText="Product Code" onChange={onChange} value={product.code} />
-                    </div>
-                    <div>
-                        <TextField name='name' floatingLabelText="Product Name" onChange={onChange} value={product.name} />
-                    </div>
-                        <TextField name='nameAr' floatingLabelText="Name Arabic" onChange={onChange} value={product.nameAr} />
-                    <div>
                         <SelectField name='categoryId' floatingLabelText="Category" onChange={onSelectChange} value={product.categoryId} >
                         {categories.map(category=>
                             <MenuItem key={category._id} value={category._id} primaryText={category.name} />
                         )}
                         </SelectField>
+                    </div>
+                    <div>
+                        <TextField name='name' floatingLabelText="Product Name" onChange={onChange} value={product.name} />
+                        <TextField name='nameAr' floatingLabelText="Name Arabic" onChange={onChange} value={product.nameAr} />
+                    </div>
+                    <div>
                     </div>
                     <div>
                         <TextField name='price' floatingLabelText="Price" onChange={onChange} value={product.price} />
@@ -56,16 +58,35 @@ const ProductForm = ( {product, stock, categories, onSave, onChange, onSelectCha
                                 <TableHeaderColumn>Item</TableHeaderColumn>
                                 <TableHeaderColumn>Use Stock</TableHeaderColumn>
                                 <TableHeaderColumn style={{width: 25}}>
-                                    <IconButton ><ContentAdd color={greenA200} /></IconButton>
+                                    <IconButton onClick={onItemAdd}><ContentAdd color={greenA200} /></IconButton>
                                 </TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
-                        
+                        <TableBody  displayRowCheckbox={false}>
+                            {product.items.map((itm, i) =>
+                                <TableRow key={i} >
+                                    <TableRowColumn style={{width: 5}}>{i+1}</TableRowColumn>
+                                    <TableRowColumn>
+                                        <SelectField name='itemId' hintText="select item" value={itm.itemId} onChange={onItemSelect.bind(this, i)} underlineShow={false}>
+                                        {items.map(item=>
+                                            <MenuItem key={item._id} value={item._id} primaryText={item.name} />
+                                        )}
+                                        </SelectField>
+                                    </TableRowColumn>
+                                    <TableRowColumn>
+                                        <TextField name='qty' value={itm.qty} onChange={onUpdateProductQty.bind(this, i)} underlineShow={true} />
+                                    </TableRowColumn>
+                                    <TableRowColumn style={{width: 25}}>
+                                        <IconButton onClick={onItemRemove.bind(this, i)}><ActionDelete color={red500} /></IconButton>
+                                    </TableRowColumn>
+                                </TableRow>
+                            )}
+                        </TableBody>
                     </Table>                
                 </CardText>
                 <CardActions>
-                    <FlatButton label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></FlatButton>
-                    <FlatButton label="Cancel" linkButton containerElement={<Link to="/product" />} />
+                    <RaisedButton icon={<ContentSave />} label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></RaisedButton>
+                    <RaisedButton icon={<ContentClear />} label="Cancel" linkButton containerElement={<Link to="/product" />} />
                 </CardActions>
             </Card>
         </form>
@@ -79,6 +100,7 @@ ProductForm.propTypes = {
     onChange: React.PropTypes.func.isRequired,
     onSelectChange: React.PropTypes.func.isRequired,
     onCheckCheck: React.PropTypes.func.isRequired,
+    onItemSelect: React.PropTypes.func.isRequired,
     loading: React.PropTypes.bool,
     errors: React.PropTypes.object
 };

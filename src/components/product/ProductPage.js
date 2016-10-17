@@ -31,9 +31,9 @@ class ProductPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
-            this.props.loadProducts();
-        }
+        // if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
+        //     this.props.loadProducts();
+        // }
     }
 
     getCategoryNameById(id) {

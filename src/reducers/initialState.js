@@ -13,5 +13,8 @@ export default {
     customers: [],
     purchaseOrders: [],
     users : [],
+    expenses: [],
+    reportCustomerData: [],
+    reportExpenseData: [],
     ajaxCallsInProgress: 0
 };

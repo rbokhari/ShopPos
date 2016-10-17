@@ -53,16 +53,15 @@ class SalesBoard extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.initialize();
-        if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
-            this.props.loadCategories();
-            this.props.loadProducts();
-        }        
+        // if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
+        //     this.props.loadCategories();
+        //     this.props.loadProducts();
+        // }        
     }
 
     initialize() {
         if (this.props.categories) {
             const category = this.props.categories[0];
-            //console.log(category[0]);
             //this.filterProducts(category._id);
         }
     }
@@ -89,7 +88,6 @@ class SalesBoard extends Component {
     }
 
     handleCategorySelect(id) {
-        //console.info(id);
         this.filterProducts(id);
     }
 
@@ -105,7 +103,7 @@ class SalesBoard extends Component {
         var customer = this.state.customer;
         customer.products[index].qty -=1;
         customer.products[index].price = customer.products[index].qty * customer.products[index].unitPrice;
-        if (customer.products[index].qty === 0){
+        if (customer.products[index].qty === 0) {
             customer.products.splice(index, 1);
         }
         this.setState({ customer: customer });
@@ -114,11 +112,12 @@ class SalesBoard extends Component {
 
     handleDeleteItem(index) {
         const beforeItems = this.state.customer;
-        console.error(beforeItems, index);
+        beforeItems.products.splice(index, 1);
         this.setState({ customer: beforeItems });
+        this.calculateTotal();
     }
 
-    handleProductSelect(id, productName, categoryId, categoryName, qty, price) {
+    handleProductSelect(id, productName, categoryId, categoryName, qty, price, items) {
         //const itemsCount = this.state.customerItems.length;
         const product = {
             //id: itemsCount + 1,
@@ -128,12 +127,14 @@ class SalesBoard extends Component {
             categoryName: categoryName,
             qty: qty,
             unitPrice: price,
-            price: price
+            price: price,
+            items: items
         };
         const customer = this.state.customer;
 
         customer.products = [...this.state.customer.products, product];
         this.setState({ customer: customer });
+        this.calculateTotal();
     }
 
     handleCustomerFormChange(event) {

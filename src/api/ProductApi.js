@@ -9,7 +9,7 @@ class ProductApi {
   }
 
   static saveProduct(product) {
-    if (typeof product._id ===  'undefined') {
+    if (product._id ===  '0') {
       return Api.post('product/create', product);
     }else {
       return Api.post('product/edit', product);

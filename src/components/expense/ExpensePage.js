@@ -6,7 +6,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
-import CategoryList from './CategoryList';
+import ExpenseList from './ExpenseList';
 
 const cardHeight = 400;
 
@@ -21,12 +21,12 @@ const fabStyle = {
     marginLeft: '90%'
 };
 
-class CategoryPage extends Component {
+class ExpensePage extends Component {
 
     constructor(props, context) {
         super(props, context);
 
-        this.props.loadCategories();
+        this.props.loadExpenses();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -36,30 +36,28 @@ class CategoryPage extends Component {
     }
 
     render() {
-        const {categories} = this.props;
+        const {expenses} = this.props;
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to="/category/new" />}>
+                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to="/expense/new" />}>
                     <ContentAdd />
                 </FloatingActionButton>
-                <CategoryList categories={categories} />
+                <ExpenseList expenses={expenses} />
             </div>
         );
     }
 
 }
 
-CategoryPage.propTypes = {
-    categories: PropTypes.array.isRequired
+ExpensePage.propTypes = {
+    expenses: PropTypes.array.isRequired
 }
 
 function mapStateToProps(state, ownProps) {
     return { 
-        categories: state.categories,
-        user: state.auth.user ,
-        branch: state.branch.current
+        expenses: state.expenses
     };
 }
 
-export default connect(mapStateToProps, actions)(CategoryPage);
+export default connect(mapStateToProps, actions)(ExpensePage);

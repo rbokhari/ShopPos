@@ -9,6 +9,7 @@ exports.createProduct = function(req, res, next) {
     const categoryId = req.body.categoryId;
     const price = req.body.price;
     const status = req.body.status;
+    const items = req.body.items;
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
 
@@ -39,7 +40,8 @@ exports.createProduct = function(req, res, next) {
             categoryId: categoryId,
             categoryName: '',
             price: price,
-            status: status
+            status: status,
+            items: items
         });
 
         product.save(function(err){
@@ -113,7 +115,8 @@ exports.getAll = function(req, res, next) {
                     categoryId: product.categoryId,
                     categoryName: getCategoryname(categories, product.categoryId).name, // categories.filter(function(cat, i) { return (cat._id===product.categoryId); })[0],
                     price: product.price,
-                    status: product.status
+                    status: product.status,
+                    items: product.items
                 };
             });
             res.setHeader('Content-Type', 'application/json');

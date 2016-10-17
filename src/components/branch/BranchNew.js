@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
@@ -50,19 +50,27 @@ class BranchNew extends Component {
                     autoScrollBodyContent={true} >
                     
                     <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
-                        <TextField name="name" floatingLabelText="Name" {...name} />
-                        <br />
-                        <TextField name="displayName" floatingLabelText="Display Name" {...displayName} />
-                        <br />
-                        <TextField name="location" floatingLabelText="Location" {...location} />
-                        <br />
-                        <TextField name="officeNo" floatingLabelText="Office No" {...officeNo} />
-                        <br />
-                        <TextField name="mobileNo" floatingLabelText="Mobile No" {...mobileNo} />
-                        <br />
-                        <TextField name="status" floatingLabelText="Status" {...status} />
-                        <br />
-                        <RaisedButton type="submit" label="Create" primary={true} />
+                        <div>
+                            <TextField name="name" floatingLabelText="Name" {...name} />
+                        </div>
+                        <div>
+                            <TextField name="displayName" floatingLabelText="Display Name" {...displayName} />
+                        </div>
+                        <div>
+                            <TextField name="location" floatingLabelText="Location" {...location} />
+                        </div>
+                        <div>
+                            <TextField name="officeNo" floatingLabelText="Office No" {...officeNo} />
+                        </div>
+                        <div>
+                            <TextField name="mobileNo" floatingLabelText="Mobile No" {...mobileNo} />
+                        </div>
+                        <div>
+                            <TextField name="status" floatingLabelText="Status" {...status} />
+                        </div>
+                        <div>
+                            <RaisedButton type="submit" label="Create" primary={true} />
+                        </div>
                     </form>
             </Dialog>
             

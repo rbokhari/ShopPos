@@ -11,8 +11,10 @@ import itemApi from '../api/ItemApi';
 import categoryApi from '../api/CategoryApi';
 import productApi from '../api/ProductApi';
 import customerApi from '../api/CustomerApi';
+import expenseApi from '../api/expenseApi';
 import purchaseOrderApi from '../api/PurchaseOrderApi';
 import usersApi from '../api/usersApi';
+import reportApi from '../api/ReportApi';
 
 export function loadBranch() {
     return function( dispatch ) {
@@ -147,7 +149,6 @@ export function signinUser( {email, password }) {
                         dispatch({ type: types.SHOW_CREATE_BRANCH });
                     }
                 }                
-alert("last");
                 // redirect to dashboard
                 browserHistory.push('/');
             })
@@ -161,6 +162,7 @@ export function userInfo() {
     return function(dispatch) {
         return authApi.userInfo()
                 .then(response => {
+                    console.info("response", response.data);
                     
                     localStorage.setItem('companyId', response.data.user.companyId);
                     localStorage.setItem('officeId', response.data.user.officeId);
@@ -190,7 +192,7 @@ export function userInfo() {
                         payload: user
                     });
                     
-                    if (data.officeId !== 0 && data.roleId !== USER_ROLE.ADMIN) {
+                    if (data.officeId !== '0' && data.roleId !== USER_ROLE.ADMIN) {
                         const branch = {
                             branchId: data.branch.branchId,
                             name: data.branch.name,
@@ -205,7 +207,7 @@ export function userInfo() {
                         }); // this is redux-thunk in action
 
                     }else if (data.roleId == USER_ROLE.ADMIN){
-                        if (response.data.user.branch.length > 0) {
+                        if (data.branch) {
                             dispatch({ type: types.LOAD_BRANCH });
                         }else {
                             dispatch({ type: types.SHOW_CREATE_BRANCH });
@@ -556,6 +558,84 @@ export function createUsers( user ) {  // this becomes action to send to reducer
             user._id ? dispatch( updateUsersSuccess( user ) ) : dispatch( createUsersSuccess( user ));
         }).catch( error => {
             throw( error );
-        })
+        });
+    };
+}
+
+// Expense's Actions
+export function updateExpenseSuccess( expense ) {
+    return {
+        type: types.UPDATE_EXPENSE_SUCCESS,
+        payload: expense.data
+    };
+}
+
+export function createExpenseSuccess( expense ) {
+    return {
+        type: types.CREATE_EXPENSE_SUCCESS,
+        payload: expense.data
+    };
+}
+
+export function loadExpensesSuccess( expenses ) {
+    return {
+        type: types.LOAD_EXPENSE_SUCCESS,
+        payload: expenses.data
+    };
+}
+
+export function loadExpenses() {
+    return function( dispatch ) {
+        //dispatch( beginAjaxCall() );
+        return expenseApi.getAllExpenses().then( expenses => {
+                dispatch(loadExpensesSuccess( expenses ) );
+            }
+        ).catch( error => {
+                console.error( error );
+            }
+        );
+    };
+}
+
+export function createExpense( expense ) {  // this becomes action to send to reducer
+    return function( dispatch, getState ) {
+        //dispatch( beginAjaxCall() );
+        return expenseApi.saveExpense( expense ).then( expense => {
+            expense._id ? dispatch( updateExpenseSuccess( expense ) ) : dispatch( createExpenseSuccess( expense ) );
+        }).catch( error => {
+            throw( error );
+        });
+    };
+}
+
+//  Report Actions
+export function loadCustomerTransaction(fromDate, toDate) {
+    return function(dispatch) {
+        console.info(fromDate, toDate);
+        return reportApi.getCustomerTransaction(fromDate, toDate)
+            .then( data => {
+                console.info("actions", data);
+                dispatch( {
+                    type: types.LOAD_REPORT_CUSTOMER_DATE_DATA_SUCCESS,
+                    payload: data.data
+                });
+            }).catch( error => {
+                console.error("actions", error);
+                throw (error);
+            });
+    };
+}
+
+export function loadExpenseTransaction(fromDate, toDate) {
+    return function(dispatch) {
+        return reportApi.getExpenseTransaction(fromDate, toDate)
+            .then( data => {
+                dispatch( {
+                    type: types.LOAD_REPORT_EXPENSE_DATE_DATA_SUCCESS,
+                    payload: data.data
+                });
+            }).catch( error => {
+                throw (error);
+            });
     };
 }

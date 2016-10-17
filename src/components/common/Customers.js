@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import _ from 'lodash';
+import Moment from 'moment';
 
 import ContentClear from 'material-ui/svg-icons/content/clear';
 import ActionDone from 'material-ui/svg-icons/action/done';
@@ -72,7 +73,7 @@ class Customers extends React.Component {
                 {_.sortBy(this.props.customers.filter(statusCheck), ['created']).map(customer=>
                     <Card key={customer._id} style={style.card}>
                         <CardHeader
-                            title={customer.carNumber} subtitle={customer.mobileNumber} />
+                            title={'Bill : ' + customer.billNo + ' @ ' + Moment(customer.created).format('dddd h:mm')} subtitle={'Car/Mobile : ' + customer.carNumber || customer.mobileNumber} />
                         <List>
                             <Subheader>Order List</Subheader>
                             {customer.products.map((product,index) => 

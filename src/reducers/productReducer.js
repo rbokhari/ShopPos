@@ -7,7 +7,6 @@ export default function(state = initialState.products, action) {
             //return [...state, ...action.items];
             return action.payload;
         case types.CREATE_PRODUCT_SUCCESS:
-        console.error("productReducer", action.payload, state);
             return [    
                 ...state, 
                 Object.assign({}, action.payload)
@@ -19,10 +18,8 @@ export default function(state = initialState.products, action) {
                 Object.assign({}, action.payload)
             ];
 
-
         default:
             return state;
     }
 
 }
-

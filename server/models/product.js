@@ -11,7 +11,12 @@ const productSchema = new Schema({
     nameAr: { type: String },
     categoryId: { type: Schema.ObjectId },
     price: { type: Number },
-    status: {type : Number}
+    status: {type : Number},
+    items: [{
+        itemId: { type: Schema.ObjectId },
+        itemName: String,
+        qty: Number
+    }],
 });
 
 // Create model class

@@ -33,9 +33,9 @@ class CategoryNew extends Component {
     }
 
     componentWillReceiveProps( nextProps ) {
-        if ( this.props.category.id != nextProps.category.id ) {
-            this.setState( { category: Object.assign( {}. nextProps.category ) } );
-        }
+        // if ( this.props.category.id != nextProps.category.id ) {
+        //     this.setState( { category: Object.assign( {}. nextProps.category ) } );
+        // }
     }
 
     saveCategory(props) {
@@ -69,7 +69,7 @@ class CategoryNew extends Component {
                 </CardText>
                 <CardActions>
                     <RaisedButton type='submit' icon={<ContentSave />} label={_id.value === '0' ? 'Save' : 'Update'} primary={true} />
-                    <RaisedButton icon={<ContentClear />} label="Cancel" secondary={true} linkButton containerElement={<Link to="/category" />}/>
+                    <RaisedButton icon={<ContentClear />} label="Cancel" linkButton containerElement={<Link to="/category" />}/>
                 </CardActions>
             </Card>
         </form>

@@ -29,6 +29,7 @@ import ActionShoppingBasket from 'material-ui/svg-icons/action/shopping-basket';
 import ActionAssignment from 'material-ui/svg-icons/action/assignment';
 import ActionAssignmentDone from 'material-ui/svg-icons/action/assignment-turned-in';
 import ActionAssignmentReturned from 'material-ui/svg-icons/action/assignment-returned';
+import ActionCardTravel from 'material-ui/svg-icons/action/card-travel';
 
 import MenuList from './common/Menu.jsx';
 import BranchListDialog from './branch/BranchListDialog';
@@ -117,6 +118,9 @@ class App extends React.Component {
                         linkButton containerElement={<Link to={'/category'} />} onTouchTap={this._handleClose} />
                     <MenuItem primaryText="Products" leftIcon={<ActionReceipt />} 
                         linkButton containerElement={<Link to={'/product'} />} onTouchTap={this._handleClose} />
+                    <Divider />
+                    <MenuItem primaryText="Expense" leftIcon={<ActionCardTravel />} 
+                        linkButton containerElement={<Link to={'/expense'} />} onTouchTap={this._handleClose} />
                     <Divider />
                     <MenuItem primaryText="Reports" leftIcon={<ActionPrint />} 
                         linkButton containerElement={<Link to={'/report'} />} onTouchTap={this._handleClose} />

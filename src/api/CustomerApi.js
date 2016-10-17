@@ -15,18 +15,6 @@ class CustomerApi {
   static updateCustomerStatus( customer, newStatus ) {
     return Api.put(`customer/${customer._id}/${newStatus}`, customer);
   }
-
-//   static deleteCategory( categoryId ) {
-//     return new Promise( ( resolve, reject ) => {
-//       setTimeout( () => {
-//         const indexOfItemToDelete = categories.findIndex( category => {
-//           category.id == categoryId;
-//         } );
-//         categories.splice( indexOfItemToDelete, 1);
-//         resolve();
-//       }, delay);
-//     });
-//   }
   
 }
 

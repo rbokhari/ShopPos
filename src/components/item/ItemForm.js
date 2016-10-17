@@ -40,7 +40,7 @@ const ItemForm = ( {item, onSave, onChange, loading, errors} ) => {
                 </CardText>
                 <CardActions>
                     <RaisedButton icon={<ContentSave />} label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></RaisedButton>
-                    <RaisedButton icon={<ContentClear />} label="Cancel" secondary={true} linkButton containerElement={<Link to="/item" />} />
+                    <RaisedButton icon={<ContentClear />} label="Cancel" linkButton containerElement={<Link to="/item" />} />
                 </CardActions>
             </Card>
         </form>

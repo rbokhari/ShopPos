@@ -46,7 +46,6 @@ class StockNew extends Component {
 
     onUpdateStockItem(row, event, index, value) {
         const stock = this.props.stock;
-
         stock.items[row].itemId = value;
         this.setState({
             stock: stock
@@ -130,7 +129,7 @@ function mapStateToProps(state, ownProps) {
     // if (stockId && state.stocks.length > 0 ) {
     //     stock = getStockById(state.stocks, stockId);
     // }
-
+//console.info("items", state.items);
     return {
         stock: stock,
         items: state.items
