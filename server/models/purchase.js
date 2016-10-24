@@ -8,6 +8,7 @@ const purchaseSchema = new Schema({
     officeId: { type: Schema.ObjectId },
     billNo: { type: String },
     billDate: String,
+    supplierId: { type: Schema.ObjectId },
     total: Number,
     notes: String,
     created: { type: Date, default: Date.now },

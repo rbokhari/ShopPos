@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import Dialog from 'material-ui/Dialog';
@@ -67,6 +67,10 @@ class BranchListDialog extends Component {
         );
     }
 
+}
+
+BranchListDialog.contextTypes = {
+    router: PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {Link} from 'react-router';
 import { Field, reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
@@ -24,7 +24,12 @@ const styles = {
 class UserNew extends Component {
 
     handleFormSubmit ( {email, password, branchId, roleId, status } ) {
-        this.props.createUsers({ email, password, branchId, roleId, status });
+        this.props.createUsers({ email, password, branchId, roleId, status })
+            .then(() => {
+                this.context.router.push('/users');
+            }, (error) => {
+                console.info(error);
+            });
     }
 
     renderAlert() {
@@ -72,6 +77,10 @@ class UserNew extends Component {
             </form>
         );
     }
+}
+
+UserNew.contextTypes = {
+    router: PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {

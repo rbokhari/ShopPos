@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Divider from 'material-ui/Divider';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
+import IconButton from 'material-ui/IconButton';
+import ContentSend from 'material-ui/svg-icons/content/send';
+
 import * as actions from '../../actions';
 
 import CategoryGrid from '../category/CategoryGrid';
@@ -160,8 +163,8 @@ class SalesBoard extends Component {
         return (
             <div>
                 <div style={{
-                        display: 'flex',
-                        flexFlow: 'row wrap'   
+                        display: 'inline-flex',
+                        flexFlow: 'row wrap',
                     }}>
                     <Card style={{
                             flexGrow: 1,
@@ -177,7 +180,9 @@ class SalesBoard extends Component {
                             flexGrow: 1,
                             marginLeft: 10
                         }} >
-                        <CardHeader title="Categories"  />
+                        <CardHeader title="Categories"> 
+                            
+                        </CardHeader>
 
                         <CategoryGrid categories={this.props.categories} 
                             loading={false} errors={this.state.errors}

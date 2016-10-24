@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 
@@ -10,7 +10,12 @@ import * as actions from '../../actions';
 class SignIn extends Component {
 
     handleFormSubmit ( {email, password} ) {
-        this.props.signinUser({ email, password});
+        this.props.signinUser({ email, password})
+            .then(res => {
+                this.context.router.push('/');
+            }, err => {
+
+            });
     }
 
     renderAlert() {
@@ -30,9 +35,9 @@ class SignIn extends Component {
         const { handleSubmit, fields: {email, password}} = this.props;
         return (
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
-                <div>Signin</div>
+                <h4>Signin</h4>
                 <div>
-                    <TextField name="name" floatingLabelText="Email" {...email} />
+                    <TextField name="name" floatingLabelText="Email" {...email} autofocus />
                 </div>
                 <div>
                     <TextField type="password" name="password" floatingLabelText="Password" {...password} />
@@ -44,6 +49,10 @@ class SignIn extends Component {
             </form>
         );
     }
+}
+
+SignIn.contextTypes = {
+    router: PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {

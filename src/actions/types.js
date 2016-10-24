@@ -26,6 +26,11 @@ export const CREATE_CATEGORY                            = 'CREATE_CATEGORY';
 export const CREATE_CATEGORY_SUCCESS                    = 'CREATE_CATEGORY_SUCCESS';
 export const UPDATE_CATEGORY_SUCCESS                    = 'UPDATE_CATEGORY_SUCCESS';
 
+export const LOAD_SUPPLIER_SUCCESS                      = 'LOAD_SUPPLIER_SUCCESS';
+export const CREATE_SUPPLIER                            = 'CREATE_SUPPLIER';
+export const CREATE_SUPPLIER_SUCCESS                    = 'CREATE_SUPPLIER_SUCCESS';
+export const UPDATE_SUPPLIER_SUCCESS                    = 'UPDATE_SUPPLIER_SUCCESS';
+
 export const LOAD_PRODUCT_SUCCESS                       = 'LOAD_PRODUCT_SUCCESS';
 export const CREATE_PRODUCT                             = 'CREATE_PRODUCT';
 export const CREATE_PRODUCT_SUCCESS                     = 'CREATE_PRODUCT_SUCCESS';

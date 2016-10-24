@@ -11,6 +11,7 @@ const Customer = require('./controllers/customer');
 const Purchase = require('./controllers/purchase');
 const User = require('./controllers/user');
 const Expense = require('./controllers/expense');
+const Supplier = require('./controllers/supplier');
 
 const requireAuth = passport.authenticate('jwt', { session: false });   // deafult is cookie based, which we turn false
 const requireLocal = passport.authenticate('local', { session: false });
@@ -47,12 +48,17 @@ module.exports = function(app, io) {
     app.get('/product/', Product.getAll);
     app.get('/product/:id', Product.getById);
 
-
     // Category Routes
     app.post('/category/create', Category.createCategory);
     app.put('/category/:id/update', Category.updateCategory);
     app.get('/category/', Category.getAll);
     app.get('/category/:id', Category.getById);
+
+    // Supplier Routes
+    app.post('/supplier/create', Supplier.createSupplier);
+    app.put('/supplier/:id/update', Supplier.updateSupplier);
+    app.get('/supplier/', Supplier.getAll);
+    app.get('/supplier/:id', Supplier.getById);
 
     // Customer Routes
     app.post('/customer/create', Customer.createCustomer, (req, res, next) => { io.sockets.emit('customer', '1'); });

@@ -35,7 +35,7 @@ const ItemList = ({items}) => {
                     <TableBody>
                         {items.map(item => 
                             <TableRow key={item._id} >
-                                <TableRowColumn>{item.code} , {item._id}</TableRowColumn>
+                                <TableRowColumn>{item.code}</TableRowColumn>
                                 <TableRowColumn>{item.name}</TableRowColumn>
                                 <TableRowColumn>{item.stock}</TableRowColumn>
                                 <TableRowColumn>{item.status ? <ActionDone color={greenA700} /> : <ContentBlock color={red500} />}</TableRowColumn>

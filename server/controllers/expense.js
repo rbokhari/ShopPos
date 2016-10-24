@@ -2,17 +2,17 @@ const Expense = require('../models/expense');
 
 exports.createExpense = function(req, res, next) {
     
-    const code = req.body.name;
+    //const code = req.body.name;
     const created = req.body.status;
-    const descrption = req.body.description;
+    const description = req.body.description;
     const amount = req.body.amount;
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
 
     const expense = new Expense({
-        code: code,
+        //code: code,
         created: created,
-        description: descrption,
+        description: description,
         amount: amount,
         companyId: companyId,
         officeId: officeId

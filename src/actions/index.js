@@ -11,6 +11,7 @@ import itemApi from '../api/ItemApi';
 import categoryApi from '../api/CategoryApi';
 import productApi from '../api/ProductApi';
 import customerApi from '../api/CustomerApi';
+import supplierApi from '../api/SupplierApi';
 import expenseApi from '../api/expenseApi';
 import purchaseOrderApi from '../api/PurchaseOrderApi';
 import usersApi from '../api/usersApi';
@@ -145,6 +146,7 @@ export function signinUser( {email, password }) {
                 }else if (data.roleId == USER_ROLE.ADMIN){
                     if (response.data.user.branch.length > 0) {
                         dispatch({ type: types.LOAD_BRANCH });
+                        browserHistory.push('/');
                     }else {
                         dispatch({ type: types.SHOW_CREATE_BRANCH });
                     }
@@ -357,10 +359,56 @@ export function createCategory( category ) {  // this becomes action to send to 
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
         return categoryApi.saveCategory( category ).then( category => {
-            category._id ? dispatch( updateCategorySuccess( category ) ) : dispatch( createCategorySuccess( category ) );
+            category._id == '0' ? dispatch( createCategorySuccess( category ) ) : dispatch( updateCategorySuccess( category ) );
         }).catch( error => {
             throw( error );
         })
+    };
+}
+
+// Supplier's Actions
+export function updateSupplierSuccess( supplier ) {
+    return {
+        type: types.UPDATE_SUPPLIER_SUCCESS,
+        payload: supplier.data
+    };
+}
+
+export function createSupplierSuccess( supplier ) {
+    return {
+        type: types.CREATE_SUPPLIER_SUCCESS,
+        payload: supplier.data
+    };
+}
+
+export function loadSupplierSuccess( suppliers ) {
+    return {
+        type: types.LOAD_SUPPLIER_SUCCESS,
+        payload: suppliers.data
+    };
+}
+
+export function loadSuppliers() {
+    return function( dispatch ) {
+        //dispatch( beginAjaxCall() );
+        return supplierApi.getAllSuppliers().then( suppliers => {
+                dispatch(loadSupplierSuccess( suppliers ) );
+            }
+        ).catch( error => {
+                console.error( error );
+            }
+        );
+    };
+}
+
+export function createSupplier( supplier ) {  // this becomes action to send to reducer
+    return function( dispatch, getState ) {
+        //dispatch( beginAjaxCall() );
+        return supplierApi.saveSupplier( supplier ).then( supplier => {
+            supplier._id == '0' ? dispatch( createSupplierSuccess( supplier ) ) : dispatch( updateSupplierSuccess( supplier ) );
+        }).catch( error => {
+            throw( error );
+        });
     };
 }
 

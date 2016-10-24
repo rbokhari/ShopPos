@@ -73,7 +73,7 @@ class Customers extends React.Component {
                 {_.sortBy(this.props.customers.filter(statusCheck), ['created']).map(customer=>
                     <Card key={customer._id} style={style.card}>
                         <CardHeader
-                            title={'Bill : ' + customer.billNo + ' @ ' + Moment(customer.created).format('dddd h:mm')} subtitle={'Car/Mobile : ' + customer.carNumber || customer.mobileNumber} />
+                            title={'Bill : ' + customer.billNo + ' @ ' + Moment(customer.created).format('dddd h:mm')} subtitle={'Car/Mobile : ' + (customer.carNumber == '' || undefined ? customer.mobileNumber : customer.carNumber)} />
                         <List>
                             <Subheader>Order List</Subheader>
                             {customer.products.map((product,index) => 

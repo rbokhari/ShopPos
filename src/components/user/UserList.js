@@ -5,7 +5,8 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 
 import ActionNotInterested from 'material-ui/svg-icons/av/not-interested';
 import ActionDone from 'material-ui/svg-icons/action/done';
-import {red500, greenA700} from 'material-ui/styles/colors';
+import ImageEdit from 'material-ui/svg-icons/image/edit';
+import {blueA700, red500, greenA700} from 'material-ui/styles/colors';
 
 //import CategoryListRow from './CategoryListRow';
 
@@ -37,7 +38,7 @@ const UserList = ({users}) => {
                                 <TableRowColumn>{user.roleId}</TableRowColumn>
                                 <TableRowColumn>{user.status ? <ActionDone color={greenA700} /> : <ActionNotInterested color={red500} />}</TableRowColumn>
                                 <TableRowColumn>
-                                    <Link to={'category/'+user._id+'/edit'}> Edit</Link>
+                                    <Link to={'users/'+user.id+'/edit'}> <ImageEdit color={blueA700} /></Link>
                                 </TableRowColumn>
                             </TableRow>
                         )}

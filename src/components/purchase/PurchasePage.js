@@ -22,11 +22,11 @@ class PurchasePage extends Component {
 
     componentWillMount() {
         this.props.loadPurchaseOrders();
+        this.props.loadSuppliers();
     }
 
     render() {
-        const {purchases} = this.props;
-        console.log("render", purchases);
+        const { purchases, suppliers } = this.props;
         if (!purchases) {
             return (<div>Loading....</div>);
         }
@@ -36,21 +36,23 @@ class PurchasePage extends Component {
                 <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to={'/purchase/new'} />}>
                     <ContentAdd />
                 </FloatingActionButton>
-                <PurchaseList purchases={purchases} />
+                <PurchaseList purchases={purchases} suppliers={suppliers} />
             </div>
         );
     }
 }
 
-
-
 function mapStateToProps(state, ownProps) {
-    return { purchases: state.purchaseOrders };
+    return { 
+        purchases: state.purchaseOrders,
+        suppliers: state.suppliers 
+    };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        loadPurchaseOrders: bindActionCreators(actions.loadPurchaseOrders, dispatch)
+        loadPurchaseOrders: bindActionCreators(actions.loadPurchaseOrders, dispatch),
+        loadSuppliers: bindActionCreators(actions.loadSuppliers, dispatch),
     };
 }
 

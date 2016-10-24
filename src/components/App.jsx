@@ -109,6 +109,8 @@ class App extends React.Component {
                     <MenuItem checked={true} primaryText="Dispatch Board" leftIcon={<ActionAssignmentDone />} 
                         linkButton containerElement={<Link to="/dispatch" />} onTouchTap={this._handleClose}  />
                     <Divider />
+                    <MenuItem checked={true} primaryText="Suppliers" leftIcon={<ActionShoppingBasket />} 
+                        linkButton containerElement={<Link to={'/supplier'} />} onTouchTap={this._handleClose}  />
                     <MenuItem checked={true} primaryText="Items" leftIcon={<ActionShoppingBasket />} 
                         linkButton containerElement={<Link to={'/item'} />} onTouchTap={this._handleClose}  />
                     <MenuItem checked={true} primaryText="Purchase Order" leftIcon={<ActionShopping />} 
@@ -208,8 +210,8 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-    const branch = state.branch === undefined ? '' : state.branch.current.displayName; 
-  
+    const branch = state.branch == undefined ? '' : state.branch.current.displayName; 
+  //console.error("state", state.branch);
     const displayTitle = state.company === undefined ? '' : state.company.displayName + ' - ' + branch;
 
     return {

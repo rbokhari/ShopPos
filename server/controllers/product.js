@@ -9,6 +9,7 @@ exports.createProduct = function(req, res, next) {
     const categoryId = req.body.categoryId;
     const price = req.body.price;
     const status = req.body.status;
+    const type = req.body.type;
     const items = req.body.items;
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
@@ -41,6 +42,7 @@ exports.createProduct = function(req, res, next) {
             categoryName: '',
             price: price,
             status: status,
+            type: type,
             items: items
         });
 

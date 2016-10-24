@@ -11,6 +11,7 @@ export default {
     categories: [],
     products: [],
     customers: [],
+    suppliers: [],
     purchaseOrders: [],
     users : [],
     expenses: [],

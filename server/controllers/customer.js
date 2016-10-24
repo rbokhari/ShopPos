@@ -25,7 +25,7 @@ exports.createCustomer = function(req, res, next) {
     });
 
     Customer.count({}, function(err, c) {
-        customer.billNo = c;
+        customer.billNo = c + 1;
         customer.products.forEach(function(product, index) {
             product.items.forEach(function(item, i) {
                 Item.update({_id: item.itemId},  { $inc : { stock : -(item.qty * product.qty) } }, function(err, numAffected) {

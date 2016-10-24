@@ -2,6 +2,7 @@ import React, {Component } from 'react';
 import { reduxForm } from 'redux-form';
 import * as actions from '../../actions';
 import { bindActionCreators } from 'redux';
+import { browserHistory } from 'react-router';
 
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
@@ -10,7 +11,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 class CreateAccount extends Component {
 
     handleFormSubmit(formProps) {
-        this.props.accountCreate(formProps);
+        this.props.accountCreate(formProps)
+            .then(response=> {
+
+            }, error => {
+
+            });
     }
 
     renderError() {
@@ -29,23 +35,30 @@ class CreateAccount extends Component {
 
         return (            
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
-                <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
+                <Card style={{ flexGrow: 1, margin: '0 auto',}} >
                     <CardHeader title="Create Account" />
                     <CardText>
-                        <TextField floatingLabelText="Company Name" {...name} errorText={name.touched && name.error} />
-                        <br />
-                        <TextField floatingLabelText="Display Name" {...displayName} />
-                        <br />
-                        <TextField floatingLabelText="Location" {...location} />
-                        <br />
-                        <TextField floatingLabelText="Contact No" {...contactNo} />
-                        <br />
-                        <TextField floatingLabelText="UserName (Admin User)" {...email} errorText={email.touched && email.error} />
-                        <br />
-                        <TextField floatingLabelText="Password" type="password" {...password} errorText={password.touched && password.error} />
-                        <br />
-                        <TextField floatingLabelText="Confirm Password" type="password" {...passwordConfirm} />
-                        <br />
+                        <div>
+                            <TextField floatingLabelText="Company Name" {...name} errorText={name.touched && name.error} />
+                        </div>
+                        <div>
+                            <TextField floatingLabelText="Display Name" {...displayName} />
+                        </div>
+                        <div>
+                            <TextField floatingLabelText="Location" {...location} />
+                        </div>
+                        <div>
+                            <TextField floatingLabelText="Contact No" {...contactNo} />
+                        </div>
+                        <div>
+                            <TextField floatingLabelText="UserName (Admin User)" {...email} errorText={email.touched && email.error} />
+                        </div>
+                        <div>
+                            <TextField floatingLabelText="Password" type="password" {...password} errorText={password.touched && password.error} />
+                        </div>
+                        <div>
+                            <TextField floatingLabelText="Confirm Password" type="password" {...passwordConfirm} />
+                        </div>
                     </CardText>
                     <CardActions>
                         {this.renderError()}

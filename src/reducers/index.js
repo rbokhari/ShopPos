@@ -8,6 +8,7 @@ import items from './itemReducer';
 import categories from './categoryReducer';
 import products from './productReducer';
 import customers from './customerReducer';
+import suppliers from './supplierReducer';
 import purchaseOrders from './purchaseOrderReducer';
 import expenses from './expenseReducer';
 import users from './userReducer';
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   categories,
   products,
   customers,
+  suppliers,
   purchaseOrders,
   expenses,
   users,

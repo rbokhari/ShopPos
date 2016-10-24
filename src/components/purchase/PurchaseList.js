@@ -1,6 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router';
 
+import Moment from 'moment';
+
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import ImageEdit from 'material-ui/svg-icons/image/edit';
@@ -12,7 +14,7 @@ const cardStyle = {
   flexGrow: 1
 };
 
-const PurchaseList = ({purchases}) => {
+const PurchaseList = ({purchases, suppliers}) => {
     return (
         <Card style={cardStyle} >
             <CardHeader title="Purchase Order " subtitle="Listing" />
@@ -21,6 +23,7 @@ const PurchaseList = ({purchases}) => {
                         <TableRow>
                             <TableHeaderColumn>Bill No</TableHeaderColumn>
                             <TableHeaderColumn>Date</TableHeaderColumn>
+                            <TableHeaderColumn>Supplier</TableHeaderColumn>
                             <TableHeaderColumn>Total</TableHeaderColumn>
                             <TableHeaderColumn>Notes</TableHeaderColumn>
                             <TableHeaderColumn>Action</TableHeaderColumn>
@@ -30,7 +33,12 @@ const PurchaseList = ({purchases}) => {
                         {purchases.map(purchase => 
                             <TableRow key={purchase._id} >
                                 <TableRowColumn>{purchase.billNo}</TableRowColumn>
-                                <TableRowColumn>{purchase.billDate}</TableRowColumn>
+                                <TableRowColumn>
+                                    {Moment(purchase.created).format('DD/MM/YYYY')}
+                                </TableRowColumn>
+                                <TableRowColumn>
+                                    {suppliers.filter((supplier, i) => { return supplier._id === purchase.supplierId })[0].name}
+                                </TableRowColumn>
                                 <TableRowColumn>{purchase.total}</TableRowColumn>
                                 <TableRowColumn>{purchase.notes}</TableRowColumn>
                                 <TableRowColumn>
@@ -45,7 +53,8 @@ const PurchaseList = ({purchases}) => {
 }
 
 PurchaseList.propTypes = {
-    purchases: React.PropTypes.array.isRequired
+    purchases: React.PropTypes.array.isRequired,
+    suppliers: React.PropTypes.array.isRequired
 }
 
 export default PurchaseList;

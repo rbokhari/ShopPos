@@ -20,6 +20,7 @@ class StockNew extends Component {
         };
 
         this.props.loadItems();
+        this.props.loadSuppliers();
 
         this.updateStockState = this.updateStockState.bind(this);
         this.onUpdateStockItem = this.onUpdateStockItem.bind(this);
@@ -27,6 +28,8 @@ class StockNew extends Component {
         this.saveStock = this.saveStock.bind(this);
         this.onAddNewItem = this.onAddNewItem.bind(this);
         this.onRemoveItem = this.onRemoveItem.bind(this);
+        this.onUpdateSupplier = this.onUpdateSupplier.bind(this);
+        this.onUpdateStockPrice = this.onUpdateStockPrice.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -44,6 +47,14 @@ class StockNew extends Component {
         });
     }
 
+    onUpdateSupplier(event, index, value) {
+        const stock = this.props.stock;
+        stock.supplierId = value;
+        this.setState({
+            stock: stock
+        });
+    }
+
     onUpdateStockItem(row, event, index, value) {
         const stock = this.props.stock;
         stock.items[row].itemId = value;
@@ -55,6 +66,14 @@ class StockNew extends Component {
     onUpdateStockQty(row, event) {
         const stock = this.props.stock;
         stock.items[row].qty = event.target.value;
+        this.setState({
+            stock: stock
+        });
+    }
+
+    onUpdateStockPrice(row, event) {
+        const stock = this.props.stock;
+        stock.items[row].price = event.target.value;
         this.setState({
             stock: stock
         });
@@ -79,7 +98,7 @@ class StockNew extends Component {
         event.preventDefault();
         this.props.createPurchaseOrder(this.props.stock)
             .then(res => {
-                
+                this.context.router.push('/purchase');
             });
         
         //this.context.router.push('/item');
@@ -88,9 +107,9 @@ class StockNew extends Component {
     render() {
         return (
             <StockForm onChange={this.updateStockState} onSave={this.saveStock} 
-                onAddStock={this.onAddNewItem} onRemoveStock={this.onRemoveItem}
-                onItemSelect={this.onUpdateStockItem} onQuantityChange={this.onUpdateStockQty}
-                stock={this.props.stock} items={this.props.items} errors={this.state.errors} />
+                onAddStock={this.onAddNewItem} onRemoveStock={this.onRemoveItem} onUpdateSupplier={this.onUpdateSupplier}
+                onItemSelect={this.onUpdateStockItem} onQuantityChange={this.onUpdateStockQty} onStockPriceChange={this.onUpdateStockPrice}
+                stock={this.props.stock} items={this.props.items} suppliers={this.props.suppliers} errors={this.state.errors} />
         );
     }
 
@@ -118,11 +137,12 @@ function mapStateToProps(state, ownProps) {
     let stock = {
         billNo: '', 
         billDate: '',
-        total: 0,
+        amount: 0,
         notes: '', 
         items: [{
             itemId: '',
-            qty: 0
+            qty: 0,
+            price: 0
         }]
     };
 
@@ -132,14 +152,16 @@ function mapStateToProps(state, ownProps) {
 //console.info("items", state.items);
     return {
         stock: stock,
-        items: state.items
+        items: state.items,
+        suppliers: state.suppliers
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         createPurchaseOrder: bindActionCreators(actions.createPurchaseOrder, dispatch),
-        loadItems: bindActionCreators(actions.loadItems, dispatch)
+        loadItems: bindActionCreators(actions.loadItems, dispatch),
+        loadSuppliers: bindActionCreators(actions.loadSuppliers, dispatch)
     };
 }
 

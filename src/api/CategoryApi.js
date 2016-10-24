@@ -8,7 +8,7 @@ class CategoryApi {
   }
 
   static saveCategory( category ) {    
-    if (category._id !== 0) {
+    if (category._id !== '0') {
       return Api.put(`category/${category._id}/update`, category);
     } else {
       return Api.post('category/create', category);

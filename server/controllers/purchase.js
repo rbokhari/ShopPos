@@ -13,6 +13,7 @@ exports.createPurchase = function(req, res, next) {
         officeId: req.headers.officeid,
         billNo: req.body.billNo,
         billDate: req.body.billDate,
+        supplierId: req.body.supplierId,
         notes: req.body.notes,
         created: new Date().now,
         total: 10,
@@ -23,7 +24,6 @@ exports.createPurchase = function(req, res, next) {
         if (err) { return next(err); }
         //next();
         purchase.items.forEach(function(item) {  
-            console.log("item", item); 
             updateItemStock(item.itemId, item.qty);
         });
         res.setHeader('Content-Type', 'application/json');

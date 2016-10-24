@@ -11,6 +11,7 @@ const productSchema = new Schema({
     nameAr: { type: String },
     categoryId: { type: Schema.ObjectId },
     price: { type: Number },
+    type: { type: String },
     status: {type : Number},
     items: [{
         itemId: { type: Schema.ObjectId },

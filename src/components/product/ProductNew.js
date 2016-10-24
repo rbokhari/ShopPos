@@ -124,7 +124,6 @@ class ProductNew extends Component {
     saveProduct(props) {
         //console.log(`new value is ${this.state.item}`);
         const product = this.props.product;
-        console.info(product);
         this.props.createProduct(this.state.product)
             .then(()=> {
                 this.context.router.push('/product');

@@ -34,6 +34,7 @@ class ExpenseNew extends Component {
     }
 
     saveExpense(props) {
+        alert("save");
         this.props.createExpense(props)
             .then(() => {
                 this.context.router.push('/expense');
@@ -43,7 +44,7 @@ class ExpenseNew extends Component {
     }
 
     render() {
-        const {handleSubmit, fields: { _id, code, created, description, amount } }  = this.props;
+        const {handleSubmit, fields: { _id, created, description, amount } }  = this.props;
 
         return (
             <form onSubmit={handleSubmit(this.saveExpense.bind(this))}>
@@ -61,7 +62,7 @@ class ExpenseNew extends Component {
                                 floatingLabelText="Description" {...description} />
                         </div>
                     </CardText>
-                    <CardActions>value : {_id.value}
+                    <CardActions>
                         <RaisedButton type='submit' icon={<ContentSave />} label={_id.value === '0' ? 'Save' : 'Update'} primary={true} />
                         <RaisedButton icon={<ContentClear />} label="Cancel" linkButton containerElement={<Link to="/expense" />}/>
                     </CardActions>
@@ -69,8 +70,8 @@ class ExpenseNew extends Component {
             </form>
         );
     }
-
 }
+
 
 ExpenseNew.propTypes = {
     // category: PropTypes.object.isRequired,
@@ -90,7 +91,6 @@ function getExpenseById( expenses, id ) {
 
 function validateForm(values) {
     const errors = {};
-    console.log(values);
 
     if (!values.code) {
         errors.name = 'Name required';
@@ -101,9 +101,9 @@ function validateForm(values) {
 
 function mapStateToProps(state, ownProps) {
     const expenseId = ownProps.params.id;
-    //alert(expenseId);
+
     let expense = {
-        _id: '0', code: '', description: '', amount: 0, created: ''
+        _id: '0', description: '', amount: 0, created: ''
     };
 
     if (expenseId && state.expenses.length > 0 ) {
@@ -118,6 +118,6 @@ function mapStateToProps(state, ownProps) {
 
 export default reduxForm({
     form: 'expense',
-    fields: ['_id', 'code', 'created', 'amount', 'description' ],
+    fields: ['_id', 'created', 'amount', 'description' ],
     validate: validateForm
 }, mapStateToProps, { createExpense: createExpense } )(ExpenseNew);

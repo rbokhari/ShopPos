@@ -48,6 +48,10 @@ const ProductForm = ( {product, stock, categories, items, onSave, onChange, onSe
                     </div>
                     <div>
                         <TextField name='price' floatingLabelText="Price" onChange={onChange} value={product.price} />
+                        <SelectField name='categoryId' floatingLabelText="Category" onChange={onSelectChange} value={product.categoryId} >
+                            <MenuItem key={0} value='Kitchen' primaryText='Kitchen' />
+                            <MenuItem key={1} value='Sale' primaryText='Sale' />
+                        </SelectField>
                     </div>
                     <Checkbox label="Status" onCheck={onCheckCheck} checked={product.status==1} style={styles.checkbox}  />
                     <h4>Items</h4>

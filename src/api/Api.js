@@ -11,8 +11,6 @@ class Api {
             'OfficeId': localStorage.getItem('officeId')
         };
         const data = params;
-console.info("api", `${API_URL}/${url}`);
-console.info("api", data);
         return axios({
             url: `${API_URL}/${url}`,
             method: 'get',

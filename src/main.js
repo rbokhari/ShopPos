@@ -18,6 +18,9 @@ import CategoryType from './components/category/CategoryType';
 import CategoryPage from './components/category/CategoryPage';
 import CategoryNew from './components/category/CategoryNew';
 
+import SupplierPage from './components/supplier/SupplierPage';
+import SupplierNew from './components/supplier/SupplierNew';
+
 import ProductPage from './components/product/ProductPage';
 import ProductNew from './components/product/ProductNew';
 
@@ -85,6 +88,10 @@ ReactDOM.render(
                 <Route path="category" component={CategoryPage} />
                 <Route path="category/new" component={CategoryNew} />
                 <Route path="category/:id/edit" component={CategoryNew} />
+
+                <Route path="supplier" component={SupplierPage} />
+                <Route path="supplier/new" component={SupplierNew} />
+                <Route path="supplier/:id/edit" component={SupplierNew} />
                 
                 <Route path="product" component={ProductPage} />
                 <Route path="product/new" component={ProductNew} />

@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack --watch --progress --colors",
+    "production": "webpack --progress --colors --production"
   },
   "author": "Syed Rahman Bokhari",
   "license": "ISC",
