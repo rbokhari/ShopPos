@@ -47,7 +47,8 @@ import reducers from './reducers';
 
 require('./main.scss');
 
-const createStoreWithMiddleware = applyMiddleware(reduxLogger(), reduxThunk)(createStore);
+//const createStoreWithMiddleware = applyMiddleware(reduxLogger(), reduxThunk)(createStore);
+const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
 const store = createStoreWithMiddleware(reducers);
 
 const token = localStorage.getItem('token');

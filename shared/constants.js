@@ -11,3 +11,13 @@ export const CUSTOMER_STATUS = {
         'DELIVERED': 3,
         'DISCARD': -1
 };
+
+export const PRODUCT_TYPE = {
+        'KITCHEN': 0,
+        'DIRECT': 1
+};
+
+export const PRODUCT_TYPE_LABEL = {
+        'KITCHEN': 'KITCHEN',
+        'DIRECT': 'DIRECT'
+};

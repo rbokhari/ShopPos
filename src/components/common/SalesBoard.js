@@ -12,6 +12,7 @@ import CategoryGrid from '../category/CategoryGrid';
 import ProductGrid from '../product/ProductGrid';
 import CustomerItems from './CustomerItems';
 import CustomerForm from './CustomerForm';
+import { PRODUCT_TYPE, PRODUCT_TYPE_LABEL } from '../../../shared/constants';
 
 class SalesBoard extends Component {
 
@@ -120,19 +121,21 @@ class SalesBoard extends Component {
         this.calculateTotal();
     }
 
-    handleProductSelect(id, productName, categoryId, categoryName, qty, price, items) {
+    handleProductSelect(id, productName, categoryId, categoryName, qty, price, type, items) {
         //const itemsCount = this.state.customerItems.length;
         const product = {
             //id: itemsCount + 1,
-            productId: id,
+            //productId: id,
             productName: productName,
-            categoryId: categoryId,
+            //categoryId: categoryId,
             categoryName: categoryName,
             qty: qty,
-            unitPrice: price,
-            price: price,
-            items: items
+            //unitPrice: price,
+            //price: price,
+            type: type,
+            //items: items
         };
+        console.info("SalesBoard", product);
         const customer = this.state.customer;
 
         customer.products = [...this.state.customer.products, product];
@@ -151,8 +154,26 @@ class SalesBoard extends Component {
 
     handleCustomerFormSubmit() {
         var customer = this.state.customer;
-        this.props.createCustomer( this.state.customer );
-        this.clearCustomer();
+        console.info("customer submit", customer);
+        this.props.createCustomer( customer )
+            .then(res => {
+                alert("done");
+                var isKitchen = false;
+                customer.products.filter((product, index) => {
+                    if (product.type == PRODUCT_TYPE.KITCHEN) {
+                        isKitchen = true;
+                    }
+                });
+                if (isKitchen) {
+
+                }
+                console.info('create customer', res, customer);
+                this.clearCustomer();
+            }, err => {
+                alert(err);
+                console.error(err);
+            });
+        
     }
 
     handleCustomerFormCancel() {

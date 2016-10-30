@@ -50,6 +50,7 @@ class ProductNew extends Component {
 
         this.updateProductState = this.updateProductState.bind(this);
         this.updateProductCategory = this.updateProductCategory.bind(this);
+        this.updateProductType = this.updateProductType.bind(this);
         this.updateProductStatus = this.updateProductStatus.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
         this.addItem = this.addItem.bind(this);
@@ -76,6 +77,14 @@ class ProductNew extends Component {
     updateProductCategory(event, index, value) {
         const product = this.props.product;
         product.categoryId = value;
+        this.setState({
+            product: product
+        });
+    }
+
+    updateProductType(event, index, value) {
+        const product = this.props.product;
+        product.type = value;
         this.setState({
             product: product
         });
@@ -175,7 +184,7 @@ class ProductNew extends Component {
             //     </Card>
             // </form>  
 
-            <ProductForm onChange={this.updateProductState} onSelectChange={this.updateProductCategory} 
+            <ProductForm onChange={this.updateProductState} onSelectChange={this.updateProductCategory} onTypeChange={this.updateProductType}
                     onCheckCheck={this.updateProductStatus} onSave={this.saveProduct}
                     onItemSelect={this.onUpdateProductItem} onUpdateProductQty={this.onUpdateProductQty}
                     onItemRemove={this.removeItem} onItemAdd={this.addItem}
@@ -218,6 +227,7 @@ function mapStateToProps(state, ownProps) {
         nameAr: '', 
         price: 0, 
         status: true, 
+        type: '',
         categoryId: 0,
         items: [
             { 

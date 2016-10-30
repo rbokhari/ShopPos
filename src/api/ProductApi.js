@@ -12,7 +12,7 @@ class ProductApi {
     if (product._id ===  '0') {
       return Api.post('product/create', product);
     }else {
-      return Api.post('product/edit', product);
+      return Api.put(`product/${product._id}/update`, product);
     }
 
   }

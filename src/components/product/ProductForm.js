@@ -17,16 +17,18 @@ import {blue500, red500, greenA200} from 'material-ui/styles/colors';
 import ContentAdd from 'material-ui/svg-icons/content/add-circle';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 
+import { PRODUCT_TYPE, PRODUCT_TYPE_LABEL } from '../../../shared/constants';
+
 const styles = {
   block: {
     maxWidth: 250,
   },
   checkbox: {
     marginBottom: 16,
-  },
+  }
 };
 
-const ProductForm = ( {product, stock, categories, items, onSave, onChange, onSelectChange, onCheckCheck, onItemSelect, onUpdateProductQty, onItemAdd, onItemRemove, loading, errors} ) => {
+const ProductForm = ( {product, stock, categories, items, onSave, onChange, onSelectChange, onTypeChange, onCheckCheck, onItemSelect, onUpdateProductQty, onItemAdd, onItemRemove, loading, errors} ) => {
     return (
         <form>
             <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
@@ -34,23 +36,21 @@ const ProductForm = ( {product, stock, categories, items, onSave, onChange, onSe
                 <CardText>
                     <div>
                         <TextField name='code' floatingLabelText="Product Code" onChange={onChange} value={product.code} />
-                        <SelectField name='categoryId' floatingLabelText="Category" onChange={onSelectChange} value={product.categoryId} >
-                        {categories.map(category=>
-                            <MenuItem key={category._id} value={category._id} primaryText={category.name} />
-                        )}
-                        </SelectField>
+                        <TextField name='price' style={{margin: 10}} floatingLabelText="Price" onChange={onChange} value={product.price} />                        
                     </div>
                     <div>
                         <TextField name='name' floatingLabelText="Product Name" onChange={onChange} value={product.name} />
                         <TextField name='nameAr' floatingLabelText="Name Arabic" onChange={onChange} value={product.nameAr} />
                     </div>
                     <div>
-                    </div>
-                    <div>
-                        <TextField name='price' floatingLabelText="Price" onChange={onChange} value={product.price} />
                         <SelectField name='categoryId' floatingLabelText="Category" onChange={onSelectChange} value={product.categoryId} >
-                            <MenuItem key={0} value='Kitchen' primaryText='Kitchen' />
-                            <MenuItem key={1} value='Sale' primaryText='Sale' />
+                        {categories.map(category=>
+                            <MenuItem key={category._id} value={category._id} primaryText={category.name} />
+                        )}
+                        </SelectField>
+                        <SelectField name='type' floatingLabelText="Type" onChange={onTypeChange} value={product.type} >
+                            <MenuItem key={PRODUCT_TYPE.KITCHEN} value={PRODUCT_TYPE.KITCHEN} primaryText={PRODUCT_TYPE_LABEL.KITCHEN} />
+                            <MenuItem key={PRODUCT_TYPE.DIRECT} value={PRODUCT_TYPE.DIRECT} primaryText={PRODUCT_TYPE_LABEL.DIRECT} />
                         </SelectField>
                     </div>
                     <Checkbox label="Status" onCheck={onCheckCheck} checked={product.status==1} style={styles.checkbox}  />
@@ -103,6 +103,7 @@ ProductForm.propTypes = {
     onSave: React.PropTypes.func.isRequired,
     onChange: React.PropTypes.func.isRequired,
     onSelectChange: React.PropTypes.func.isRequired,
+    onTypeChange: React.PropTypes.func.isRequired,
     onCheckCheck: React.PropTypes.func.isRequired,
     onItemSelect: React.PropTypes.func.isRequired,
     loading: React.PropTypes.bool,

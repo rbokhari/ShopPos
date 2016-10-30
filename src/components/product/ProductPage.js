@@ -16,6 +16,7 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import ProductList from './ProductList';
+import { PRODUCT_TYPE, PRODUCT_TYPE_LABEL } from '../../../shared/constants';
 
 const fabStyle = {
     marginTop: 10,
@@ -39,6 +40,15 @@ class ProductPage extends Component {
     getCategoryNameById(id) {
     }
 
+    getTypeName(value) {
+        if (value == PRODUCT_TYPE.KITCHEN) {
+            return PRODUCT_TYPE_LABEL.KITCHEN;
+        } else if (value == PRODUCT_TYPE.DIRECT) {
+            return PRODUCT_TYPE_LABEL.DIRECT;
+        }
+        return '';
+    }
+
     render() {
         const {products} = this.props;
 
@@ -47,7 +57,7 @@ class ProductPage extends Component {
                 <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to="/product/new" />}>
                     <ContentAdd />
                 </FloatingActionButton>
-                <ProductList products={products} />
+                <ProductList products={products} showName={this.getTypeName} />
             </div>
         );
     }

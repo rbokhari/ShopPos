@@ -2,7 +2,7 @@
 
 import * as types from './types';
 import { browserHistory } from 'react-router';
-import { USER_ROLE } from '../../shared/constants';
+import { USER_ROLE, PRODUCT_TYPE } from '../../shared/constants';
 
 import { beginAjaxCall } from './ajaxStatusActions';
 
@@ -495,6 +495,16 @@ export function createCustomer( customer ) {  // this becomes action to send to 
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
         return customerApi.saveCustomer( customer ).then( customer => {
+            var isKitchen = false;
+            customer.data.products.filter((product, index) => {
+                console.info("test", product, PRODUCT_TYPE.KITCHEN);
+                if (product.type == PRODUCT_TYPE.KITCHEN) {
+                    isKitchen = true;
+                }
+            });
+            if (!isKitchen) {
+                dispatch(updateCustomerStatus(customer.data, 2));
+            }
             customer._id ? dispatch( updateCustomerSuccess( customer ) ) : dispatch( createCustomerSuccess( customer ) );
         }).catch( error => {
             throw( error );
@@ -503,7 +513,6 @@ export function createCustomer( customer ) {  // this becomes action to send to 
 }
 
 export function updateCustomerStatus( customer, newStatus ) {  // this becomes action to send to reducer
-
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
         return customerApi.updateCustomerStatus( customer, newStatus ).then( customer => {

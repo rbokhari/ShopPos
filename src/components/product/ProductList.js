@@ -9,6 +9,8 @@ import ActionDone from 'material-ui/svg-icons/action/done';
 import ImageEdit from 'material-ui/svg-icons/image/edit';
 import {blueA700, red500, greenA700} from 'material-ui/styles/colors';
 
+import { PRODUCT_TYPE, PRODUCT_TYPE_LABEL } from '../../../shared/constants';
+
 //import ProductListRow from './ProductListRow';
 
 const cardStyle = {
@@ -17,7 +19,7 @@ const cardStyle = {
   flexGrow: 1
 };
 
-const ProductList = ({products}) => {
+const ProductList = ({products, showName}) => {
 
     return (
         <Card style={cardStyle} >
@@ -27,6 +29,7 @@ const ProductList = ({products}) => {
                         <TableRow>
                             <TableHeaderColumn>Name</TableHeaderColumn>
                             <TableHeaderColumn>Category</TableHeaderColumn>
+                            <TableHeaderColumn>Type</TableHeaderColumn>
                             <TableHeaderColumn>Price</TableHeaderColumn>
                             <TableHeaderColumn>Status</TableHeaderColumn>
                             <TableHeaderColumn>Action</TableHeaderColumn>
@@ -37,6 +40,7 @@ const ProductList = ({products}) => {
                             <TableRow key={product._id} >
                                 <TableRowColumn>{product.name}</TableRowColumn>
                                 <TableRowColumn>{product.categoryName}</TableRowColumn>
+                                <TableRowColumn>{showName(product.type)}</TableRowColumn>
                                 <TableRowColumn>{product.price}</TableRowColumn>
                                 <TableRowColumn>{product.status ? <ActionDone color={greenA700} /> : <ActionNotInterested color={red500} />}</TableRowColumn>
                                 <TableRowColumn>
