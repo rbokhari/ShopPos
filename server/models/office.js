@@ -6,10 +6,10 @@ const Schema = mongoose.Schema;
 const officeSchema = new Schema({
     companyId: { type: Schema.ObjectId },
     name: { type: String, lowercase: true },
-    displayName: String,
-    location: String,
-    officeNo: String,
-    mobileNo: String,
+    displayName: { type: String },
+    location: { type: String },
+    officeNo: { type:String },
+    mobileNo: { type: String },
     status: {type : Number}
 });
 

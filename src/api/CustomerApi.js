@@ -10,7 +10,6 @@ class CustomerApi {
 
   static saveCustomer( customer ) {
     //JSON.stringify(customer)
-    console.info(customer);
     return Api.post('customer/create', customer);
   }
 

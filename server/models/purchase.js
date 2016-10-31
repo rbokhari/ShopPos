@@ -7,16 +7,16 @@ const purchaseSchema = new Schema({
     companyId: {type: Schema.ObjectId },
     officeId: { type: Schema.ObjectId },
     billNo: { type: String },
-    billDate: String,
+    billDate: { type: String },
     supplierId: { type: Schema.ObjectId },
-    total: Number,
-    notes: String,
+    total: { type: Number },
+    notes: { type: String },
     created: { type: Date, default: Date.now },
     items: [{
         itemId: { type: Schema.ObjectId },
-        itemName: String,
-        qty: Number,
-        price: Number
+        itemName: { type: String },
+        qty: { type: Number },
+        price: { type: Number }
     }],
     status: {type : Number}
 });

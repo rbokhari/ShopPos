@@ -5,10 +5,10 @@ const Schema = mongoose.Schema;
 
 const companySchema = new Schema({
     name: { type: String, unique: true, lowercase: true },
-    displayName: String,
-    location: String,
-    contactNo: String,
-    status: {type : Number}
+    displayName: { type: String },
+    location: { type: String },
+    contactNo: { type: String },
+    status: { type : Number }
 });
 
 // Create model class

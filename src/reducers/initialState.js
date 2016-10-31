@@ -6,6 +6,7 @@ export default {
         current: {},
         all: []
     },
+    openDay: {},
     user: {},
     items: [],
     categories: [],

@@ -7,7 +7,7 @@ const itemSchema = new Schema({
     companyId: { type: Schema.ObjectId },
     officeId: { type: Schema.ObjectId },
     code: { type: String, lowercase: true },    //unique: true,
-    name: String,
+    name: { type: String },
     description: { type: String },
     stock: { type: Number },
     status: {type : Number}

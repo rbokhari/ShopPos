@@ -12,20 +12,20 @@ const customerSchema = new Schema({
     created: { type: Date, default: Date.now },
     status: { type : Number },
     products: [{
-        //productId: { type: Schema.ObjectId },
-        productName: String,
-        //categoryId: { type: Schema.ObjectId },
-        categoryName: String,
-        qty: Number,
-        unitPrice: Number,
-        price: Number,
-        type: Number,
-        // items: [{
-        //     //_id: { type: Schema.ObjectId },
-        //     itemId: { type: Schema.ObjectId },
-        //     //itemName: String,
-        //     qty: Number
-        // }],
+        productId: { type: Schema.ObjectId },
+        productName: { type: String },
+        categoryId: { type: Schema.ObjectId },
+        categoryName: { type: String },
+        qty: { type: Number },
+        unitPrice: { type: Number },
+        price: { type: Number },
+        type: { type: Number },
+        items: [{
+            //_id: { type: Schema.ObjectId },
+            itemId: { type: Schema.ObjectId },
+            itemName: String,
+            qty: { type: Number }
+        }],
     }]
 });
 

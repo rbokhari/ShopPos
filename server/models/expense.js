@@ -9,7 +9,7 @@ const expenseSchema = new Schema({
     code : { type: String, unique: true, lowercase: true },
     created: { type: Date, default: Date.now },
     amount: { type: Number },
-    description: String,
+    description: { type: String },
 });
 
 // Create model class

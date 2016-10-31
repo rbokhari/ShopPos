@@ -16,6 +16,7 @@ import expenseApi from '../api/expenseApi';
 import purchaseOrderApi from '../api/PurchaseOrderApi';
 import usersApi from '../api/usersApi';
 import reportApi from '../api/ReportApi';
+import dayApi from '../api/dayApi';
 
 export function loadBranch() {
     return function( dispatch ) {
@@ -128,7 +129,6 @@ export function signinUser( {email, password }) {
                     type: types.AUTH_USER_INFO, 
                     payload: user
                 });
-                
                 if (data.officeId !== 0 && data.roleId !== USER_ROLE.ADMIN) {
                     const branch = {
                         branchId: data.branch.branchId,
@@ -137,12 +137,11 @@ export function signinUser( {email, password }) {
                         office: data.branch.office,
                         mobile: data.branch.mobile
                     };
-
                     dispatch({ 
                         type: types.SWITCH_BRANCH,
                         payload: branch
                     }); // this is redux-thunk in action
-
+                    browserHistory.push('/');
                 }else if (data.roleId == USER_ROLE.ADMIN){
                     if (response.data.user.branch.length > 0) {
                         dispatch({ type: types.LOAD_BRANCH });
@@ -150,9 +149,10 @@ export function signinUser( {email, password }) {
                     }else {
                         dispatch({ type: types.SHOW_CREATE_BRANCH });
                     }
+                    browserHistory.push('/');
                 }                
                 // redirect to dashboard
-                browserHistory.push('/');
+                
             })
             .catch((error) => {
                 dispatch(authError(`Bad login info ${error}`));
@@ -310,12 +310,11 @@ export function createItem( item ) {  // this becomes action to send to reducer
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
         return itemApi.saveItem( item ).then( item => {
-            console.info("item", item);
             item._id ? dispatch( updateItemSuccess( item ) ) : dispatch( createItemSuccess( item ) );
         }).catch( error => {
             console.error("createItem", error);
             throw( error );
-        })
+        });
     };
 }
 //-------------------------------------
@@ -362,7 +361,7 @@ export function createCategory( category ) {  // this becomes action to send to 
             category._id == '0' ? dispatch( createCategorySuccess( category ) ) : dispatch( updateCategorySuccess( category ) );
         }).catch( error => {
             throw( error );
-        })
+        });
     };
 }
 
@@ -497,7 +496,6 @@ export function createCustomer( customer ) {  // this becomes action to send to 
         return customerApi.saveCustomer( customer ).then( customer => {
             var isKitchen = false;
             customer.data.products.filter((product, index) => {
-                console.info("test", product, PRODUCT_TYPE.KITCHEN);
                 if (product.type == PRODUCT_TYPE.KITCHEN) {
                     isKitchen = true;
                 }
@@ -668,16 +666,13 @@ export function createExpense( expense ) {  // this becomes action to send to re
 //  Report Actions
 export function loadCustomerTransaction(fromDate, toDate) {
     return function(dispatch) {
-        console.info(fromDate, toDate);
         return reportApi.getCustomerTransaction(fromDate, toDate)
             .then( data => {
-                console.info("actions", data);
                 dispatch( {
                     type: types.LOAD_REPORT_CUSTOMER_DATE_DATA_SUCCESS,
                     payload: data.data
                 });
             }).catch( error => {
-                console.error("actions", error);
                 throw (error);
             });
     };
@@ -694,5 +689,51 @@ export function loadExpenseTransaction(fromDate, toDate) {
             }).catch( error => {
                 throw (error);
             });
+    };
+}
+
+// Days's Actions
+export function updateDaySuccess( day ) {
+    return {
+        type: types.UPDATE_DAY_SUCCESS,
+        payload: day.data
+    };
+}
+
+export function createDaySuccess( day ) {
+    return {
+        type: types.CREATE_DAY_SUCCESS,
+        payload: day.data
+    };
+}
+
+export function loadOpenDaySuccess( days ) {
+    return {
+        type: types.LOAD_DAY_SUCCESS,
+        payload: days.data
+    };
+}
+
+export function loadOpenDay() {
+    return function( dispatch ) {
+        //dispatch( beginAjaxCall() );
+        return dayApi.openDay().then( day => {
+                dispatch(loadOpenDaySuccess( day ) );
+            }
+        ).catch( error => {
+                console.error( error );
+            }
+        );
+    };
+}
+
+export function createDay( day ) {  // this becomes action to send to reducer
+    return function( dispatch, getState ) {
+        //dispatch( beginAjaxCall() );
+        return dayApi.startDay( day ).then( day => {
+            day._id == '0' ? dispatch(createDaySuccess(day)) : dispatch(updateDaySuccess(day));
+        }).catch( error => {
+            throw( error );
+        });
     };
 }

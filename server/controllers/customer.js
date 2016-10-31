@@ -16,14 +16,16 @@ function fontPath(file) {
 exports.createCustomer = function(req, res, next) {
     //var data = JSON.parse(req.body);
     //console.log("customer",req.headers, req.body);
-    const customer = new Customer({
+    var productsItem = req.body.products;
+    console.log(productsItem);
+    var customer = new Customer({
         companyId: req.headers.companyid,
         officeId: req.headers.officeid,
         carNumber: req.body.carNumber,
         mobileNumber: req.body.mobileNumber,
         created: new Date().now,
         status: req.body.status,
-        products: req.body.products
+        products: productsItem
     });
     //customer.products = req.body.products;
     console.log("create", customer);
@@ -31,32 +33,30 @@ exports.createCustomer = function(req, res, next) {
         if (err) { return next(err); }
         customer.billNo = c + 1;
 
-        customer.save(function(err){
-            //console.log("here last", customer.products);
-            if (err) { return next(err); }
-            next();
-            res.setHeader('Content-Type', 'application/json');
-            res.json(customer);
-        });
-
-
-
-        // req.body.products.forEach(function(product, index) {
-        //     product.items.forEach(function(item, i) {
-        //         Item.update({_id: item.itemId},  { $inc : { stock : -(item.qty * product.qty) } }, function(err, numAffected) {
-        //             if (index === req.body.products.length-1 && i === product.items.length -1) {
-        //                 customer.save(function(err){
-        //                     console.log("here last", customer.products);
-        //                     if (err) { return next(err); }
-        //                     next();
-        //                     res.setHeader('Content-Type', 'application/json');
-        //                     console.log(customer);
-        //                     res.json(customer);
-        //                 });
-        //             }
-        //         });
-        //     });
+        // customer.save(function(err){
+        //     //console.log("here last", customer.products);
+        //     if (err) { return next(err); }
+        //     next();
+        //     res.setHeader('Content-Type', 'application/json');
+        //     res.json(customer);
         // });
+
+        customer.products.forEach(function(product, index) {
+            product.items.forEach(function(item, i) {
+                Item.update({_id: item.itemId},  { $inc : { stock : -(item.qty * product.qty) } }, function(err, numAffected) {
+                    if (index === customer.products.length-1 && i === product.items.length -1) {
+                        customer.save(function(err){
+                            console.log("here last", customer.products);
+                            if (err) { return next(err); }
+                            next();
+                            res.setHeader('Content-Type', 'application/json');
+                            console.log(customer);
+                            res.json(customer);
+                        });
+                    }
+                });
+            });
+        });
     });
 };
 

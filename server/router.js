@@ -12,6 +12,7 @@ const Purchase = require('./controllers/purchase');
 const User = require('./controllers/user');
 const Expense = require('./controllers/expense');
 const Supplier = require('./controllers/supplier');
+const Day = require('./controllers/day');
 
 const requireAuth = passport.authenticate('jwt', { session: false });   // deafult is cookie based, which we turn false
 const requireLocal = passport.authenticate('local', { session: false });
@@ -91,6 +92,14 @@ module.exports = function(app, io) {
     // Reports Routes 
     app.get('/customer/transaction/bydate', Customer.getTransaction);
     app.get('/expense/transaction/bydate', Expense.getByDate);
+
+
+    // Days Routes
+    app.post('/day/create', Day.createDay);
+    app.put('/day/:id/close', Day.closeDay);
+    app.get('/day/', Day.getAll);
+    //app.get('/day/:id', Day.getById);
+    app.get('/day/open', Day.getOpenDay);
 
     // app.get('/', function(req, res, next) {
     //     res.send(['a', 'b', 'c']);

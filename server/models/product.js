@@ -15,8 +15,8 @@ const productSchema = new Schema({
     status: {type : Number},
     items: [{
         itemId: { type: Schema.ObjectId },
-        itemName: String,
-        qty: Number
+        itemName: { type: String },
+        qty: { type: Number }
     }],
 });
 

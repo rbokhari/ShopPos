@@ -62,3 +62,11 @@ export const UPDATE_EXPENSE_SUCCESS                     = 'UPDATE_EXPENSE_SUCCES
 
 export const LOAD_REPORT_CUSTOMER_DATE_DATA_SUCCESS     = 'LOAD_REPORT_CUSTOMER_DATE_DATA_SUCCESS';
 export const LOAD_REPORT_EXPENSE_DATE_DATA_SUCCESS      = 'LOAD_REPORT_EXPENSE_DATE_DATA_SUCCESS';
+
+
+export const LOAD_OPEN_DAY                              = 'LOAD_OPEN_DAY';
+export const LOAD_OPEN_DAY_SUCCESS                      = 'LOAD_OPEN_DAY_SUCCESS';
+export const UPDATE_CLOSE_DAY                           = 'UPDATE_CLOSE_DAY';
+export const UPDATE_CLOSE_DAY_SUCCESS                   = 'UPDATE_CLOSE_DAY_SUCCESS';
+export const CREATE_DAY                                 = 'CREATE_DAY';
+export const CREATE_DAY_SUCCESS                         = 'CREATE_DAY_SUCCESS';

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Divider from 'material-ui/Divider';
+import Snackbar from 'material-ui/Snackbar';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import IconButton from 'material-ui/IconButton';
 import ContentSend from 'material-ui/svg-icons/content/send';
@@ -23,6 +24,7 @@ class SalesBoard extends Component {
             // categories: this.props.categories,
             // products: this.props.products,
             filterProducts: [],
+            snakbarStatus: false,
             //customerProducts: [],
             customer: {
                 carNumber: '',
@@ -33,6 +35,11 @@ class SalesBoard extends Component {
             },
             errors: {}
         };
+
+        this.props.loadOpenDay()
+            .then(res => {
+
+            });
 
         this.props.loadCategories();
         this.props.loadProducts();
@@ -125,17 +132,16 @@ class SalesBoard extends Component {
         //const itemsCount = this.state.customerItems.length;
         const product = {
             //id: itemsCount + 1,
-            //productId: id,
+            productId: id,
             productName: productName,
-            //categoryId: categoryId,
+            categoryId: categoryId,
             categoryName: categoryName,
             qty: qty,
-            //unitPrice: price,
-            //price: price,
+            unitPrice: price,
+            price: price,
             type: type,
-            //items: items
+            items: items
         };
-        console.info("SalesBoard", product);
         const customer = this.state.customer;
 
         customer.products = [...this.state.customer.products, product];
@@ -154,26 +160,15 @@ class SalesBoard extends Component {
 
     handleCustomerFormSubmit() {
         var customer = this.state.customer;
-        console.info("customer submit", customer);
         this.props.createCustomer( customer )
             .then(res => {
-                alert("done");
-                var isKitchen = false;
-                customer.products.filter((product, index) => {
-                    if (product.type == PRODUCT_TYPE.KITCHEN) {
-                        isKitchen = true;
-                    }
+                this.setState({
+                    snakbarStatus: true
                 });
-                if (isKitchen) {
-
-                }
-                console.info('create customer', res, customer);
                 this.clearCustomer();
             }, err => {
-                alert(err);
                 console.error(err);
             });
-        
     }
 
     handleCustomerFormCancel() {
@@ -216,6 +211,10 @@ class SalesBoard extends Component {
                             onProductSelect={this.handleProductSelect} />
                             
                     </Card>
+                    <Snackbar open={this.state.snakbarStatus}
+                        message="New Customer Added !"
+                        autoHideDuration={2000}
+                        onRequestClose={()=> this.setState({snakbarStatus: false})} />
                 </div>
                 <CustomerForm customer={this.state.customer} 
                     onChange={this.handleCustomerFormChange} 
@@ -236,7 +235,8 @@ function mapStateToProps(state, ownProps) {
     return {
         products: state.products,
         categories: state.categories,
-        branch: state.branch.current
+        branch: state.branch.current,
+        openDay: state.openDay
     };
 }
 
@@ -244,7 +244,9 @@ function mapDispatchToProps(dispatch) {
     return {
         createCustomer: bindActionCreators(actions.createCustomer, dispatch),
         loadCategories: bindActionCreators(actions.loadCategories, dispatch),
-        loadProducts: bindActionCreators(actions.loadProducts, dispatch)
+        loadProducts: bindActionCreators(actions.loadProducts, dispatch),
+        loadOpenDay: bindActionCreators(actions.loadOpenDay, dispatch),
+        createDay: bindActionCreators(actions.createDay, dispatch)
     };
 }
 
