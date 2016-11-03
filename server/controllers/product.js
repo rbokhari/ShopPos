@@ -3,7 +3,7 @@ const Category = require('../models/category');
 
 exports.createProduct = function(req, res, next) {
     
-    const code = req.body.code;
+    //const code = req.body.code;
     const name = req.body.name;
     const nameAr = req.body.nameAr;
     const categoryId = req.body.categoryId;
@@ -24,36 +24,43 @@ exports.createProduct = function(req, res, next) {
         return res.status(422).send({ error: 'office is not passed'});
     }
 
-    // check if item code is already assigned
-    Product.findOne( { code: code }, function(err, existingProduct) {
+    // check if item name is already assigned
+    Product.findOne( {
+        $and: [
+                { name: name }, 
+                { companyId: companyId }, 
+                { officeId: officeId }
+            ] }, function(err, existingProduct) {
         if (err) { return next(err); }
 
         if (existingProduct) {
-            return res.status(422).send({ error: 'Code is in use !'});
+            return res.status(422).send({ error: 'Name is in use !'});
         }
 
-        const product = new Product({
-            companyId: companyId,
-            officeId: officeId,
-            code: code,
-            name: name,
-            nameAr: nameAr,
-            categoryId: categoryId,
-            categoryName: '',
-            price: price,
-            status: status,
-            type: type,
-            items: items
-        });
+        Product.count({} , function(err, cn) {
+            const product = new Product({
+                companyId: companyId,
+                officeId: officeId,
+                code: cn+1,
+                name: name,
+                nameAr: nameAr,
+                categoryId: categoryId,
+                categoryName: '',
+                price: price,
+                status: status,
+                type: type,
+                items: items
+            });
 
-        product.save(function(err){
-            if (err) { return next(err); }
+            product.save(function(err){
+                if (err) { return next(err); }
 
-            Category.findOne({_id: product.categoryId}, function(err, category) {
-                product.categoryName = category.name;
-                res.setHeader('Content-Type', 'application/json');
-                
-                res.json(product);
+                Category.findOne({_id: product.categoryId}, function(err, category) {
+                    product.categoryName = category.name;
+                    res.setHeader('Content-Type', 'application/json');
+                    
+                    res.json(product);
+                });
             });
         });
     });

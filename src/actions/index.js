@@ -501,7 +501,7 @@ export function createCustomer( customer ) {  // this becomes action to send to 
                 }
             });
             if (!isKitchen) {
-                dispatch(updateCustomerStatus(customer.data, 2));
+                dispatch(updateCustomerStatus(customer.data, 3));
             }
             customer._id ? dispatch( updateCustomerSuccess( customer ) ) : dispatch( createCustomerSuccess( customer ) );
         }).catch( error => {
@@ -707,10 +707,17 @@ export function createDaySuccess( day ) {
     };
 }
 
-export function loadOpenDaySuccess( days ) {
+export function loadOpenDaySuccess( day ) {
+    return { 
+        type: types.LOAD_OPEN_DAY_SUCCESS,
+        payload: day.data
+    };
+}
+
+export function loadCloseDaySuccess() {
     return {
-        type: types.LOAD_DAY_SUCCESS,
-        payload: days.data
+        type: types.UPDATE_CLOSE_DAY_SUCCESS,
+        payload: { _id: '0', today: ''}
     };
 }
 
@@ -718,6 +725,11 @@ export function loadOpenDay() {
     return function( dispatch ) {
         //dispatch( beginAjaxCall() );
         return dayApi.openDay().then( day => {
+            console.info("loadopenday", day);
+                if (day.data !== null) {
+                    //alert("haer i am ");
+                    localStorage.setItem('dayId', day.data._id);
+                }
                 dispatch(loadOpenDaySuccess( day ) );
             }
         ).catch( error => {
@@ -727,11 +739,28 @@ export function loadOpenDay() {
     };
 }
 
-export function createDay( day ) {  // this becomes action to send to reducer
+export function loadCloseDay() {
+    return function( dispatch ) {
+        return dayApi.closeDay().then( res => {
+            console.info(res);
+                if (res.status == 200) {
+                    localStorage.removeItem('dayId');
+                    dispatch(loadCloseDaySuccess() );
+                }
+            }).catch( error => {
+                console.error( error );
+            }
+        );
+    };
+}
+
+export function createDay() {  // this becomes action to send to reducer
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
-        return dayApi.startDay( day ).then( day => {
-            day._id == '0' ? dispatch(createDaySuccess(day)) : dispatch(updateDaySuccess(day));
+        return dayApi.createDay().then( day => {
+            console.info("day", day);
+            localStorage.setItem('dayId', day.data._id);
+            dispatch(createDaySuccess(day));
         }).catch( error => {
             throw( error );
         });

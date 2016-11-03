@@ -35,7 +35,7 @@ const ProductForm = ( {product, stock, categories, items, onSave, onChange, onSe
                 <CardHeader title="Product" subtitle={product._id === '0' ? 'Add New' : 'Edit'} />
                 <CardText>
                     <div>
-                        <TextField name='code' floatingLabelText="Product Code" onChange={onChange} value={product.code} />
+                        <TextField name='code' floatingLabelText="Product Code" onChange={onChange} value={product.code} disabled={true} defaultValue="Auto Number" />
                         <TextField name='price' style={{margin: 10}} floatingLabelText="Price" onChange={onChange} value={product.price} />                        
                     </div>
                     <div>

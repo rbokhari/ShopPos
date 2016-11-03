@@ -36,10 +36,7 @@ class SalesBoard extends Component {
             errors: {}
         };
 
-        this.props.loadOpenDay()
-            .then(res => {
 
-            });
 
         this.props.loadCategories();
         this.props.loadProducts();
@@ -53,6 +50,7 @@ class SalesBoard extends Component {
         this.handleCustomerFormChange = this.handleCustomerFormChange.bind(this);
         this.handleCustomerFormSubmit = this.handleCustomerFormSubmit.bind(this);
         this.handleCustomerFormCancel = this.handleCustomerFormCancel.bind(this);
+
     }
 
     filterProducts(id) {
@@ -176,6 +174,7 @@ class SalesBoard extends Component {
     }
 
     render() {
+
         return (
             <div>
                 <div style={{
@@ -236,7 +235,6 @@ function mapStateToProps(state, ownProps) {
         products: state.products,
         categories: state.categories,
         branch: state.branch.current,
-        openDay: state.openDay
     };
 }
 
@@ -245,8 +243,6 @@ function mapDispatchToProps(dispatch) {
         createCustomer: bindActionCreators(actions.createCustomer, dispatch),
         loadCategories: bindActionCreators(actions.loadCategories, dispatch),
         loadProducts: bindActionCreators(actions.loadProducts, dispatch),
-        loadOpenDay: bindActionCreators(actions.loadOpenDay, dispatch),
-        createDay: bindActionCreators(actions.createDay, dispatch)
     };
 }
 

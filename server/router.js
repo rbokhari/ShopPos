@@ -96,7 +96,7 @@ module.exports = function(app, io) {
 
     // Days Routes
     app.post('/day/create', Day.createDay);
-    app.put('/day/:id/close', Day.closeDay);
+    app.put('/day/close', Day.closeDay);
     app.get('/day/', Day.getAll);
     //app.get('/day/:id', Day.getById);
     app.get('/day/open', Day.getOpenDay);

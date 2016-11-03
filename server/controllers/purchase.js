@@ -2,8 +2,14 @@ const Purchase = require('../models/purchase');
 const Item = require('../models/item');
 
 function updateItemStock(itemId, qty) {
-    Item.update({_id: itemId}, { $inc: {stock: qty} }, function(err) {
+
+    Item.findOne({ _id: itemId } , function(err, item) {
         if (err) { console.error("err", err);}
+        const totalUpdate = item.uomCount * qty;
+
+        Item.update({_id: itemId}, { $inc: {stock: totalUpdate} }, function(err) {
+            if (err) { console.error("err", err);}
+        });
     });
 }
 
@@ -16,7 +22,7 @@ exports.createPurchase = function(req, res, next) {
         supplierId: req.body.supplierId,
         notes: req.body.notes,
         created: new Date().now,
-        total: 10,
+        total: req.body.amount,
         items: req.body.items 
     });
 

@@ -21,3 +21,13 @@ export const PRODUCT_TYPE_LABEL = {
         'KITCHEN': 'KITCHEN',
         'DIRECT': 'DIRECT'
 };
+
+export const ITEM_UOM = {
+        'NUMBER': '1',
+        'CARTON': '2'
+};
+
+export const ITEM_UOM_LABEL = {
+        'NUMBER': 'NUMBER',
+        'CARTON': 'CARTON'
+};

@@ -1,19 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
-import { reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 //import { bindActionCreators } from 'redux';
 //import { connect } from 'react-redux';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 
 import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
 import { createItem } from '../../actions';
-//import ItemForm from './ItemForm';
+
+import { ITEM_UOM, ITEM_UOM_LABEL } from '../../../shared/constants.js';
 
 class ItemNew extends Component {
 
@@ -40,6 +44,7 @@ class ItemNew extends Component {
     }
 
     saveItem(props) {
+        console.log(props);
         this.props.createItem(props)
             .then(() => {
                 this.context.router.push('/item');
@@ -49,7 +54,7 @@ class ItemNew extends Component {
     }
 
     render() {
-        const {handleSubmit, fields: { _id, code, name, description, status } }  = this.props;
+        const {handleSubmit, fields: { _id, code, name, uom, uomCount, description, status } }  = this.props;
         
         return (
             <form onSubmit={handleSubmit(this.saveItem.bind(this))}>
@@ -57,10 +62,20 @@ class ItemNew extends Component {
                     <CardHeader title="Item" subtitle={ _id.value === 0 ?  'Add New' : 'Edit'} />
                     <CardText>
                         <div>
-                            <TextField name='code' floatingLabelText="Item Code" {...code} errorText={code.touched && code.error} />
+                            <TextField name='code' floatingLabelText="Item Code" {...code} disabled={true} defaultValue="Auto Number" />
                         </div>
                         <div>
-                            <TextField name='name' floatingLabelText="Item Name" {...name} errorText={name.touched && name.error} />
+                            <TextField name='name' floatingLabelText="Item Name" {...name} errorText={name.touched && name.error} autoFocus  />
+                        </div>
+                        
+                        <div>
+                            <SelectField name='uom' floatingLabelText="UOM" {...uom} value={uom.value} errorText={uom.touched && uom.error} onChange={(event, index, value) => uom.onChange(value)} >
+                                <MenuItem key={ITEM_UOM.NUMBER} value={ITEM_UOM.NUMBER} primaryText={ITEM_UOM_LABEL.NUMBER} />
+                                <MenuItem key={ITEM_UOM.CARTON} value={ITEM_UOM.CARTON} primaryText={ITEM_UOM_LABEL.CARTON} />
+                            </SelectField>
+                        </div>
+                        <div>
+                            <TextField name='uomCount' floatingLabelText="Count" {...uomCount} errorText={uomCount.touched && uomCount.error} />
                         </div>
                         <div>
                             <TextField name='description' multiLine={true} rows={2} rowsMax={4} 
@@ -102,12 +117,16 @@ function validateForm(values) {
     const errors = {};
     console.log(values);
 
-    if (!values.code) {
-        errors.code = 'Code required';
-    }
-
     if (!values.name) {
         errors.name = 'Name required';
+    }
+
+    if (!values.uom) {
+        errors.uom = 'UOM required';
+    }
+
+    if (!values.uomCount) {
+        errors.uomCount = 'Count required';
     }
 
     return errors;
@@ -117,7 +136,7 @@ function mapStateToProps(state, ownProps) {
     const itemId = ownProps.params.id;
 
     let item = {
-        _id: 0, code: '', name: '', description: '', stock: 0, status: 1
+        _id: 0, code: '', name: '', uom: 0, uomCount: 1, description: '', stock: 0, status: true
     };
 
     if (itemId && state.items.length > 0 ) {
@@ -138,7 +157,7 @@ function mapStateToProps(state, ownProps) {
 
 export default reduxForm({
     form: 'item',
-    fields: ['_id', 'code', 'name', 'description', 'status' ],
+    fields: ['_id', 'code', 'name', 'uom', 'uomCount', 'description', 'status' ],
     validate: validateForm
 }, mapStateToProps, { createItem: createItem } )(ItemNew);
 

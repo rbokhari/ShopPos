@@ -17,10 +17,10 @@ exports.createCustomer = function(req, res, next) {
     //var data = JSON.parse(req.body);
     //console.log("customer",req.headers, req.body);
     var productsItem = req.body.products;
-    console.log(productsItem);
     var customer = new Customer({
         companyId: req.headers.companyid,
         officeId: req.headers.officeid,
+        dayId: req.headers.dayid,
         carNumber: req.body.carNumber,
         mobileNumber: req.body.mobileNumber,
         created: new Date().now,
@@ -28,18 +28,9 @@ exports.createCustomer = function(req, res, next) {
         products: productsItem
     });
     //customer.products = req.body.products;
-    console.log("create", customer);
     Customer.count({}, function(err, c) {
         if (err) { return next(err); }
         customer.billNo = c + 1;
-
-        // customer.save(function(err){
-        //     //console.log("here last", customer.products);
-        //     if (err) { return next(err); }
-        //     next();
-        //     res.setHeader('Content-Type', 'application/json');
-        //     res.json(customer);
-        // });
 
         customer.products.forEach(function(product, index) {
             product.items.forEach(function(item, i) {
@@ -81,14 +72,14 @@ exports.printReceipt = function(req, res, next) {
         if (err) { return next(err); }
 
 // console.log("customer is >>" + customer);
- console.log("status is >> " + newStatus + " >>");
-        if (newStatus != 2) { return next(); }
+ //console.log("status is >> " + newStatus + " >>");
+        if (newStatus != 3) { return next(); }  // when dispatch then print
 
-var wstream = fs.createWriteStream('pdf/'+id+'.txt');
+        var wstream = fs.createWriteStream('pdf/'+id+'.txt');
 //wstream.write(customer);
 // wstream.write('Another line\n');
-wstream.end();
-next();
+        wstream.end();
+        next();
 
 // var fontDescriptors = {
 //   Roboto: {

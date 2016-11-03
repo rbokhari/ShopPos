@@ -5,6 +5,8 @@ exports.createItem = function(req, res, next) {
     const code = req.body.code;
     const name = req.body.name;
     const desc = req.body.description;
+    const uom = req.body.uom;
+    const uomCount = req.body.uomCount;
     const stock = 0;
     const status = req.body.status;
     const companyId = req.headers.companyid;
@@ -21,9 +23,10 @@ exports.createItem = function(req, res, next) {
     }
 
     // check if item code is already assigned
+
     Item.findOne( { 
             $and: [
-                { code: code }, 
+                { name: name }, 
                 { companyId: companyId }, 
                 { officeId: officeId }
             ] }, function(err, existingItem) {
@@ -31,27 +34,28 @@ exports.createItem = function(req, res, next) {
         if (err) { return next(err); }
 
         if (existingItem) {
-            return res.status(422).send({ error: 'Code is in use !'});
+            return res.status(422).send({ error: 'Name is already defined !'});
         }
-
-        const item = new Item({
-            companyId: companyId,
-            officeId: officeId,
-            code: code,
-            name: name,
-            description: desc,
-            stock: stock,
-            status: status
-        });
-
-        item.save(function(err){
+        Item.count({}, function(err, cn){
             if (err) { return next(err); }
-
-            // respond to request indicating the item was created
-            res.json(item);
+            const item = new Item({
+                companyId: companyId,
+                officeId: officeId,
+                code: cn + 1,
+                name: name,
+                uom: uom,
+                uomCount: uomCount,
+                description: desc,
+                stock: stock,
+                status: status
+            });
+            item.save(function(err){
+                if (err) { return next(err); }
+                // respond to request indicating the item was created
+                res.json(item);
+            });
         });
     });
-
 };
 
 exports.updateItem = function(req, res) {
@@ -59,6 +63,8 @@ exports.updateItem = function(req, res) {
     const code = req.body.code;
     const name = req.body.name;
     const desc = req.body.description;
+    const uom = req.body.uom;
+    const uomCount = req.body.uomCount;
     const status = req.body.status;
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
@@ -67,7 +73,7 @@ exports.updateItem = function(req, res) {
                             { companyId: companyId }, 
                             { officeId: officeId }
                         ] }, 
-                    { code: code, name: name, description: desc, status: status }, 
+                    { code: code, name: name, uom: uom, uomCount: uomCount, description: desc, status: status }, 
                     function(err, existingItem) {
 
         if (err) { return next(err); }

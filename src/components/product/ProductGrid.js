@@ -7,7 +7,7 @@ import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 
 const style = {
     margin: 15,
-    width: 120,
+    //width: 120,
     height: 60
 };
 

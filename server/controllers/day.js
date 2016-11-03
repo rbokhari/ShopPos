@@ -31,25 +31,25 @@ exports.createDay = function(req, res, next) {
 
 exports.closeDay = function(req, res) {
     //res.json('Got a PUT request at category');
-    const id = req.body._id;
-    const today = req.body.today;
-    const close = req.body.close;
-    const status = req.body.status;
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
+    const dayId = req.headers.dayid;
+    const newDate = new Date();
 
     Day.update( { $and: [ 
-                            { _id: id } , 
+                            { _id: dayId } , 
                             { companyId: companyId }, 
                             { officeId: officeId }
                         ] }, 
-                    { status: status }, 
+                    { status: 1, close: newDate }, 
                         function(err, existing) {
 
-        if (err) { return next(err); }
-        res.send('Day Closed');
+        if (err) { 
+            console.log(err);
+            return next(err); 
+        }
+        res.send('Day close');
     });
-
 };
 
 exports.getAll = function(req, res, next) {
@@ -88,7 +88,7 @@ exports.getOpenDay = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
     
-    Day.find({ 
+    Day.findOne({ 
             $and: [ 
                     { companyId: companyId }, 
                     { officeId: officeId }, 

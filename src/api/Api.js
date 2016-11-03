@@ -8,7 +8,8 @@ class Api {
         const headers = {
             'authorization': localStorage.getItem('token'),
             'CompanyId': localStorage.getItem('companyId'),
-            'OfficeId': localStorage.getItem('officeId')
+            'OfficeId': localStorage.getItem('officeId'),
+            'DayId': localStorage.getItem('dayId')
         };
         const data = params;
         return axios({
@@ -23,7 +24,8 @@ class Api {
         const headers = {
             'authorization': localStorage.getItem('token'),
             'CompanyId': localStorage.getItem('companyId'),
-            'OfficeId': localStorage.getItem('officeId')
+            'OfficeId': localStorage.getItem('officeId'),
+            'DayId': localStorage.getItem('dayId')
         };
         const params = Object.assign( {}, data );
         return axios.post(`${API_URL}/${url}`, params, { headers: headers });
@@ -33,7 +35,8 @@ class Api {
         const headers = {
             'authorization': localStorage.getItem('token'),
             'CompanyId': localStorage.getItem('companyId'),
-            'OfficeId': localStorage.getItem('officeId')
+            'OfficeId': localStorage.getItem('officeId'),
+            'DayId': localStorage.getItem('dayId')
         };
         console.info(`${API_URL}/${url}`);
         const params = Object.assign( {}, data );
