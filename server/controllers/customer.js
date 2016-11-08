@@ -4,9 +4,9 @@ var path = require('path');
 //var pdfMakePrinter = require('pdfmake/src/printer');
     //var PdfPrinter = require('pdfmake/src/printer');
 
-
 const Customer = require('../models/customer');
 const Item = require('../models/item');
+const Day = require('../models/day');
 
 // fonts are available in the test-env/tests/fonts path, this is a helper
 function fontPath(file) {
@@ -244,23 +244,37 @@ exports.getTransaction = function(req, res, next) {
     const toDate = new Date(req.query.toDate);
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-    console.log(fromDate);
-    console.log(toDate);
 
-    Customer.find({ 
-        $and: [
-            { companyId: companyId },
-            { officeId: officeId },
-            { created: {
-                $gte: fromDate,
-                $lte: toDate
-            }}
-        ] }, {}, { sort : {created: -1} }, function(err, customers){
-        
+    Day.find({ 
+            $and: [ 
+                    { companyId: companyId }, 
+                    { officeId: officeId }, 
+                    { today: {
+                        $gte: fromDate,
+                        $lte: toDate
+                    }}
+                ] }, { _id: 1 }, function(err, days){
 
         if (err) { return next(err); }
-        //next();
-        res.setHeader('Content-Type', 'application/json');
-        res.json(customers);
+        days = days.map(function(day,index){
+            return day._id;
+        });
+
+        if (days.length > 0) {        
+            Customer.find({ 
+                $and: [
+                    { companyId: companyId },
+                    { officeId: officeId },
+                    { status: 3 },
+                    { dayId: { $in: days }}
+                ] }, {}, { sort : {created: -1} }, function(err, customers){
+                
+                if (err) { return next(err); }
+                //next();
+                res.setHeader('Content-Type', 'application/json');
+                res.json(customers);
+            });
+        }
     });
+
 };

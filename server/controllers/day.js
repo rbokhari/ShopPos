@@ -11,22 +11,31 @@ exports.createDay = function(req, res, next) {
             return res.status(422).send({ error: 'Day already open !'});
         }
 
-        const day = new Day({
-            today: new Date().now,
-            close: null,
-            status: 0,
-            companyId: companyId,
-            officeId: officeId
-        });
-
-        day.save(function(err){
+        Day.count({ $and: [ { companyId: companyId} , { officeId: officeId } ] }, function(err, cn){
             if (err) { return next(err); }
 
-            res.setHeader('Content-Type', 'application/json');
-            res.json(day);
+            console.log("cn", cn);
+
+            const day = new Day({
+                _id: cn+1,
+                today: new Date().now,
+                close: null,
+                status: 0,
+                companyId: companyId,
+                officeId: officeId
+            });
+
+            console.log("new day", day);
+
+            day.save(function(err){
+                if (err) { return next(err); }
+
+                res.setHeader('Content-Type', 'application/json');
+                res.json(day);
+            });
+
         });
     });
-
 };
 
 exports.closeDay = function(req, res) {
@@ -99,5 +108,28 @@ exports.getOpenDay = function(req, res, next) {
 
         res.setHeader('Content-Type', 'application/json');
         res.json(day);
+    });
+};
+
+exports.getDayBetweenDates = function(req, res, next) {
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+    const fromDate = new Date(req.body.fromDate);
+    const toDate = new Date(req.body.toDate);
+
+    Day.find({ 
+            $and: [ 
+                    { companyId: companyId }, 
+                    { officeId: officeId }, 
+                    { created: {
+                        $gte: fromDate,
+                        $lte: toDate
+                    }}
+                ]}, function(err, days){
+
+        if (err) { return next(err); }
+
+        res.setHeader('Content-Type', 'application/json');
+        res.json(days);
     });
 };

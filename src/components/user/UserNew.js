@@ -10,6 +10,7 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 
+import { USER_ROLE, USER_ROLE_LABEL } from '../../../shared/constants';
 import * as actions from '../../actions';
 
 const styles = {
@@ -63,8 +64,8 @@ class UserNew extends Component {
                         </SelectField>
                         <br />
                         <SelectField name='roleId' floatingLabelText="Role" {...roleId} onChange={(e, i, v) => roleId.onChange(v)} >
-                            <MenuItem key={2} value={2} primaryText='Branch Admin' />
-                            <MenuItem key={3} value={3} primaryText='Branch User' />
+                            <MenuItem key={USER_ROLE.BRANCH_MANAGER} value={USER_ROLE.BRANCH_MANAGER} primaryText={USER_ROLE_LABEL.BRANCH_MANAGER} />
+                            <MenuItem key={USER_ROLE.BRANCH_SALES_PERSON} value={USER_ROLE.BRANCH_SALES_PERSON} primaryText={USER_ROLE_LABEL.BRANCH_SALES_PERSON} />
                         </SelectField>
                         <br />
                         <Checkbox name="status" label="Status" style={styles.checkbox} {...status} onCheck ={(e, v) => status.onChange(v)} />

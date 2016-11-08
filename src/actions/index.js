@@ -105,17 +105,19 @@ export function signinUser( {email, password }) {
                 //     type: types.AUTH_USER_INFO, 
                 //     payload: response.data.user
                 // });
+               //alert("push");
+                
                 const data = response.data.user;
 
-                const company = {
-                    companyId: data.company.companyId,
-                    name: data.company.name,
-                    displayName: data.company.displayName
-                };
-                dispatch({ 
-                        type: types.LOAD_COMPANY,
-                        payload: company
-                });
+                // const company = {
+                //     companyId: data.company.companyId,
+                //     name: data.company.name,
+                //     displayName: data.company.displayName
+                // };
+                // dispatch({ 
+                //         type: types.LOAD_COMPANY,
+                //         payload: company
+                // });
 
                 const user = {
                     userId: data.userId,
@@ -129,32 +131,34 @@ export function signinUser( {email, password }) {
                     type: types.AUTH_USER_INFO, 
                     payload: user
                 });
-                if (data.officeId !== 0 && data.roleId !== USER_ROLE.ADMIN) {
-                    const branch = {
-                        branchId: data.branch.branchId,
-                        name: data.branch.name,
-                        displayName: data.branch.displayName,
-                        office: data.branch.office,
-                        mobile: data.branch.mobile
-                    };
-                    dispatch({ 
-                        type: types.SWITCH_BRANCH,
-                        payload: branch
-                    }); // this is redux-thunk in action
-                    browserHistory.push('/');
-                }else if (data.roleId == USER_ROLE.ADMIN){
-                    if (response.data.user.branch.length > 0) {
-                        dispatch({ type: types.LOAD_BRANCH });
-                        browserHistory.push('/');
-                    }else {
-                        dispatch({ type: types.SHOW_CREATE_BRANCH });
-                    }
-                    browserHistory.push('/');
-                }                
+                browserHistory.push('/');
+                // if (data.officeId !== 0 && data.roleId !== USER_ROLE.ADMIN) {
+                //     const branch = {
+                //         branchId: data.branch.branchId,
+                //         name: data.branch.name,
+                //         displayName: data.branch.displayName,
+                //         office: data.branch.office,
+                //         mobile: data.branch.mobile
+                //     };
+                //     dispatch({ 
+                //         type: types.SWITCH_BRANCH,
+                //         payload: branch
+                //     }); // this is redux-thunk in action
+                //     browserHistory.push('/');
+                // }else if (data.roleId == USER_ROLE.ADMIN){
+                //     if (response.data.user.branch.length > 0) {
+                //         dispatch({ type: types.LOAD_BRANCH });
+                //         browserHistory.push('/');
+                //     }else {
+                //         dispatch({ type: types.SHOW_CREATE_BRANCH });
+                //     }
+                //     browserHistory.push('/');
+                // }                
                 // redirect to dashboard
                 
             })
             .catch((error) => {
+                console.info("error", error);
                 dispatch(authError(`Bad login info ${error}`));
             });
     };
@@ -164,13 +168,9 @@ export function userInfo() {
     return function(dispatch) {
         return authApi.userInfo()
                 .then(response => {
-                    console.info("response", response.data);
-                    
                     localStorage.setItem('companyId', response.data.user.companyId);
                     localStorage.setItem('officeId', response.data.user.officeId);
-
                     const data = response.data.user;
-
                     const company = {
                         companyId: data.company.companyId,
                         name: data.company.name,
@@ -226,6 +226,7 @@ export function signoutUser() {
     localStorage.removeItem('token');
     localStorage.removeItem('companyId');
     localStorage.removeItem('officeId');
+    localStorage.removeItem('dayId');
     return { type : types.UNAUTH_USER };
 }
 
@@ -725,9 +726,7 @@ export function loadOpenDay() {
     return function( dispatch ) {
         //dispatch( beginAjaxCall() );
         return dayApi.openDay().then( day => {
-            console.info("loadopenday", day);
                 if (day.data !== null) {
-                    //alert("haer i am ");
                     localStorage.setItem('dayId', day.data._id);
                 }
                 dispatch(loadOpenDaySuccess( day ) );

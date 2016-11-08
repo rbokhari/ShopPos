@@ -97,7 +97,7 @@ class App extends React.Component {
         if (this.props.authenticated) {
             return (
                 <Drawer open={this.state.open} docked={true} onRequestChange={(open) => this.setState({open})}>
-                    <AppBar title="Menu" showMenuIconButton={true} 
+                    <AppBar title={'User : ' + (this.props.user ? this.props.user.name : '')} showMenuIconButton={true} 
                         iconElementLeft={<IconButton><NavigationClose /></IconButton>}
                         onLeftIconButtonTouchTap={this._handleClose}
                         onTitleTouchTap={this._handleClose} />
@@ -109,26 +109,34 @@ class App extends React.Component {
                     <MenuItem checked={true} primaryText="Dispatch Board" leftIcon={<ActionAssignmentDone />} 
                         linkButton containerElement={<Link to="/dispatch" />} onTouchTap={this._handleClose}  />
                     <Divider />
-                    <MenuItem checked={true} primaryText="Suppliers" leftIcon={<ActionShoppingBasket />} 
-                        linkButton containerElement={<Link to={'/supplier'} />} onTouchTap={this._handleClose}  />
-                    <MenuItem checked={true} primaryText="Items" leftIcon={<ActionShoppingBasket />} 
-                        linkButton containerElement={<Link to={'/item'} />} onTouchTap={this._handleClose}  />
-                    <MenuItem checked={true} primaryText="Purchase Order" leftIcon={<ActionShopping />} 
-                        linkButton containerElement={<Link to={'/purchase'} />} onTouchTap={this._handleClose}  />
+                    { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
+                        <MenuItem checked={true} primaryText="Suppliers" leftIcon={<ActionShoppingBasket />} 
+                            linkButton containerElement={<Link to={'/supplier'} />} onTouchTap={this._handleClose}  />}
+                    { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
+                        <MenuItem checked={true} primaryText="Items" leftIcon={<ActionShoppingBasket />} 
+                            linkButton containerElement={<Link to={'/item'} />} onTouchTap={this._handleClose}  />}
+                    { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
+                        <MenuItem checked={true} primaryText="Purchase Order" leftIcon={<ActionShopping />} 
+                            linkButton containerElement={<Link to={'/purchase'} />} onTouchTap={this._handleClose}  />}
                     <Divider />
-                    <MenuItem primaryText="Category" leftIcon={<DeviceHub />} 
-                        linkButton containerElement={<Link to={'/category'} />} onTouchTap={this._handleClose} />
-                    <MenuItem primaryText="Products" leftIcon={<ActionReceipt />} 
-                        linkButton containerElement={<Link to={'/product'} />} onTouchTap={this._handleClose} />
+                    { this.props.user && this.props.user.roleId === USER_ROLE.ADMIN && 
+                        <MenuItem primaryText="Category" leftIcon={<DeviceHub />} 
+                            linkButton containerElement={<Link to={'/category'} />} onTouchTap={this._handleClose} />}
+                    { this.props.user && this.props.user.roleId === USER_ROLE.ADMIN && 
+                        <MenuItem primaryText="Products" leftIcon={<ActionReceipt />} 
+                            linkButton containerElement={<Link to={'/product'} />} onTouchTap={this._handleClose} />}
                     <Divider />
-                    <MenuItem primaryText="Expense" leftIcon={<ActionCardTravel />} 
-                        linkButton containerElement={<Link to={'/expense'} />} onTouchTap={this._handleClose} />
+                    { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
+                        <MenuItem primaryText="Expense" leftIcon={<ActionCardTravel />} 
+                            linkButton containerElement={<Link to={'/expense'} />} onTouchTap={this._handleClose} />}
                     <Divider />
-                    <MenuItem primaryText="Reports" leftIcon={<ActionPrint />} 
-                        linkButton containerElement={<Link to={'/report'} />} onTouchTap={this._handleClose} />
+                    { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
+                        <MenuItem primaryText="Reports" leftIcon={<ActionPrint />} 
+                            linkButton containerElement={<Link to={'/report'} />} onTouchTap={this._handleClose} />}
                     <Divider />
-                    { this.props.user && this.props.user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Users" leftIcon={<Person />} 
-                        linkButton containerElement={<Link to={'/users'} />} onTouchTap={this._handleClose} /> }
+                    { this.props.user && this.props.user.roleId === USER_ROLE.ADMIN && 
+                        <MenuItem primaryText="Users" leftIcon={<Person />} 
+                            linkButton containerElement={<Link to={'/users'} />} onTouchTap={this._handleClose} /> }
                 </Drawer>
             );
         } else {
@@ -213,7 +221,6 @@ function mapStateToProps(state, ownProps) {
     const branch = state.branch == undefined ? '' : state.branch.current.displayName; 
   //console.error("state", state.branch);
     const displayTitle = state.company === undefined ? '' : state.company.displayName + ' - ' + branch;
-
     return {
         user: state.auth.user,
         branch: branch,

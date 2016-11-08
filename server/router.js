@@ -100,6 +100,7 @@ module.exports = function(app, io) {
     app.get('/day/', Day.getAll);
     //app.get('/day/:id', Day.getById);
     app.get('/day/open', Day.getOpenDay);
+    app.get('/day/byDates', Day.getDayBetweenDates);
 
     // app.get('/', function(req, res, next) {
     //     res.send(['a', 'b', 'c']);

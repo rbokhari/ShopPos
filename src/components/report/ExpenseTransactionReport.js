@@ -45,6 +45,8 @@ class ExpenseTransactionReport extends Component {
 
     getData() {
         const { report } = this.props;
+        report.fromDate.setHours(0,0,0);
+        report.toDate.setHours(23,59,0);
         this.props.loadExpenseTransaction(report.fromDate, report.toDate);
             // .then(data => {
             //     console.info(data);

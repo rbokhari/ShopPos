@@ -64,7 +64,7 @@ class Dashboard extends Component {
 
     render() {
         //alert(this.props.day._id);
-        if (!this.props.day  || !this.props.day._id || this.props.day._id == '0') {
+        if (!this.props.day || !this.props.day._id || this.props.day._id == '0') {
             return (
                 <DayGrid day={this.props.day} 
                     onCreateDay={this.handleCreateDay}
@@ -103,7 +103,6 @@ class Dashboard extends Component {
 
 function mapStateToProps(state, ownProps) {
     var day = { _id:'0', today: '' };
-    console.info('day', state.day);
     return {
         day: state.day
     };

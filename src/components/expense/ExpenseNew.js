@@ -34,7 +34,7 @@ class ExpenseNew extends Component {
     }
 
     saveExpense(props) {
-        alert("save");
+        alert("save11");
         this.props.createExpense(props)
             .then(() => {
                 this.context.router.push('/expense');
@@ -51,7 +51,7 @@ class ExpenseNew extends Component {
                 <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
                     <CardHeader title="Expense" subtitle={ _id.value === '0' ? 'Add New' : 'Edit'} />
                     <CardText>
-                        <DatePicker name='created' floatingLabelText="Date"  
+                        <DatePicker name='created' floatingLabelText="Date" defaultValue={null} 
                             mode="landscape" {...created} onChange={(e, val) => {return created.onChange(val)}} />
                         <div>
                             <TextField name="amount" 

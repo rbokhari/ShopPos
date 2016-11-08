@@ -16,6 +16,10 @@ export default {
     purchaseOrders: [],
     users : [],
     expenses: [],
+    reportParam: {
+        fromDate: new Date(),
+        toDate: new Date()
+    },
     reportCustomerData: [],
     reportExpenseData: [],
     ajaxCallsInProgress: 0

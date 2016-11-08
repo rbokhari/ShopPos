@@ -45,6 +45,8 @@ class CustomerTransactionReport extends Component {
 
     getData() {
         const { report } = this.props;
+        report.fromDate.setHours(0,0,0);
+        report.toDate.setHours(23,59,0);
         this.props.loadCustomerTransaction(report.fromDate, report.toDate);
             // .then(data => {
             //     console.info(data);
@@ -70,9 +72,9 @@ class CustomerTransactionReport extends Component {
                     <CardHeader title="Customer" subtitle="Transaction" showExpandableButton={true} />
                     <CardText expandable={true}>
                         <div>
-                            <DatePicker name='fromDate' floatingLabelText="From Date" autoOk={true} defaultDate={this.props.report.fromDate} 
+                            <DatePicker name='fromDate' floatingLabelText="From Date" autoOk={true} 
                                 container="inline" mode="landscape" onChange={this.handleFromDate} style={{display: 'inline-block'}} />
-                            <DatePicker name='toDate' floatingLabelText="To Date" autoOk={true} defaultDate={this.props.report.toDate} 
+                            <DatePicker name='toDate' floatingLabelText="To Date" autoOk={true} 
                                 container="inline" mode="landscape" onChange={this.handleToDate} style={{display: 'inline-block'}} />
                             <RaisedButton type='button' icon={<FindReplace />} label='Search' secondary={true} onClick={this.getData.bind(this)} />
                         </div>
@@ -103,7 +105,7 @@ class CustomerTransactionReport extends Component {
                                             {customer.products.length}
                                         </TableRowColumn>
                                         <TableRowColumn>
-                                            {this.getAmount(customer.products)}
+                                            {this.getAmount(customer.products).toFixed(3)}
                                         </TableRowColumn>
                                     </TableRow>
                                 )}
@@ -124,6 +126,10 @@ class CustomerTransactionReport extends Component {
     }
 }
 
+function formatAmount(amount) {
+    return parseFloat(amount).toFixed(3);
+}
+
 function getTotalPrice(customers=[]) {
     let amount = 0;
     if (typeof customers !== undefined) {
@@ -133,7 +139,7 @@ function getTotalPrice(customers=[]) {
             });
         });
     }
-    return amount;
+    return amount.toFixed(3);
 }
 
 
@@ -142,7 +148,6 @@ function mapStateToProps(state, ownProps) {
         fromDate: new Date(), // Moment().format('DD/MM/YYYY'),
         toDate: new Date() // Moment().format('DD/MM/YYYY')
     };
-console.error(state);
     return {
         report: report,
         customers: state.reportCustomerData,

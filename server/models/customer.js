@@ -8,7 +8,7 @@ const customerSchema = new Schema({
     officeId: { type: Schema.ObjectId },
     billNo: { type: String },
     carNumber: { type: String },
-    dayId: { type: Schema.ObjectId },
+    dayId: { type: Number },
     mobileNumber: String,
     created: { type: Date, default: Date.now },
     status: { type : Number },

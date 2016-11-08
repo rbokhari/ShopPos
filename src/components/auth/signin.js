@@ -10,12 +10,13 @@ import * as actions from '../../actions';
 class SignIn extends Component {
 
     handleFormSubmit ( {email, password} ) {
-        this.props.signinUser({ email, password})
-            .then(res => {
-                this.context.router.push('/');
-            }, err => {
+        this.props.signinUser({ email, password});
+            // .then(res => {
+            //     alert("yes");
+            //     this.context.router.push('/');
+            // }, err => {
 
-            });
+            // });
     }
 
     renderAlert() {
@@ -35,9 +36,9 @@ class SignIn extends Component {
         const { handleSubmit, fields: {email, password}} = this.props;
         return (
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
-                <h4>Signin</h4>
+                <h2>Sign In</h2>
                 <div>
-                    <TextField name="name" floatingLabelText="Email" {...email} autofocus />
+                    <TextField name="name" floatingLabelText="Email" {...email} autoFocus />
                 </div>
                 <div>
                     <TextField type="password" name="password" floatingLabelText="Password" {...password} />
