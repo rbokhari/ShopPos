@@ -12,6 +12,10 @@ class ReportApi {
         return Api.get('expense/transaction/byDate', { fromDate: fromDate, toDate: toDate });
     }
 
+    static getPurchaseTransaction(fromDate, toDate) {
+        return Api.get('purchase/transaction/byDate', { fromDate: fromDate, toDate: toDate });
+    }
+
 }
 
 export default ReportApi;

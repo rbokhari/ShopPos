@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import CustomerTransactionReport from './CustomerTransactionReport';
 import ExpenseTransactionReport from './ExpenseTransactionReport';
+import PurchaseTransactionReport from './PurchaseTransactionReport';
 
 class ReportPage extends Component {
 
@@ -14,6 +15,7 @@ class ReportPage extends Component {
             <div>
                 <CustomerTransactionReport></CustomerTransactionReport>
                 <ExpenseTransactionReport></ExpenseTransactionReport>
+                <PurchaseTransactionReport></PurchaseTransactionReport>
             </div>
         );
     }

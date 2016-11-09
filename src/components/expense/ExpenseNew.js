@@ -34,7 +34,6 @@ class ExpenseNew extends Component {
     }
 
     saveExpense(props) {
-        alert("save11");
         this.props.createExpense(props)
             .then(() => {
                 this.context.router.push('/expense');
@@ -51,9 +50,9 @@ class ExpenseNew extends Component {
                 <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
                     <CardHeader title="Expense" subtitle={ _id.value === '0' ? 'Add New' : 'Edit'} />
                     <CardText>
-                        <DatePicker name='created' floatingLabelText="Date" defaultValue={null} 
+                        <DatePicker name='created' floatingLabelText="Date" value={created.value != ''? new Date(created.value) : null}  
                             mode="landscape" {...created} onChange={(e, val) => {return created.onChange(val)}} />
-                        <div>
+                        <div>{created.value}
                             <TextField name="amount" 
                                 floatingLabelText="Amount" {...amount} errorText={amount.touched && amount.error} />
                         </div>
@@ -70,8 +69,8 @@ class ExpenseNew extends Component {
             </form>
         );
     }
-}
 
+}
 
 ExpenseNew.propTypes = {
     // category: PropTypes.object.isRequired,
@@ -92,9 +91,9 @@ function getExpenseById( expenses, id ) {
 function validateForm(values) {
     const errors = {};
 
-    if (!values.code) {
-        errors.name = 'Name required';
-    }
+    // if (!values.code) {
+    //     errors.name = 'Name required';
+    // }
 
     return errors;
 }
@@ -109,6 +108,7 @@ function mapStateToProps(state, ownProps) {
     if (expenseId && state.expenses.length > 0 ) {
         expense = getExpenseById(state.expenses, expenseId);
     }
+    console.info(expense);
 
     return {
         expense: expense,

@@ -18,12 +18,18 @@ exports.createExpense = function(req, res, next) {
         officeId: officeId
     });
 
-    expense.save(function(err){
+    Expense.count({ $and : [ {companyId: companyId }, {officeId: officeId }]}, function(err, cn){
         if (err) { return next(err); }
+        expense.code = cn+1;
+        expense.save(function(err){
+            if (err) { return next(err); }
 
-        res.setHeader('Content-Type', 'application/json');
-        res.json(expense);
+            res.setHeader('Content-Type', 'application/json');
+            res.json(expense);
+        });
+
     });
+
 };
 
 exports.updateExpense = function(req, res) {

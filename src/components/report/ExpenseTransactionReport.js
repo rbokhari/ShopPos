@@ -83,8 +83,10 @@ class ExpenseTransactionReport extends Component {
                             <TableHeader displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={false}>
                                 <TableRow>
                                     <TableHeaderColumn style={{width: 5}}>Sr.</TableHeaderColumn>
+                                    <TableHeaderColumn>Code</TableHeaderColumn>
                                     <TableHeaderColumn>Date</TableHeaderColumn>
                                     <TableHeaderColumn>Amount</TableHeaderColumn>
+                                    <TableHeaderColumn>Description</TableHeaderColumn>
                                 </TableRow>
                             </TableHeader>
                             <TableBody  displayRowCheckbox={false}>
@@ -93,12 +95,12 @@ class ExpenseTransactionReport extends Component {
                                         <TableRowColumn style={{width: 5}}>
                                             {i+1}
                                         </TableRowColumn>
+                                        <TableRowColumn style={{width: 20}}>{expense.code}</TableRowColumn>
                                         <TableRowColumn>
                                             {Moment(expense.created).format('DD/MM/YYYY')}
                                         </TableRowColumn>
-                                        <TableRowColumn>
-                                            {expense.amount} 
-                                        </TableRowColumn>
+                                        <TableRowColumn>{expense.amount}</TableRowColumn>
+                                        <TableRowColumn>{expense.description}</TableRowColumn>
                                     </TableRow>
                                 )}
                             </TableBody>

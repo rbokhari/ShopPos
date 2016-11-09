@@ -30,6 +30,7 @@ class StockNew extends Component {
         this.onRemoveItem = this.onRemoveItem.bind(this);
         this.onUpdateSupplier = this.onUpdateSupplier.bind(this);
         this.onUpdateStockPrice = this.onUpdateStockPrice.bind(this);
+        this.onUpdateBillDate = this.onUpdateBillDate.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -50,6 +51,14 @@ class StockNew extends Component {
     onUpdateSupplier(event, index, value) {
         const stock = this.props.stock;
         stock.supplierId = value;
+        this.setState({
+            stock: stock
+        });
+    }
+
+    onUpdateBillDate(event, index, value) {
+        const stock = this.props.stock;
+        stock.billDate = value;
         this.setState({
             stock: stock
         });
@@ -106,7 +115,7 @@ class StockNew extends Component {
 
     render() {
         return (
-            <StockForm onChange={this.updateStockState} onSave={this.saveStock} 
+            <StockForm onChange={this.updateStockState} onSave={this.saveStock} onBillDateChange={this.onUpdateBillDate}
                 onAddStock={this.onAddNewItem} onRemoveStock={this.onRemoveItem} onUpdateSupplier={this.onUpdateSupplier}
                 onItemSelect={this.onUpdateStockItem} onQuantityChange={this.onUpdateStockQty} onStockPriceChange={this.onUpdateStockPrice}
                 stock={this.props.stock} items={this.props.items} suppliers={this.props.suppliers} errors={this.state.errors} />

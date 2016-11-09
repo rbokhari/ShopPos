@@ -25,6 +25,7 @@ const ExpenseList = ({expenses}) => {
                 <Table>
                     <TableHeader>
                         <TableRow>
+                            <TableHeaderColumn>Code</TableHeaderColumn>
                             <TableHeaderColumn>Date</TableHeaderColumn>
                             <TableHeaderColumn>Amount</TableHeaderColumn>
                             <TableHeaderColumn>Description</TableHeaderColumn>
@@ -34,6 +35,7 @@ const ExpenseList = ({expenses}) => {
                     <TableBody>
                         {expenses.map( expense =>
                             <TableRow key={expense._id}>
+                                <TableRowColumn>{expense.code}</TableRowColumn>
                                 <TableRowColumn>
                                     {Moment(expense.created).format('DD/MM/YYYY')}
                                 </TableRowColumn>

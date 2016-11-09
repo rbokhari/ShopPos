@@ -92,6 +92,7 @@ module.exports = function(app, io) {
     // Reports Routes 
     app.get('/customer/transaction/bydate', Customer.getTransaction);
     app.get('/expense/transaction/bydate', Expense.getByDate);
+    app.get('/purchase/transaction/bydate', Purchase.getByDate);
 
 
     // Days Routes

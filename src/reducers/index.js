@@ -14,6 +14,7 @@ import expenses from './expenseReducer';
 import users from './userReducer';
 import customerData from './reportCustomerReducer';
 import expenseData from './reportExpenseReducer';
+import purchaseData from './reportPurchaseReducer';
 import day from './dayReducer';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 
@@ -33,7 +34,8 @@ const rootReducer = combineReducers({
   expenses,
   users,
   reportCustomerData: customerData,
-  reportExpenseData: expenseData
+  reportExpenseData: expenseData,
+  reportPurchaseData: purchaseData
 });
 
 export default rootReducer;

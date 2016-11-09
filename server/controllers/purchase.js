@@ -73,3 +73,26 @@ exports.getById = function(req, res, next) {
         res.json(purchase);
     });
 };
+
+exports.getByDate = function(req, res, next) {
+    const fromDate = new Date(req.query.fromDate);
+    const toDate = new Date(req.query.toDate);
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+
+    Purchase.find({ 
+        $and: [
+            { companyId: companyId },
+            { officeId: officeId },
+            { billDate: {
+                $gte: fromDate,
+                $lte: toDate
+            }}
+        ] }, {}, { sort : {created: -1} }, function(err, purchases){
+        
+
+        if (err) { return next(err); }
+        res.setHeader('Content-Type', 'application/json');
+        res.json(purchases);
+    });
+};

@@ -50,7 +50,7 @@ const renderFields = ({ items }) => (
     )
 )
 
-const StockForm = ( { stock, items, suppliers, onSave, onChange, onItemSelect, onQuantityChange, onStockPriceChange, onUpdateSupplier, onAddStock, onRemoveStock, loading, errors } ) => {
+const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChange, onItemSelect, onQuantityChange, onStockPriceChange, onUpdateSupplier, onAddStock, onRemoveStock, loading, errors } ) => {
     return (
         <form>
             <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
@@ -60,7 +60,7 @@ const StockForm = ( { stock, items, suppliers, onSave, onChange, onItemSelect, o
                     <TextField name='billNo' floatingLabelText="Bill No" onChange={onChange} value={stock.billNo} />
                     
                     <DatePicker name='billDate' floatingLabelText="Bill Date" autoOk={true}  
-                                container="inline" mode="landscape" onChange={()=> {}} style={{display: 'inline-block'}} />
+                                container="inline" mode="landscape" onChange={onBillDateChange} style={{display: 'inline-block'}} />
                     </div>
                     <div>
                         <SelectField name='supplierId' hintText="select supplier" value={stock.supplierId} onChange={onUpdateSupplier} underlineShow={true}>
