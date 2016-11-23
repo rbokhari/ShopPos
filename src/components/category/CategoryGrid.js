@@ -3,14 +3,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 const styles = {
     backgroundColor: '#4B77BE',
-    margin: 15,
-    width: 120,
-    height: 60
+    margin: 10,
+    //width: 120,
+    height: 50
 };
 
 const CategoryGrid = ( { categories, onCategorySelect, loading, errors } ) => {
     return (
-        <div style={{width: 450}}>
+        <div >
             {categories.map(category=>
                 <RaisedButton id={category._id} name={category._id} key={category._id} label={category.name} 
                     primary={true} style={styles}

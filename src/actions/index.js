@@ -94,7 +94,6 @@ export function signinUser( {email, password }) {
         return authApi.signIn({email:email, password: password})
             .then(response => {
                 // update state to indicate user is authenticated
-
                 // save the JWT token
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('companyId', response.data.user.companyId);

@@ -36,8 +36,6 @@ class SalesBoard extends Component {
             errors: {}
         };
 
-
-
         this.props.loadCategories();
         this.props.loadProducts();
         
@@ -184,7 +182,7 @@ class SalesBoard extends Component {
                     <Card style={{
                             flexGrow: 1,
                         }} >
-                        <CardHeader title="Customer"  />
+                        <CardHeader title="Customer" />
                         
                         <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total}
                             onHandleIncrease={this.handleIncreaseQty} onHandleDecrease={this.handleDecreaseQty} onHandleDelete={this.handleDeleteItem}
@@ -192,8 +190,10 @@ class SalesBoard extends Component {
 
                     </Card>
                     <Card style={{
-                            flexGrow: 1,
-                            marginLeft: 10
+                            //flexGrow: 1,
+                            marginLeft: 10,
+                            width: 400,
+                            minWidth: 300
                         }} >
                         <CardHeader title="Categories"> 
                             

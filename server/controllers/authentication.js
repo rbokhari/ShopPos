@@ -21,6 +21,7 @@ exports.signin = function(req, res, next) {
     //     companyId: req.user.companyId,
     //     status: req.user.status
     // };
+    console.log("singin");
     const user = req.user;
     var result = {
         userId: user._id,

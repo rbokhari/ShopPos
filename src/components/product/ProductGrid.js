@@ -6,14 +6,14 @@ import Subheader from 'material-ui/Subheader';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 
 const style = {
-    margin: 15,
+    margin: 10,
     //width: 120,
     height: 60
 };
 
 const ProductGrid = ( { products, onProductSelect, loading, errors } ) => {
     return (
-        <div style={{width: 450}}>
+        <div>
             {products.map(product=>
                 <RaisedButton id={product._id} name={product._id} key={product._id} 
                     label={product.name} secondary={true} style={style}

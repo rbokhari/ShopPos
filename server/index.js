@@ -18,19 +18,19 @@ mongoose.connect('mongodb://127.0.0.1:27017/CoffeeShop');
 app.use(cors());
 app.use(bodyParser.json({ type: '*/*' }));
 app.use(function(req, res, next) {
-    //res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.header("Access-Control-Allow-Origin", "*");
+    //res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    //res.header("Access-Control-Allow-Origin", "http://localhost:8081");
     res.header('Access-Control-Allow-Credentials', false);
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, CompanyId, OfficeId, DayId");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD");
     next();
 });
 
-
 // Server Setup
 const port = process.env.PORT || 3090;
 const server = http.createServer(app);
-server.listen(port, function() {
+server.listen(port, '0.0.0.0', function() {
     console.log('Server listening on: ', port);
 });
 
@@ -44,5 +44,4 @@ io.on('connection', function(socket){
 });
 
 //io.socket.emit('customer', '1');
-
 router(app, io);
