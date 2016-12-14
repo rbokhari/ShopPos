@@ -11,6 +11,8 @@ const customerSchema = new Schema({
     dayId: { type: Number },
     mobileNumber: String,
     created: { type: Date, default: Date.now },
+    finished: { type: Date, default: Date.now },
+    option: { type: String },
     status: { type : Number },
     products: [{
         productId: { type: Schema.ObjectId },
@@ -21,6 +23,7 @@ const customerSchema = new Schema({
         unitPrice: { type: Number },
         price: { type: Number },
         type: { type: Number },
+        note: { type: String },
         items: [{
             //_id: { type: Schema.ObjectId },
             itemId: { type: Schema.ObjectId },

@@ -10,6 +10,8 @@ import ActionDone from 'material-ui/svg-icons/action/done';
 import ActionDoneAll from 'material-ui/svg-icons/action/done-all';
 import DeviceAccessTime from 'material-ui/svg-icons/device/access-time';
 
+import {grey400, darkBlack, lightBlack, blue500, teal500, yellow50} from 'material-ui/styles/colors';
+
 import * as actions from '../../actions';
 import { CUSTOMER_STATUS } from '../../../shared/constants';
 
@@ -25,8 +27,8 @@ import Divider from 'material-ui/Divider';
 
 const style = {
     card: {
-        width: 290,
-        maxWidth: 290,
+        width: 360,
+        maxWidth: 360,
         marginTop: 10,
         marginRight: 10,
         display: 'inline-block',
@@ -63,19 +65,22 @@ class Customers extends React.Component {
             return (
                 <ListItem key={index} leftCheckbox={<Checkbox />}
                     rightIcon={<Badge badgeContent={product.qty} secondary={true} />}
-                    primaryText={product.productName} secondaryText={product.categoryName} >
+                primaryText={<span>{product.productName} <span style={{color: lightBlack}} >[{product.categoryName}]</span></span>} 
+                    secondaryText={product.note} secondaryTextLines={2} >
                 </ListItem>
             );
         }
-
         return (
             <div style={style.div}>
                 {_.sortBy(this.props.customers.filter(statusCheck), ['created']).map(customer=>
                     <Card key={customer._id} style={style.card}>
-                        <CardHeader
-                            title={'Bill : ' + customer.billNo + ' @ ' + Moment(customer.created).format('dddd h:mm')} subtitle={'Car/Mobile : ' + (customer.carNumber == '' || undefined ? customer.mobileNumber : customer.carNumber)} />
+                        <CardHeader style={{width:400}}
+                            title={
+                                <span>Bill : {customer.billNo} @ {Moment(customer.created).format('dddd h:mm')} {customer.option==='1' ? <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>Take Away </span> : <span style={{backgroundColor:blue500, padding:2, color:yellow50}}>Dine In </span>}</span>
+                            } 
+                            subtitle={<p>{customer.option==='1' ? 'Car/Mobile' : 'Table'} : {customer.carNumber == '' || undefined ? customer.mobileNumber : customer.carNumber}</p>} />
                         <List>
-                            <Subheader>Order List</Subheader>
+                            <Subheader>Order List {customer.option}</Subheader>
                             {customer.products.map((product,index) => 
                                 listItem(product, index)
                             )}

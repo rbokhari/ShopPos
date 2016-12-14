@@ -49,7 +49,7 @@ const ProductList = ({products, showName}) => {
                             </TableRow>
                         )}
                     </TableBody>
-                </Table>                
+                </Table>
         </Card>
     );
 }

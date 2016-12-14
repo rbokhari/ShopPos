@@ -24,6 +24,7 @@ exports.createCustomer = function(req, res, next) {
         carNumber: req.body.carNumber,
         mobileNumber: req.body.mobileNumber,
         created: new Date().now,
+        option: req.body.option,
         status: req.body.status,
         products: productsItem
     });
@@ -37,11 +38,9 @@ exports.createCustomer = function(req, res, next) {
                 Item.update({_id: item.itemId},  { $inc : { stock : -(item.qty * product.qty) } }, function(err, numAffected) {
                     if (index === customer.products.length-1 && i === product.items.length -1) {
                         customer.save(function(err){
-                            console.log("here last", customer.products);
                             if (err) { return next(err); }
                             next();
                             res.setHeader('Content-Type', 'application/json');
-                            console.log(customer);
                             res.json(customer);
                         });
                     }
@@ -54,7 +53,15 @@ exports.createCustomer = function(req, res, next) {
 exports.updateCustomer = function(req, res, next) {
     // next();
     // res.json(req.body);
-    Customer.update({_id: req.params.id}, { status: req.params.newStatus }, { multi: false }, function(err, numAffected) {
+    console.log(new Date());
+    console.log(new Date().now);
+    const finishedDate = new Date().now; 
+    var customerUpdate = {
+        status: req.params.newStatus, 
+        finished: new Date() 
+    };
+    console.log(customerUpdate);
+    Customer.update({_id: req.params.id}, customerUpdate, { multi: false }, function(err, numAffected) {
         if (err) { return next(err); }
         next();
         res.json(req.body);

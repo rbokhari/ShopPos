@@ -6,6 +6,8 @@ import Snackbar from 'material-ui/Snackbar';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import IconButton from 'material-ui/IconButton';
 import ContentSend from 'material-ui/svg-icons/content/send';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 import * as actions from '../../actions';
 
@@ -25,10 +27,13 @@ class SalesBoard extends Component {
             // products: this.props.products,
             filterProducts: [],
             snakbarStatus: false,
+            openNote: false,
+            itemIndexNote: -1,
             //customerProducts: [],
             customer: {
                 carNumber: '',
                 mobileNumber: '',
+                option: '1',
                 status: 0,
                 total: 0,
                 products: []   
@@ -44,6 +49,8 @@ class SalesBoard extends Component {
         this.handleIncreaseQty = this.handleIncreaseQty.bind(this);
         this.handleDecreaseQty = this.handleDecreaseQty.bind(this);
         this.handleDeleteItem = this.handleDeleteItem.bind(this);  
+        this.handleAddNote = this.handleAddNote.bind(this);
+        this.handleCloseNote = this.handleCloseNote.bind(this);
         //this.calculateTotal = this.calculateTotal.bind(this);
         this.handleCustomerFormChange = this.handleCustomerFormChange.bind(this);
         this.handleCustomerFormSubmit = this.handleCustomerFormSubmit.bind(this);
@@ -77,6 +84,7 @@ class SalesBoard extends Component {
         const customer = {
             carNumber: '',
             mobileNumber: '',
+            option: '1',
             status: 0,
             products: [] 
         };
@@ -124,6 +132,30 @@ class SalesBoard extends Component {
         this.calculateTotal();
     }
 
+    handleAddNote(index) {
+        this.setState({
+            openNote: true,
+            itemIndexNote: index
+        });
+        const cust = this.state.customer;
+        if (cust.products[index].note !== '') {
+            const note = this.refs.tNote;
+            console.error('note', note);
+            //note.value = cust.products[index].note;
+        }
+    }
+
+    handleCloseNote() {
+        const note = this.refs.tNote;
+        const beforeItems = this.state.customer;
+        beforeItems.products[this.state.itemIndexNote].note = note.value;
+        this.setState({
+            openNote: false,
+            itemIndexNote: -1,
+            customer: beforeItems
+        });
+    }
+
     handleProductSelect(id, productName, categoryId, categoryName, qty, price, type, items) {
         //const itemsCount = this.state.customerItems.length;
         const product = {
@@ -136,10 +168,10 @@ class SalesBoard extends Component {
             unitPrice: price,
             price: price,
             type: type,
+            note: '',
             items: items
         };
         const customer = this.state.customer;
-
         customer.products = [...this.state.customer.products, product];
         this.setState({ customer: customer });
         this.calculateTotal();
@@ -156,6 +188,7 @@ class SalesBoard extends Component {
 
     handleCustomerFormSubmit() {
         var customer = this.state.customer;
+        console.log('custoemr', customer);
         this.props.createCustomer( customer )
             .then(res => {
                 this.setState({
@@ -172,6 +205,10 @@ class SalesBoard extends Component {
     }
 
     render() {
+        const actions = [
+            <FlatButton label="OK" primary={true} onTouchTap={this.handleCloseNote} />,
+            <FlatButton label="Cancel" primary={false} onTouchTap={()=> this.setState({ openNote: false})} />
+        ];
 
         return (
             <div>
@@ -186,8 +223,14 @@ class SalesBoard extends Component {
                         
                         <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total}
                             onHandleIncrease={this.handleIncreaseQty} onHandleDecrease={this.handleDecreaseQty} onHandleDelete={this.handleDeleteItem}
-                            errors={this.state.errors} />
+                            onHandleNote={this.handleAddNote} errors={this.state.errors} />
+        <Dialog
+            title="Add Customization" actions={actions} onRequestClose={this.handleCloseNote}
+            modal={true} open={this.state.openNote}
+            autoScrollBodyContent={true} >
 
+                <textarea ref='tNote' style={{}} rows={3}></textarea>
+        </Dialog>
                     </Card>
                     <Card style={{
                             //flexGrow: 1,
@@ -235,6 +278,7 @@ function mapStateToProps(state, ownProps) {
         products: state.products,
         categories: state.categories,
         branch: state.branch.current,
+        //openNote: false
     };
 }
 

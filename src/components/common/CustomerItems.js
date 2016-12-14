@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {blue500, red500, greenA200} from 'material-ui/styles/colors';
+import {blue500, red500, greenA200, grey500} from 'material-ui/styles/colors';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
 import FlatButton from 'material-ui/FlatButton';
@@ -8,10 +8,16 @@ import IconButton from 'material-ui/IconButton';
 import Badge from 'material-ui/Badge';
 
 import ActionDelete from 'material-ui/svg-icons/action/delete';
+import ActionNoteAdd from 'material-ui/svg-icons/action/note-add';
+import ActionSpeakerNote from 'material-ui/svg-icons/action/speaker-notes';
 import ArrowUp from 'material-ui/svg-icons/image/exposure-plus-1';
 import ArrowDown from 'material-ui/svg-icons/image/exposure-neg-1';
 
-const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecrease, onHandleDelete, errors } ) => {
+const styles = {
+    margin: -5
+};
+
+const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecrease, onHandleDelete, onHandleNote, errors } ) => {
     
         return (
             <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 750 }} selectable={false}>
@@ -32,7 +38,7 @@ const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecreas
                                 {index+1}
                             </TableRowColumn>
                             <TableRowColumn style={{width: 200}}>
-                                {item.productName} ({item.unitPrice})
+                                {item.productName} ({item.unitPrice}) {item.note == '' ? '' : <ActionSpeakerNote color={blue500} />}
                             </TableRowColumn>
                             <TableRowColumn style={{width: 100}}>
                                 {item.categoryName}
@@ -44,9 +50,10 @@ const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecreas
                                 {item.price}
                             </TableRowColumn>
                             <TableRowColumn style={{width: 150}}>
-                                <IconButton onClick={onHandleDelete.bind(this, index)}><ActionDelete color={red500} /></IconButton>
-                                <IconButton onClick={onHandleIncrease.bind(this, index)}><ArrowUp color={greenA200} /></IconButton>
-                                <IconButton onClick={onHandleDecrease.bind(this, index)}><ArrowDown color={red500} /></IconButton>
+                                <IconButton style={styles} onClick={onHandleIncrease.bind(this, index)}><ArrowUp color={greenA200} /></IconButton>
+                                <IconButton style={styles} onClick={onHandleDecrease.bind(this, index)}><ArrowDown color={red500} /></IconButton>
+                                <IconButton style={styles} onClick={onHandleNote.bind(this, index)}><ActionNoteAdd color={grey500} /></IconButton>
+                                <IconButton style={styles} onClick={onHandleDelete.bind(this, index)}><ActionDelete color={red500} /></IconButton>
                             </TableRowColumn>
                         </TableRow>
                     )}
@@ -68,7 +75,8 @@ CustomerItems.propTypes = {
     errors: React.PropTypes.object,
     onHandleIncrease: React.PropTypes.func.isRequired,
     onHandleDecrease: React.PropTypes.func.isRequired,
-    onHandleDelete: React.PropTypes.func.isRequired
+    onHandleDelete: React.PropTypes.func.isRequired,
+    onHandleNote: React.PropTypes.func.isRequired
 };
 
 export default CustomerItems;
