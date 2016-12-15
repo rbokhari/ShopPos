@@ -29,6 +29,7 @@ class SalesBoard extends Component {
             snakbarStatus: false,
             openNote: false,
             itemIndexNote: -1,
+            isCustom: false,
             //customerProducts: [],
             customer: {
                 carNumber: '',
@@ -51,6 +52,7 @@ class SalesBoard extends Component {
         this.handleDeleteItem = this.handleDeleteItem.bind(this);  
         this.handleAddNote = this.handleAddNote.bind(this);
         this.handleCloseNote = this.handleCloseNote.bind(this);
+        this.handleRowSelection = this.handleRowSelection.bind(this);
         //this.calculateTotal = this.calculateTotal.bind(this);
         this.handleCustomerFormChange = this.handleCustomerFormChange.bind(this);
         this.handleCustomerFormSubmit = this.handleCustomerFormSubmit.bind(this);
@@ -132,6 +134,14 @@ class SalesBoard extends Component {
         this.calculateTotal();
     }
 
+    handleRowSelection(data) {
+        console.log(this.state.isCustom);
+        console.log(data, data.length > 0);
+        this.setState({ 
+            itemIndexNote: data.length > 0 ? data[0] : -1
+        });
+    }
+
     handleAddNote(index) {
         this.setState({
             openNote: true,
@@ -188,7 +198,6 @@ class SalesBoard extends Component {
 
     handleCustomerFormSubmit() {
         var customer = this.state.customer;
-        console.log('custoemr', customer);
         this.props.createCustomer( customer )
             .then(res => {
                 this.setState({
@@ -219,11 +228,12 @@ class SalesBoard extends Component {
                     <Card style={{
                             flexGrow: 1,
                         }} >
-                        <CardHeader title="Customer" />
+                        <CardHeader title="Customer Order" />
                         
-                        <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total}
+                        <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total} rowSelectIndex={this.state.itemIndexNote}
                             onHandleIncrease={this.handleIncreaseQty} onHandleDecrease={this.handleDecreaseQty} onHandleDelete={this.handleDeleteItem}
-                            onHandleNote={this.handleAddNote} errors={this.state.errors} />
+                            onHandleNote={this.handleAddNote} onHandleRowSelection={this.handleRowSelection} errors={this.state.errors} />
+
         <Dialog
             title="Add Customization" actions={actions} onRequestClose={this.handleCloseNote}
             modal={true} open={this.state.openNote}
@@ -236,9 +246,10 @@ class SalesBoard extends Component {
                             //flexGrow: 1,
                             marginLeft: 10,
                             width: 400,
-                            minWidth: 300
+                            minWidth: 300,
+                            display: this.state.itemIndexNote > -1 ? 'none' : 'block'
                         }} >
-                        <CardHeader title="Categories"> 
+                        <CardHeader title="Menu Products"> 
                             
                         </CardHeader>
 
@@ -252,6 +263,20 @@ class SalesBoard extends Component {
                             loading={false} errors={this.state.errors}
                             onProductSelect={this.handleProductSelect} />
                             
+                    </Card>
+
+                    <Card style={{
+                            //flexGrow: 1,
+                            marginLeft: 10,
+                            width: 400,
+                            minWidth: 300,
+                            display: this.state.itemIndexNote > -1 ? 'block' : 'none'
+                        }} >
+                        <CardHeader title="Add On"> 
+                            
+                        </CardHeader>
+
+                        <Divider />
                     </Card>
                     <Snackbar open={this.state.snakbarStatus}
                         message="New Customer Added !"

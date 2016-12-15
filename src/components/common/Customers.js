@@ -66,7 +66,7 @@ class Customers extends React.Component {
                 <ListItem key={index} leftCheckbox={<Checkbox />}
                     rightIcon={<Badge badgeContent={product.qty} secondary={true} />}
                 primaryText={<span>{product.productName} <span style={{color: lightBlack}} >[{product.categoryName}]</span></span>} 
-                    secondaryText={product.note} secondaryTextLines={2} >
+                    secondaryText={<span>{product.note} <ul><li>first</li><li>second.</li></ul></span>} secondaryTextLines={2} >
                 </ListItem>
             );
         }

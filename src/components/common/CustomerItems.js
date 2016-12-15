@@ -17,11 +17,11 @@ const styles = {
     margin: -5
 };
 
-const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecrease, onHandleDelete, onHandleNote, errors } ) => {
+const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecrease, onHandleDelete, onHandleNote, onHandleRowSelection, rowSelectIndex, errors } ) => {
     
         return (
-            <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 750 }} selectable={false}>
-                <TableHeader  displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={false}>
+            <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 750 }} selectable={true} onRowSelection={onHandleRowSelection.bind(this)}>
+                <TableHeader  displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={true}>
                     <TableRow>
                         <TableHeaderColumn style={{width: 5}} >Sr</TableHeaderColumn>
                         <TableHeaderColumn style={{width: 200}}>Name</TableHeaderColumn>
@@ -31,11 +31,11 @@ const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecreas
                         <TableHeaderColumn style={{width: 150}}>Action</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
-                <TableBody displayRowCheckbox={false}>
+                <TableBody displayRowCheckbox={true} deselectOnClickaway={false}>
                     {products.map((item, index) =>
-                        <TableRow key={index} >
+                        <TableRow key={index} selected={index === rowSelectIndex}>
                             <TableRowColumn style={{width: 5}}>
-                                {index+1}
+                                {index+1} 
                             </TableRowColumn>
                             <TableRowColumn style={{width: 200}}>
                                 {item.productName} ({item.unitPrice}) {item.note == '' ? '' : <ActionSpeakerNote color={blue500} />}
@@ -76,7 +76,8 @@ CustomerItems.propTypes = {
     onHandleIncrease: React.PropTypes.func.isRequired,
     onHandleDecrease: React.PropTypes.func.isRequired,
     onHandleDelete: React.PropTypes.func.isRequired,
-    onHandleNote: React.PropTypes.func.isRequired
+    onHandleNote: React.PropTypes.func.isRequired,
+    onHandleRowSelection: React.PropTypes.func.isRequired
 };
 
 export default CustomerItems;

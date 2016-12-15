@@ -48,7 +48,7 @@ class CategoryNew extends Component {
     }
 
     render() {
-        const {handleSubmit, fields: { _id, name, description, status } }  = this.props;
+        const {handleSubmit, fields: { _id, name, description, addons, status } }  = this.props;
 
         return (
             <form onSubmit={handleSubmit(this.saveCategory.bind(this))}>
@@ -58,6 +58,10 @@ class CategoryNew extends Component {
                     <div>
                         <TextField name="name" 
                             floatingLabelText="Category Name" {...name} errorText={name.touched && name.error} />
+                    </div>
+                    <div>
+                        <TextField name="description" 
+                            floatingLabelText="Description" {...description} />
                     </div>
                     <div>
                         <TextField name="description" 
@@ -126,7 +130,7 @@ function mapStateToProps(state, ownProps) {
 
 export default reduxForm({
     form: 'category',
-    fields: ['_id', 'name', 'description', 'status' ],
+    fields: ['_id', 'name', 'description', 'addons', 'status' ],
     validate: validateForm
 }, mapStateToProps, { createCategory: createCategory } )(CategoryNew);
 
