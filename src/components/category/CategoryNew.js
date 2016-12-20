@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { Link } from 'react-router';
-import { reduxForm } from 'redux-form';
+import { reduxForm, Field, FieldArray } from 'redux-form';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
@@ -49,6 +49,15 @@ class CategoryNew extends Component {
 
     render() {
         const {handleSubmit, fields: { _id, name, description, addons, status } }  = this.props;
+        const arrayData = [{name: '', price: ''}];
+// const renderAddons = (fields) => (
+//     fields.map((addon, index) => (
+//         <div key={index}>
+//             <input type='text' />
+//         </div>
+//         )
+//     )
+// )
 
         return (
             <form onSubmit={handleSubmit(this.saveCategory.bind(this))}>
@@ -60,15 +69,13 @@ class CategoryNew extends Component {
                             floatingLabelText="Category Name" {...name} errorText={name.touched && name.error} />
                     </div>
                     <div>
-                        <TextField name="description" 
-                            floatingLabelText="Description" {...description} />
-                    </div>
-                    <div>
-                        <TextField name="description" 
-                            floatingLabelText="Description" {...description} />
+                        <TextField name="description" floatingLabelText="Description" {...description} />
                     </div>
                     <div>
                         <Checkbox name="status" label="Status" {...status} style={styles.checkbox} checked={status.value} onCheck={(e, checked) => status.onChange(checked)} />
+                    </div>
+                    <div>
+                        
                     </div>
                 </CardText>
                 <CardActions>
@@ -102,7 +109,6 @@ function getCategoryById( categories, id ) {
 
 function validateForm(values) {
     const errors = {};
-    console.log(values);
 
     if (!values.name) {
         errors.name = 'Name required';
@@ -115,7 +121,7 @@ function mapStateToProps(state, ownProps) {
     const categoryId = ownProps.params.id;
     
     let category = {
-        _id: '0', name: '', description: '', status:1
+        _id: '0', name: '', description: '', addons: [{name:'', price:0}], status:1
     };
 
     if (categoryId && state.categories.length > 0 ) {

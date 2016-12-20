@@ -38,7 +38,7 @@ const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecreas
                                 {index+1} 
                             </TableRowColumn>
                             <TableRowColumn style={{width: 200}}>
-                                {item.productName} ({item.unitPrice}) {item.note == '' ? '' : <ActionSpeakerNote color={blue500} />}
+                                {item.productName} ({item.unitPrice}) {item.addons.length == 0 ? '' : <ActionSpeakerNote color={blue500} />}
                             </TableRowColumn>
                             <TableRowColumn style={{width: 100}}>
                                 {item.categoryName}

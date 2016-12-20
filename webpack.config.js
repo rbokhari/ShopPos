@@ -28,7 +28,7 @@ module.exports = {
                     path.join(__dirname, 'src'),
                     path.join(__dirname, 'shared')
                 ],
-                loader: 'react-hot!babel'
+                loader: 'babel'
             },
             {
                 test: /\.scss$/,

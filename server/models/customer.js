@@ -24,10 +24,15 @@ const customerSchema = new Schema({
         price: { type: Number },
         type: { type: Number },
         note: { type: String },
+        addons: [{ 
+            _id: { type: Schema.ObjectId }, 
+            name: { type: String}, 
+            price: { type: Number }
+        }],
         items: [{
             //_id: { type: Schema.ObjectId },
             itemId: { type: Schema.ObjectId },
-            itemName: String,
+            itemName: { type: String },
             qty: { type: Number }
         }],
     }]

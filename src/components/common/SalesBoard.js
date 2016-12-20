@@ -12,9 +12,11 @@ import FlatButton from 'material-ui/FlatButton';
 import * as actions from '../../actions';
 
 import CategoryGrid from '../category/CategoryGrid';
+import CategoryAddOnGrid from '../category/CategoryAddOnGrid';
 import ProductGrid from '../product/ProductGrid';
 import CustomerItems from './CustomerItems';
 import CustomerForm from './CustomerForm';
+import CustomerAddonSelected from './CustomerSelectedAddon';
 import { PRODUCT_TYPE, PRODUCT_TYPE_LABEL } from '../../../shared/constants';
 
 class SalesBoard extends Component {
@@ -30,6 +32,7 @@ class SalesBoard extends Component {
             openNote: false,
             itemIndexNote: -1,
             isCustom: false,
+            categoryId: '0',
             //customerProducts: [],
             customer: {
                 carNumber: '',
@@ -53,6 +56,9 @@ class SalesBoard extends Component {
         this.handleAddNote = this.handleAddNote.bind(this);
         this.handleCloseNote = this.handleCloseNote.bind(this);
         this.handleRowSelection = this.handleRowSelection.bind(this);
+        this.handleAddOnAdd = this.handleAddOnAdd.bind(this);
+        this.handleAddOnDelete = this.handleAddOnDelete.bind(this);
+
         //this.calculateTotal = this.calculateTotal.bind(this);
         this.handleCustomerFormChange = this.handleCustomerFormChange.bind(this);
         this.handleCustomerFormSubmit = this.handleCustomerFormSubmit.bind(this);
@@ -88,9 +94,14 @@ class SalesBoard extends Component {
             mobileNumber: '',
             option: '1',
             status: 0,
+            total: 0,
             products: [] 
         };
-        this.setState({ customer: customer });
+        this.setState({ 
+            customer: customer, 
+            itemIndexNote: -1, 
+            categoryId: '0' 
+        });
     }
 
     calculateTotal() {
@@ -98,7 +109,12 @@ class SalesBoard extends Component {
         var total = 0;
         _.each(items, (item, index) => {
             total += item.price;
+
+            _.each(item.addons, (addon, index) => {
+                total += addon.price;
+            });
         });
+
         var customer = this.state.customer;
         customer.total = parseFloat(Math.round(total * 100) / 100).toFixed(3);
         this.setState({ customer: customer });
@@ -135,11 +151,34 @@ class SalesBoard extends Component {
     }
 
     handleRowSelection(data) {
-        console.log(this.state.isCustom);
-        console.log(data, data.length > 0);
+        const catId = data.length > 0 ? this.state.customer.products[data[0]].categoryId : '0';
         this.setState({ 
-            itemIndexNote: data.length > 0 ? data[0] : -1
+            itemIndexNote: data.length > 0 ? data[0] : -1,
+            categoryId: catId
         });
+    }
+
+    handleAddOnAdd(id, name, price) {
+        const customer = this.state.customer;
+        const index = this.state.itemIndexNote;
+        const addon = {
+            _id: id,
+            name: name,
+            price: price
+        };
+        console.log(customer);
+        customer.products[index].addons = [...customer.products[index].addons, addon];
+        this.setState({ customer: customer});
+        this.calculateTotal();
+    }
+
+    handleAddOnDelete(id) {
+        console.log(id);
+        const customer = this.state.customer;
+        const productIndex = this.state.itemIndexNote;
+        customer.products[productIndex].addons.splice(id, 1);
+        this.setState({ customer: customer });
+        this.calculateTotal();
     }
 
     handleAddNote(index) {
@@ -179,6 +218,7 @@ class SalesBoard extends Component {
             price: price,
             type: type,
             note: '',
+            addons: [],
             items: items
         };
         const customer = this.state.customer;
@@ -198,6 +238,7 @@ class SalesBoard extends Component {
 
     handleCustomerFormSubmit() {
         var customer = this.state.customer;
+        console.log("customer submit", customer);
         this.props.createCustomer( customer )
             .then(res => {
                 this.setState({
@@ -228,7 +269,7 @@ class SalesBoard extends Component {
                     <Card style={{
                             flexGrow: 1,
                         }} >
-                        <CardHeader title="Customer Order" />
+                        <CardHeader title="Customer Order" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}/>
                         
                         <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total} rowSelectIndex={this.state.itemIndexNote}
                             onHandleIncrease={this.handleIncreaseQty} onHandleDecrease={this.handleDecreaseQty} onHandleDelete={this.handleDeleteItem}
@@ -249,7 +290,7 @@ class SalesBoard extends Component {
                             minWidth: 300,
                             display: this.state.itemIndexNote > -1 ? 'none' : 'block'
                         }} >
-                        <CardHeader title="Menu Products"> 
+                        <CardHeader title="Menu Products" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> 
                             
                         </CardHeader>
 
@@ -265,19 +306,33 @@ class SalesBoard extends Component {
                             
                     </Card>
 
-                    <Card style={{
+                    <div style={{
                             //flexGrow: 1,
+                            display:'block',
                             marginLeft: 10,
                             width: 400,
                             minWidth: 300,
                             display: this.state.itemIndexNote > -1 ? 'block' : 'none'
-                        }} >
-                        <CardHeader title="Add On"> 
-                            
-                        </CardHeader>
+                        }}>
+                            <Card style={{height: 290}}>
+                                <CardHeader title="Add On" style={{fontStyle: 'bold'}} style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> 
+                                </CardHeader>
 
-                        <Divider />
-                    </Card>
+                                <CategoryAddOnGrid categories={this.props.categories} loading={false} errors={this.state.errors}
+                                    onAddOnSelect={this.handleAddOnAdd} categoryId={this.state.categoryId} />
+
+                            </Card>
+                            <br />
+                            <Card style={{height: 250}}>
+                                <CardHeader title="Selected AddOns" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> 
+                                </CardHeader>
+
+                                <CustomerAddonSelected customer={this.state.customer} productIndex={this.state.itemIndexNote}
+                                    onAddOnDelete={this.handleAddOnDelete} />
+                            </Card>
+
+                    </div>
+                    
                     <Snackbar open={this.state.snakbarStatus}
                         message="New Customer Added !"
                         autoHideDuration={2000}

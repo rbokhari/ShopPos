@@ -103,40 +103,40 @@ class App extends React.Component {
                         onTitleTouchTap={this._handleClose} />
 
                     <MenuItem checked={true} primaryText="Sales Board" leftIcon={<ActionAssignment />} 
-                        linkButton containerElement={<Link to="/" />} onTouchTap={this._handleClose}  />
+                        containerElement={<Link to="/" />} onTouchTap={this._handleClose}  />
                     <MenuItem checked={true} primaryText="Kitchen Board" leftIcon={<ActionAssignmentReturned />} 
-                        linkButton containerElement={<Link to="/kitchen" />} onTouchTap={this._handleClose}  />
+                         containerElement={<Link to="/kitchen" />} onTouchTap={this._handleClose}  />
                     <MenuItem checked={true} primaryText="Dispatch Board" leftIcon={<ActionAssignmentDone />} 
-                        linkButton containerElement={<Link to="/dispatch" />} onTouchTap={this._handleClose}  />
+                         containerElement={<Link to="/dispatch" />} onTouchTap={this._handleClose}  />
                     <Divider />
                     { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
                         <MenuItem checked={true} primaryText="Suppliers" leftIcon={<ActionShoppingBasket />} 
-                            linkButton containerElement={<Link to={'/supplier'} />} onTouchTap={this._handleClose}  />}
+                             containerElement={<Link to={'/supplier'} />} onTouchTap={this._handleClose}  />}
                     { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
                         <MenuItem checked={true} primaryText="Items" leftIcon={<ActionShoppingBasket />} 
-                            linkButton containerElement={<Link to={'/item'} />} onTouchTap={this._handleClose}  />}
+                             containerElement={<Link to={'/item'} />} onTouchTap={this._handleClose}  />}
                     { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
                         <MenuItem checked={true} primaryText="Purchase Order" leftIcon={<ActionShopping />} 
-                            linkButton containerElement={<Link to={'/purchase'} />} onTouchTap={this._handleClose}  />}
+                             containerElement={<Link to={'/purchase'} />} onTouchTap={this._handleClose}  />}
                     <Divider />
                     { this.props.user && this.props.user.roleId === USER_ROLE.ADMIN && 
                         <MenuItem primaryText="Category" leftIcon={<DeviceHub />} 
-                            linkButton containerElement={<Link to={'/category'} />} onTouchTap={this._handleClose} />}
+                             containerElement={<Link to={'/category'} />} onTouchTap={this._handleClose} />}
                     { this.props.user && this.props.user.roleId === USER_ROLE.ADMIN && 
                         <MenuItem primaryText="Products" leftIcon={<ActionReceipt />} 
-                            linkButton containerElement={<Link to={'/product'} />} onTouchTap={this._handleClose} />}
+                             containerElement={<Link to={'/product'} />} onTouchTap={this._handleClose} />}
                     <Divider />
                     { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
                         <MenuItem primaryText="Expense" leftIcon={<ActionCardTravel />} 
-                            linkButton containerElement={<Link to={'/expense'} />} onTouchTap={this._handleClose} />}
+                             containerElement={<Link to={'/expense'} />} onTouchTap={this._handleClose} />}
                     <Divider />
                     { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
                         <MenuItem primaryText="Reports" leftIcon={<ActionPrint />} 
-                            linkButton containerElement={<Link to={'/report'} />} onTouchTap={this._handleClose} />}
+                             containerElement={<Link to={'/report'} />} onTouchTap={this._handleClose} />}
                     <Divider />
                     { this.props.user && this.props.user.roleId === USER_ROLE.ADMIN && 
                         <MenuItem primaryText="Users" leftIcon={<Person />} 
-                            linkButton containerElement={<Link to={'/users'} />} onTouchTap={this._handleClose} /> }
+                             containerElement={<Link to={'/users'} />} onTouchTap={this._handleClose} /> }
                 </Drawer>
             );
         } else {
@@ -148,9 +148,9 @@ class App extends React.Component {
                         onTitleTouchTap={this._handleClose} />
 
                     <MenuItem checked={true} primaryText="Create Account" leftIcon={<ActionAssignment />} 
-                        linkButton containerElement={<Link to="/createAccount" />} onTouchTap={this._handleClose}  />
+                         containerElement={<Link to="/createAccount" />} onTouchTap={this._handleClose}  />
                     <MenuItem checked={true} primaryText="Login" leftIcon={<ActionAssignment />} 
-                        linkButton containerElement={<Link to="/signin" />} onTouchTap={this._handleClose}  />
+                         containerElement={<Link to="/signin" />} onTouchTap={this._handleClose}  />
                     
                 </Drawer>
             );
@@ -191,7 +191,7 @@ class App extends React.Component {
                             { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Switch Branch" onTouchTap={this._loadBranch} />}
                             { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Create Branch" onTouchTap={this._showCreateBranch} />}
                             { user && user.roleId === USER_ROLE.ADMIN && <Divider />}
-                            <MenuItem primaryText="Sign out" linkButton containerElement={<Link to={'/signout'} />} />
+                            <MenuItem primaryText="Sign out"  containerElement={<Link to={'/signout'} />} />
 
                             </IconMenu>
                         } >
