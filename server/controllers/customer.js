@@ -17,7 +17,6 @@ exports.createCustomer = function(req, res, next) {
     //var data = JSON.parse(req.body);
     //console.log("customer",req.headers, req.body);
     var productsItem = req.body.products;
-    console.log(productsItem);
     var customer = new Customer({
         companyId: req.headers.companyid,
         officeId: req.headers.officeid,

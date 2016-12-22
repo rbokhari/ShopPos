@@ -1,4 +1,5 @@
 const Day = require('../models/day');
+const nodemailer = require('nodemailer');
 
 exports.createDay = function(req, res, next) {
     const companyId = req.headers.companyid;
@@ -45,20 +46,69 @@ exports.closeDay = function(req, res) {
     const dayId = req.headers.dayid;
     const newDate = new Date();
 
-    Day.update( { $and: [ 
-                            { _id: dayId } , 
-                            { companyId: companyId }, 
-                            { officeId: officeId }
-                        ] }, 
-                    { status: 1, close: newDate }, 
-                        function(err, existing) {
-
-        if (err) { 
-            console.log(err);
-            return next(err); 
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'rbokhari@gmail.com',
+            pass: ''
         }
-        res.send('Day close');
     });
+
+        
+        // setup e-mail data with unicode symbols 
+        var mailOptions = {
+            from: '"Fred Foo " <rbokhari@gmail.com>', // sender address 
+            to: 'rahman_naveed@hotmail.com', // list of receivers 
+            subject: 'Hello ', // Subject line 
+            text: 'Hello world', // plaintext body 
+            html: '<b>Hello world</b>' // html body 
+        };
+        
+        // send mail with defined transport object 
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                return console.log(error);
+            }
+            console.log('Message sent: ' + info.response);
+        });
+
+        res.send('Day close');
+
+    // Day.update( { $and: [ 
+    //                         { _id: dayId } , 
+    //                         { companyId: companyId }, 
+    //                         { officeId: officeId }
+    //                     ] }, 
+    //                 { status: 1, close: newDate }, 
+    //                     function(err, existing) {
+
+    //     if (err) { 
+    //         console.log(err);
+    //         return next(err); 
+    //     }
+
+    //     // send email here
+    //     var transporter = nodemailer.createTransport('smtps://rbokhari@gmail.com:pass@smtp.gmail.com');
+        
+    //     // setup e-mail data with unicode symbols 
+    //     var mailOptions = {
+    //         from: '"Fred Foo 👥" <rbokhari@gmail.com>', // sender address 
+    //         to: 'rbokhari@gmail.com', // list of receivers 
+    //         subject: 'Hello ✔', // Subject line 
+    //         text: 'Hello world 🐴', // plaintext body 
+    //         html: '<b>Hello world 🐴</b>' // html body 
+    //     };
+        
+    //     // send mail with defined transport object 
+    //     transporter.sendMail(mailOptions, function(error, info){
+    //         if(error){
+    //             return console.log(error);
+    //         }
+    //         console.log('Message sent: ' + info.response);
+    //     });
+
+    //     res.send('Day close');
+    // });
 };
 
 exports.getAll = function(req, res, next) {

@@ -14,7 +14,6 @@ const styles = {
 };
 
 const CustomerSelectedAddon = ( { customer, productIndex, onAddOnDelete } ) => {
-    console.log("cusertom ", productIndex, customer);
     if (productIndex == -1) {
         return (<div>&nbsp;</div>)
     }

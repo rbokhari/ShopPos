@@ -3,7 +3,6 @@ import React from 'react';
 import {blue500, red500, greenA200, grey500} from 'material-ui/styles/colors';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
-import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import Badge from 'material-ui/Badge';
 
@@ -17,7 +16,7 @@ const styles = {
     margin: -5
 };
 
-const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecrease, onHandleDelete, onHandleNote, onHandleRowSelection, rowSelectIndex, errors } ) => {
+const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecrease, onHandleDelete, onHandleNote, onHandleRowSelection, onHandleQuantity, rowSelectIndex, errors } ) => {
     
         return (
             <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 750 }} selectable={true} onRowSelection={onHandleRowSelection.bind(this)}>
@@ -44,7 +43,7 @@ const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecreas
                                 {item.categoryName}
                             </TableRowColumn>
                             <TableRowColumn style={{width: 50}}>
-                                <Badge badgeContent={item.qty} secondary={true} style={{marginTop: 10}} />
+                                <Badge badgeContent={item.qty} secondary={true} style={{marginTop: 10}} onClick={onHandleQuantity.bind(this, index)} />
                             </TableRowColumn>
                             <TableRowColumn style={{width: 50}}>
                                 {item.price}
@@ -61,7 +60,7 @@ const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecreas
                 <TableFooter>
                     <TableRow>
                         <TableRowColumn colSpan="6" style={{textAlign: 'center'}}>
-                            Total Bill :: {totalBill}
+                            <h1>Total Bill : {totalBill}</h1>
                         </TableRowColumn>
                     </TableRow>
                 </TableFooter>
@@ -77,7 +76,8 @@ CustomerItems.propTypes = {
     onHandleDecrease: React.PropTypes.func.isRequired,
     onHandleDelete: React.PropTypes.func.isRequired,
     onHandleNote: React.PropTypes.func.isRequired,
-    onHandleRowSelection: React.PropTypes.func.isRequired
+    onHandleRowSelection: React.PropTypes.func.isRequired,
+    onHandleQuantity: React.PropTypes.func.isRequired
 };
 
 export default CustomerItems;

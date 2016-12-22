@@ -59,7 +59,7 @@ class ItemNew extends Component {
         return (
             <form onSubmit={handleSubmit(this.saveItem.bind(this))}>
                 <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
-                    <CardHeader title="Item" subtitle={ _id.value === 0 ?  'Add New' : 'Edit'} />
+                    <CardHeader title="Item"  />
                     <CardText>
                         <div>
                             <TextField name='code' floatingLabelText="Item Code" {...code} disabled={true} defaultValue="Auto Number" />

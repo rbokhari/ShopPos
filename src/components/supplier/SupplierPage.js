@@ -40,7 +40,7 @@ class SupplierPage extends Component {
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to="/supplier/new" />}>
+                <FloatingActionButton style={fabStyle} secondary={true} containerElement={<Link to="/supplier/new" />}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <SupplierList suppliers={suppliers} />

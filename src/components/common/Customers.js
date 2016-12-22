@@ -7,6 +7,8 @@ import Moment from 'moment';
 
 import ContentClear from 'material-ui/svg-icons/content/clear';
 import ActionDone from 'material-ui/svg-icons/action/done';
+import ActionGrade  from 'material-ui/svg-icons/action/grade';
+import ContentAddCircle from 'material-ui/svg-icons/content/add-circle-outline';
 import ActionDoneAll from 'material-ui/svg-icons/action/done-all';
 import DeviceAccessTime from 'material-ui/svg-icons/device/access-time';
 
@@ -30,7 +32,7 @@ const style = {
         width: 360,
         maxWidth: 360,
         marginTop: 10,
-        marginRight: 10,
+        marginRight: 13,
         display: 'inline-block',
         verticalAlign:'top'
     },
@@ -63,26 +65,38 @@ class Customers extends React.Component {
 
         const listItem = (product, index) => {
             return (
-                <ListItem key={index} leftCheckbox={<Checkbox />}
-                    rightIcon={<Badge badgeContent={product.qty} secondary={true} />}
+                <ListItem key={index} leftCheckbox={<Checkbox />} initiallyOpen={true}
+                    rightIcon={<Badge badgeContent={product.qty} primary={true} />}
                 primaryText={<span>{product.productName} <span style={{color: lightBlack}} >[{product.categoryName}]</span></span>} 
-                    secondaryText={<span>{product.note} <ul><li>first</li><li>second.</li></ul></span>} secondaryTextLines={2} >
+                    nestedItems={product.addons.length > 0 && [
+                        product.addons.map((addon, i) => {
+                            return <ListItem key={i+index} style={{margin:-1}} secondaryText={addon.name} leftIcon={<ContentAddCircle />} />
+                        })
+                  ]} >
                 </ListItem>
             );
         }
+
         return (
             <div style={style.div}>
                 {_.sortBy(this.props.customers.filter(statusCheck), ['created']).map(customer=>
                     <Card key={customer._id} style={style.card}>
                         <CardHeader style={{width:400}}
                             title={
-                                <span>Bill : {customer.billNo} @ {Moment(customer.created).format('dddd h:mm')} {customer.option==='1' ? <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>Take Away </span> : <span style={{backgroundColor:blue500, padding:2, color:yellow50}}>Dine In </span>}</span>
+                                <span style={{fontWeight: 'bold', color: '#3F51B5'}}>
+                                    Bill : {customer.billNo} @ {Moment(customer.created).format('dddd h:mm')}&nbsp; 
+                                    {customer.option==='1' ? 
+                                        <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>Take Away </span> : 
+                                        <span style={{backgroundColor:blue500, padding:2, color:yellow50}}>Dine In </span>
+                                    }</span>
                             } 
                             subtitle={<p>{customer.option==='1' ? 'Car/Mobile' : 'Table'} : {customer.carNumber == '' || undefined ? customer.mobileNumber : customer.carNumber}</p>} />
                         <List>
-                            <Subheader>Order List {customer.option}</Subheader>
+                            <Subheader>Order List : Total Items <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>{customer.products.length} </span></Subheader>
+                            <Divider />
                             {customer.products.map((product,index) => 
-                                listItem(product, index)
+                                <span>{listItem(product, index)}
+                                <Divider /></span>
                             )}
                         </List>
                         <CardActions>
@@ -101,37 +115,6 @@ class Customers extends React.Component {
     }
 
 }
-
-// const Customers = ( { customers, status } ) => {
-//     const handleUpdate = (id) => {
-//         console.error("status", id);
-//     }
-//     return (
-//         <div style={style.div}>
-//             {customers.filter(customer=> customer.status === status).map(customer=>
-//                 <Card key={customer._id} style={style.card}>
-//                     <CardHeader
-//                         title={customer.carNumber} subtitle={customer.mobileNumber} />
-//                     <List>
-//                         <Subheader>Order List</Subheader>
-//                         {customer.products.map((product,index)=> 
-//                             <ListItem key={index}
-//                                 leftCheckbox={<Checkbox />}
-//                                 rightIcon={<Badge badgeContent={product.qty} secondary={true} />}
-//                                 primaryText={product.productName} secondaryText={product.categoryName} >
-//                             </ListItem>
-//                         )}
-//                     </List>
-//                     <CardActions>
-//                         { customer.status ===0 && <RaisedButton label="Finished" primary={true} onTouchTap={handleUpdate.bind(this,1)} />}
-//                         { customer.status ===1 && <RaisedButton label="Dispatch" primary={true} onTouchTap={handleUpdate.bind(this,2)} />}
-//                         <RaisedButton label="Discard" secondary={true} onTouchTap={handleUpdate.bind(this,-1)} />
-//                     </CardActions>
-//                 </Card>
-//             )}
-//         </div>
-//     );
-// }
 
 Customers.propTypes = {
     customers: React.PropTypes.array.isRequired,

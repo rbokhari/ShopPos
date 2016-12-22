@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import * as actions from '../../actions';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import RaisedButton from 'material-ui/RaisedButton';
+
+import { loadCustomers } from '../../actions';
 import { CUSTOMER_STATUS } from '../../../shared/constants';
 import Customers from './Customers';
 
@@ -14,7 +17,15 @@ class KitchenBoard extends Component {
                     maxwidth: 1200,
                     width: '100%',
             }}>
-                <h1>Kitchen Board</h1>
+                <Toolbar>
+                    <ToolbarGroup>
+                        <ToolbarTitle text="Kitchen Board" />
+                    </ToolbarGroup>
+                    <ToolbarGroup firstChild={true}>
+                        <ToolbarSeparator />
+                        <RaisedButton label="Refresh" primary={true} onClick={()=> this.props.loadCustomers()} />
+                    </ToolbarGroup>
+                </Toolbar>
                 <div style={{
                     display: 'flex',
                     flexFlow: 'row wrap'                 
@@ -38,10 +49,10 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        createCustomer: bindActionCreators(actions.createCustomer, dispatch)
-    };
-}
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         loadCustomers: bindActionCreators(loadCustomers, dispatch)
+//     };
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(KitchenBoard);
+export default connect(mapStateToProps, {loadCustomers: loadCustomers})(KitchenBoard);

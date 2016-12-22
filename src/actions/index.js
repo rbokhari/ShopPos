@@ -754,7 +754,6 @@ export function loadOpenDay() {
 export function loadCloseDay() {
     return function( dispatch ) {
         return dayApi.closeDay().then( res => {
-            console.info(res);
                 if (res.status == 200) {
                     localStorage.removeItem('dayId');
                     dispatch(loadCloseDaySuccess() );

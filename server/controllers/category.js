@@ -5,6 +5,7 @@ exports.createCategory = function(req, res, next) {
     const status = req.body.status;
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
+    const addons = req.body.addons;
 
     Category.findOne( { $and: [ { name: name }, { companyId: companyId }, { officeId: officeId }] }, function(err, existingName) {
         if (err) { return next(err); }
@@ -17,7 +18,8 @@ exports.createCategory = function(req, res, next) {
             name: name,
             status: status,
             companyId: companyId,
-            officeId: officeId
+            officeId: officeId,
+            addons: addons
         });
 
         category.save(function(err){
@@ -38,12 +40,13 @@ exports.updateCategory = function(req, res) {
     const description = req.body.description;
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
+    const addons = req.body.addons;
 
     Category.update( { $and: [ { _id: id } , 
                             { companyId: companyId }, 
                             { officeId: officeId }
                         ] }, 
-                    { name: name, status: status }, 
+                    { name: name, status: status, addons: addons }, 
                         function(err, existingItem) {
 
         if (err) { return next(err); }

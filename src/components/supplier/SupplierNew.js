@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { Link } from 'react-router';
-import { reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
@@ -11,6 +12,8 @@ import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
 import { createSupplier } from '../../actions';
+
+import { materialTextField, materialCheckBox } from '../controls/index';
 
 const styles = {
   block: {
@@ -39,6 +42,8 @@ class SupplierNew extends Component {
     }
 
     saveSupplier(props) {
+        //console.log(props);
+
         this.props.createSupplier(props)
             .then(() => {
                 this.context.router.push('/supplier');
@@ -48,41 +53,35 @@ class SupplierNew extends Component {
     }
 
     render() {
-        const {handleSubmit, fields: { _id, name, person, contact, description, status } }  = this.props;
+        const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
 
         return (
             <form onSubmit={handleSubmit(this.saveSupplier.bind(this))}>
             <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
-                <CardHeader title="Supplier" subtitle={ _id.value === '0' ? 'Add New' : 'Edit'} />
+                <CardHeader title="Supplier" subtitle={ this.props.supplier._id == '0' ? 'Add New' : 'Modify'}  />
                 <CardText>
                     <div>
-                        <TextField name="name" 
-                            floatingLabelText="Supplier Name" {...name} errorText={name.touched && name.error} />
+                        <Field name="name" component={materialTextField} label="Name"/>
                     </div>
                     <div>
-                        <TextField name="person" 
-                            floatingLabelText="Person Name" {...person} errorText={person.touched && person.error} />
+                        <Field name="person" component={materialTextField} label="Person Name"/>
                     </div>
                     <div>
-                        <TextField name="contact" 
-                            floatingLabelText="Contact No" {...contact} errorText={contact.touched && contact.error} />
+                        <Field name="contact" component={materialTextField} label="Contact No"/>
                     </div>
                     <div>
-                        <TextField name="description" 
-                            floatingLabelText="Description" {...description} />
+                        <Field name="description" component={materialTextField} label="Description"/>
                     </div>
                     <div>
-                        <Checkbox name="status" label="Status" {...status} style={styles.checkbox} checked={status.value} onCheck={(e, checked) => status.onChange(checked)} />
+                        <Field name="status" component={materialCheckBox} label="Status"/>
                     </div>
                 </CardText>
                 <CardActions>
-                    <RaisedButton type='submit' icon={<ContentSave />} label={_id.value === '0' ? 'Save' : 'Update'} primary={true} />
-                    <RaisedButton icon={<ContentClear />} label="Cancel" linkButton containerElement={<Link to="/supplier" />}/>
+                    <RaisedButton type='submit' icon={<ContentSave />} label={ this.props.supplier._id == '0' ? 'Save' : 'Update' } primary={true} />
+                    <RaisedButton icon={<ContentClear />} label="Cancel" containerElement={<Link to="/supplier" />}/>
                 </CardActions>
             </Card>
         </form>
-            // <CategoryForm onChange={this.updateCategoryState} onSave={this.saveCategory}
-            //     category={this.state.category} errors={this.state.errors} />
         );
     }
 
@@ -131,8 +130,18 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-export default reduxForm({
+// export default reduxForm({
+//     form: 'supplier',
+// }, mapStateToProps, { createSupplier: createSupplier } )(SupplierNew);
+
+SupplierNew = reduxForm({
     form: 'supplier',
-    fields: ['_id', 'name', 'person', 'contact', 'description', 'status' ],
-    validate: validateForm
-}, mapStateToProps, { createSupplier: createSupplier } )(SupplierNew);
+})(SupplierNew);
+
+SupplierNew = connect(
+    mapStateToProps, 
+    {createSupplier: createSupplier}
+)(SupplierNew);
+
+
+export default SupplierNew;

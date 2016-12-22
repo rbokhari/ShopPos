@@ -30,7 +30,9 @@ class SalesBoard extends Component {
             filterProducts: [],
             snakbarStatus: false,
             openNote: false,
+            openQuantity: false,
             itemIndexNote: -1,
+            itemIndexQty: -1,
             isCustom: false,
             categoryId: '0',
             //customerProducts: [],
@@ -54,6 +56,9 @@ class SalesBoard extends Component {
         this.handleDecreaseQty = this.handleDecreaseQty.bind(this);
         this.handleDeleteItem = this.handleDeleteItem.bind(this);  
         this.handleAddNote = this.handleAddNote.bind(this);
+        this.handleOpenQuantity = this.handleOpenQuantity.bind(this);
+        this.handleCloseQuantity = this.handleCloseQuantity.bind(this);
+        this.handleKeyQuantity = this.handleKeyQuantity.bind(this);
         this.handleCloseNote = this.handleCloseNote.bind(this);
         this.handleRowSelection = this.handleRowSelection.bind(this);
         this.handleAddOnAdd = this.handleAddOnAdd.bind(this);
@@ -100,6 +105,7 @@ class SalesBoard extends Component {
         this.setState({ 
             customer: customer, 
             itemIndexNote: -1, 
+            itemIndexQty: -1,
             categoryId: '0' 
         });
     }
@@ -166,19 +172,44 @@ class SalesBoard extends Component {
             name: name,
             price: price
         };
-        console.log(customer);
         customer.products[index].addons = [...customer.products[index].addons, addon];
         this.setState({ customer: customer});
         this.calculateTotal();
     }
 
     handleAddOnDelete(id) {
-        console.log(id);
         const customer = this.state.customer;
         const productIndex = this.state.itemIndexNote;
         customer.products[productIndex].addons.splice(id, 1);
         this.setState({ customer: customer });
         this.calculateTotal();
+    }
+
+    handleOpenQuantity(index) {
+        this.setState({ 
+            openQuantity: true,
+            itemIndexQty: index
+        });
+    }
+
+    handleCloseQuantity() {
+        const qty = this.refs.tQuantity;
+        const customer = this.state.customer;
+        
+        customer.products[this.state.itemIndexQty].qty = qty.value;
+        customer.products[this.state.itemIndexQty].price = customer.products[this.state.itemIndexQty].unitPrice * qty.value;
+        this.setState({ 
+            openQuantity: false,
+            itemIndexQty: -1,
+            customer: customer
+        });
+        this.calculateTotal();
+    }
+
+    handleKeyQuantity(event) {
+        if (event.key == 'Enter') {
+            this.handleCloseQuantity();
+        }
     }
 
     handleAddNote(index) {
@@ -238,7 +269,6 @@ class SalesBoard extends Component {
 
     handleCustomerFormSubmit() {
         var customer = this.state.customer;
-        console.log("customer submit", customer);
         this.props.createCustomer( customer )
             .then(res => {
                 this.setState({
@@ -259,6 +289,10 @@ class SalesBoard extends Component {
             <FlatButton label="OK" primary={true} onTouchTap={this.handleCloseNote} />,
             <FlatButton label="Cancel" primary={false} onTouchTap={()=> this.setState({ openNote: false})} />
         ];
+         const actionsQuantity = [
+            <FlatButton label="OK" primary={true} onTouchTap={this.handleCloseQuantity} />,
+            <FlatButton label="Cancel" primary={false} onTouchTap={()=> this.setState({ openQuantity: false})} />
+        ];
 
         return (
             <div>
@@ -273,7 +307,7 @@ class SalesBoard extends Component {
                         
                         <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total} rowSelectIndex={this.state.itemIndexNote}
                             onHandleIncrease={this.handleIncreaseQty} onHandleDecrease={this.handleDecreaseQty} onHandleDelete={this.handleDeleteItem}
-                            onHandleNote={this.handleAddNote} onHandleRowSelection={this.handleRowSelection} errors={this.state.errors} />
+                            onHandleNote={this.handleAddNote} onHandleRowSelection={this.handleRowSelection} onHandleQuantity={this.handleOpenQuantity} errors={this.state.errors} />
 
         <Dialog
             title="Add Customization" actions={actions} onRequestClose={this.handleCloseNote}
@@ -281,6 +315,13 @@ class SalesBoard extends Component {
             autoScrollBodyContent={true} >
 
                 <textarea ref='tNote' style={{}} rows={3}></textarea>
+        </Dialog>
+        <Dialog
+            title="Quantity" actions={actionsQuantity} onRequestClose={this.handleCloseQuantity}
+            modal={true} open={this.state.openQuantity}
+            autoScrollBodyContent={true} contentStyle={{width:250, maxWidth:'none'}}>
+
+                <input type="text" ref='tQuantity' style={{margin:5, fontSize: 18, width: 50}} onKeyDown={this.handleKeyQuantity} autoFocus />
         </Dialog>
                     </Card>
                     <Card style={{
@@ -290,7 +331,7 @@ class SalesBoard extends Component {
                             minWidth: 300,
                             display: this.state.itemIndexNote > -1 ? 'none' : 'block'
                         }} >
-                        <CardHeader title="Menu Products" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> 
+                        <CardHeader title="Menu" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> 
                             
                         </CardHeader>
 

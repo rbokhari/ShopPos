@@ -30,7 +30,7 @@ class ItemPage extends Component {
         const {items} = this.props;
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to={'/item/new'} />}>
+                <FloatingActionButton style={fabStyle} secondary={true} href={'/item/new'}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <ItemList items={items} />

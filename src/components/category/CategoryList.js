@@ -31,8 +31,8 @@ const CategoryList = ({categories}) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {categories.map( category =>
-                            <TableRow key={category._id}>
+                        {categories.map( (category, index) =>
+                            <TableRow key={index}>
                                 <TableRowColumn>{category.name}</TableRowColumn>
                                 <TableRowColumn>{category.status ? <ActionDone color={greenA700} /> : <ActionNotInterested color={red500} />}</TableRowColumn>
                                 <TableRowColumn>

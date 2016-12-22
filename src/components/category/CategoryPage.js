@@ -40,7 +40,7 @@ class CategoryPage extends Component {
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to="/category/new" />}>
+                <FloatingActionButton style={fabStyle} secondary={true} containerElement={<Link to="/category/new" />}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <CategoryList categories={categories} />
