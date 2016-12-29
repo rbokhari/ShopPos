@@ -237,7 +237,7 @@ export function CompanyExists() {
         .catch((error)=> {return {name: error.response.data.error}});
 }
 
-export function AccountCreate({ name, displayName, location, contactNo, email, password, confirmPassword}) {
+export function accountCreate({ name, displayName, location, contactNo, email, password, confirmPassword}) {
     const data = {
         name, displayName, location, contactNo, email, password
     };

@@ -15,6 +15,14 @@ const cardStyle = {
 };
 
 const PurchaseList = ({purchases, suppliers}) => {
+
+    const supplierName = (supplierId) => {
+        const data = suppliers.filter((supplier, i) => {
+            return supplier._id === supplierId;
+        });
+        return data.length > 0 ? data[0].name : '-';
+    };
+
     return (
         <Card style={cardStyle} >
             <CardHeader title="Purchase Order " subtitle="Listing" />
@@ -37,7 +45,7 @@ const PurchaseList = ({purchases, suppliers}) => {
                                     {Moment(purchase.created).format('DD/MM/YYYY')}
                                 </TableRowColumn>
                                 <TableRowColumn>
-                                    {suppliers.filter((supplier, i) => { return supplier._id === purchase.supplierId })[0].name}
+                                    {supplierName(purchase.supplierId)}
                                 </TableRowColumn>
                                 <TableRowColumn>{purchase.total}</TableRowColumn>
                                 <TableRowColumn>{purchase.notes}</TableRowColumn>

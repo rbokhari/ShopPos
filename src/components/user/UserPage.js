@@ -34,7 +34,7 @@ class UserPage extends Component {
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to="users/new" />}>
+                <FloatingActionButton style={fabStyle} secondary={true} containerElement={<Link to="users/new" />}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <UserList users={users} />

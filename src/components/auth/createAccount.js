@@ -1,11 +1,13 @@
 import React, {Component } from 'react';
-import { reduxForm } from 'redux-form';
-import * as actions from '../../actions';
-import { bindActionCreators } from 'redux';
+import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { accountCreate } from '../../actions';
+//import { bindActionCreators } from 'redux';
 import { browserHistory } from 'react-router';
 
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
+//import TextField from 'material-ui/TextField';
+import { materialTextField } from '../controls/index';
 import RaisedButton from 'material-ui/RaisedButton';
 
 class CreateAccount extends Component {
@@ -31,7 +33,8 @@ class CreateAccount extends Component {
 
     render() {
 
-        const { handleSubmit, fields: { name, displayName, location, contactNo, email, password, passwordConfirm }} = this.props;
+        //const { handleSubmit, fields: { name, displayName, location, contactNo, email, password, passwordConfirm }} = this.props;
+        const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
 
         return (            
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
@@ -39,25 +42,25 @@ class CreateAccount extends Component {
                     <CardHeader title="Create Account" />
                     <CardText>
                         <div>
-                            <TextField floatingLabelText="Company Name" {...name} errorText={name.touched && name.error} />
+                            <Field name="name" component={materialTextField} label="Company Name" autoFocus />
                         </div>
                         <div>
-                            <TextField floatingLabelText="Display Name" {...displayName} />
+                            <Field name="displayName" component={materialTextField} label="Display Name"  />
                         </div>
                         <div>
-                            <TextField floatingLabelText="Location" {...location} />
+                            <Field name="location" component={materialTextField} label="Location"  />
                         </div>
                         <div>
-                            <TextField floatingLabelText="Contact No" {...contactNo} />
+                            <Field name="contactNo" component={materialTextField} label="Contact No"  />
                         </div>
                         <div>
-                            <TextField floatingLabelText="UserName (Admin User)" {...email} errorText={email.touched && email.error} />
+                            <Field name="email" component={materialTextField} label="User Name (Admin User)"  />
                         </div>
                         <div>
-                            <TextField floatingLabelText="Password" type="password" {...password} errorText={password.touched && password.error} />
+                            <Field name="password" component={materialTextField} label="Password" type="password"  />
                         </div>
                         <div>
-                            <TextField floatingLabelText="Confirm Password" type="password" {...passwordConfirm} />
+                            <Field name="passwordConfirm" component={materialTextField} label="Confirm Password"  />
                         </div>
                     </CardText>
                     <CardActions>
@@ -92,17 +95,29 @@ function mapStateToProps(state) {
     return { errorMessage: state.auth.error };
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        accountCreate: bindActionCreators(actions.AccountCreate, dispatch),
-        //companyExists: bindActionCreators(actions.CompanyExists, dispatch)
-    };
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         accountCreate: bindActionCreators(actions.AccountCreate, dispatch),
+//         //companyExists: bindActionCreators(actions.CompanyExists, dispatch)
+//     };
 
-}
+// }
 
-export default reduxForm({
-    form: 'account',
-    fields: ['name', 'displayName', 'location', 'contactNo', 'email', 'password', 'passwordConfirm'],
-    validate: validate,
-    //asyncValidate: this.props.companyExists
-}, mapStateToProps, mapDispatchToProps)(CreateAccount);
+// export default reduxForm({
+//     form: 'account',
+//     fields: ['name', 'displayName', 'location', 'contactNo', 'email', 'password', 'passwordConfirm'],
+//     validate: validate,
+//     //asyncValidate: this.props.companyExists
+// }, mapStateToProps, mapDispatchToProps)(CreateAccount);
+
+CreateAccount = reduxForm({
+    form: 'signin',
+})(CreateAccount);
+
+CreateAccount = connect(
+    mapStateToProps, 
+    { accountCreate: accountCreate }
+)(CreateAccount);
+
+
+export default CreateAccount;

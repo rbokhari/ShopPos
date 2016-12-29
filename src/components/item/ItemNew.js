@@ -1,14 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { Field, reduxForm } from 'redux-form';
-//import { bindActionCreators } from 'redux';
-//import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 
@@ -16,6 +13,7 @@ import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
 import { createItem } from '../../actions';
+import { materialTextField, materialCheckBox, materialSelectField } from '../controls/index';
 
 import { ITEM_UOM, ITEM_UOM_LABEL } from '../../../shared/constants.js';
 
@@ -54,7 +52,8 @@ class ItemNew extends Component {
     }
 
     render() {
-        const {handleSubmit, fields: { _id, code, name, uom, uomCount, description, status } }  = this.props;
+        //const {handleSubmit, fields: { _id, code, name, uom, uomCount, description, status } }  = this.props;
+        const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
         
         return (
             <form onSubmit={handleSubmit(this.saveItem.bind(this))}>
@@ -62,32 +61,32 @@ class ItemNew extends Component {
                     <CardHeader title="Item"  />
                     <CardText>
                         <div>
-                            <TextField name='code' floatingLabelText="Item Code" {...code} disabled={true} defaultValue="Auto Number" />
+                            <Field name="code" component={materialTextField} label="Item Code"/>
                         </div>
                         <div>
-                            <TextField name='name' floatingLabelText="Item Name" {...name} errorText={name.touched && name.error} autoFocus  />
+                            <Field name="name" component={materialTextField} label="Item Name"/>
                         </div>
                         
                         <div>
-                            <SelectField name='uom' floatingLabelText="UOM" {...uom} value={uom.value} errorText={uom.touched && uom.error} onChange={(event, index, value) => uom.onChange(value)} >
+                            <Field name="uom" component={materialSelectField} label="UOM">
                                 <MenuItem key={ITEM_UOM.NUMBER} value={ITEM_UOM.NUMBER} primaryText={ITEM_UOM_LABEL.NUMBER} />
+                                <MenuItem key={ITEM_UOM.KG} value={ITEM_UOM.KG} primaryText={ITEM_UOM_LABEL.KG} />
                                 <MenuItem key={ITEM_UOM.CARTON} value={ITEM_UOM.CARTON} primaryText={ITEM_UOM_LABEL.CARTON} />
-                            </SelectField>
+                            </Field>
                         </div>
                         <div>
-                            <TextField name='uomCount' floatingLabelText="Count" {...uomCount} errorText={uomCount.touched && uomCount.error} />
+                            <Field name="uomCount" component={materialTextField} label="Count"/>
                         </div>
                         <div>
-                            <TextField name='description' multiLine={true} rows={2} rowsMax={4} 
-                                floatingLabelText="Description" {...description} />
+                            <Field name="description" component={materialTextField} label="Description" multiLine={true} rows={2} rowsMax={4}  />
                         </div>
                         <div>
-                            <Checkbox label="Status" {...status} checked={status.value} onCheck={(e, checked) => status.onChange(checked)}  />
+                            <Field name="status" component={materialCheckBox} label="Status"/>
                         </div>
                     </CardText>
                     <CardActions>
-                        <RaisedButton type='submit' icon={<ContentSave />} label={_id.value === 0 ? 'Save' : 'Update'} primary={true} ></RaisedButton>
-                        <RaisedButton icon={<ContentClear />} label="Cancel" linkButton containerElement={<Link to="/item" />} />
+                        <RaisedButton type='submit' icon={<ContentSave />} label={this.props.item._id.value === 0 ? 'Save' : 'Update'} primary={true} ></RaisedButton>
+                        <RaisedButton icon={<ContentClear />} label="Cancel" containerElement={<Link to="/item" />} />
                     </CardActions>
                 </Card>
             </form>
@@ -115,8 +114,7 @@ function getItemById(items, id) {
 
 function validateForm(values) {
     const errors = {};
-    console.log(values);
-
+    
     if (!values.name) {
         errors.name = 'Name required';
     }
@@ -155,10 +153,23 @@ function mapStateToProps(state, ownProps) {
 //     };
 // }
 
-export default reduxForm({
+// export default reduxForm({
+//     form: 'item',
+//     fields: ['_id', 'code', 'name', 'uom', 'uomCount', 'description', 'status' ],
+//     validate: validateForm
+// }, mapStateToProps, { createItem: createItem } )(ItemNew);
+
+
+ItemNew = reduxForm({
     form: 'item',
-    fields: ['_id', 'code', 'name', 'uom', 'uomCount', 'description', 'status' ],
-    validate: validateForm
-}, mapStateToProps, { createItem: createItem } )(ItemNew);
+    //validate: validateForm
+})(ItemNew);
+
+ItemNew = connect(
+    mapStateToProps, 
+    {createItem: createItem}
+)(ItemNew);
+
+export default ItemNew;
 
 //export default connect(mapStateToProps, mapDispatchToProps)(ItemNew);

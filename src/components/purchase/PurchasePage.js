@@ -33,7 +33,7 @@ class PurchasePage extends Component {
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to={'/purchase/new'} />}>
+                <FloatingActionButton style={fabStyle} secondary={true} containerElement={<Link to={'/purchase/new'} />}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <PurchaseList purchases={purchases} suppliers={suppliers} />

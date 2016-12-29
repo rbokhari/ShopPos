@@ -59,16 +59,20 @@ exports.updateCategory = function(req, res) {
 exports.getAll = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-    Category.find({ 
-        $and: [ 
-            { companyId: companyId }, 
-            { officeId: officeId }
-        ]}, function(err, categories){
-            
-        if (err) { return next(err); }
-        res.setHeader('Content-Type', 'application/json');
-        res.json(categories);
-    });
+    if (companyId != '0' && officeId != '0') {
+        Category.find({ 
+            $and: [ 
+                { companyId: companyId }, 
+                { officeId: officeId }
+            ]}, function(err, categories){
+                
+            if (err) { return next(err); }
+            res.setHeader('Content-Type', 'application/json');
+            res.json(categories);
+        });
+    } else {
+        res.json({});
+    }
 };
 
 exports.getById = function(req, res, next) {

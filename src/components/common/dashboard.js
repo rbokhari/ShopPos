@@ -15,7 +15,6 @@ const style = {
     }
 };
 
-
 class Dashboard extends Component {
 
     constructor(props, context) {

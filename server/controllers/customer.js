@@ -1,4 +1,4 @@
-const pdfMake = require('pdfmake');
+//const pdfMake = require('pdfmake');
 var fs = require('fs');
 var path = require('path');
 //var pdfMakePrinter = require('pdfmake/src/printer');
@@ -198,7 +198,6 @@ exports.printReceipt = function(req, res, next) {
 
 
 exports.getAll = function(req, res, next) {
-    console.log("getAll");
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
     
@@ -218,20 +217,25 @@ exports.getAllByStatus = function(req, res, next) {
     const status = req.params.status;   // e.g. 0 = issue, 1 = Kitchen finished, 2 = devliered
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
+console.log("companyId", companyId);
+console.log("officeId", officeId);
+    if (companyId != '0' && officeId != '0') {
+        Customer.find({ 
+            $and: [
+                {companyId: companyId},
+                {officeId: officeId },
+                { $or: [{status: 0}, {status: 1}, {status: 2}] }
+            ] }, {}, { sort : {created: 1} }, function(err, customers){
+            
 
-    Customer.find({ 
-        $and: [
-            {companyId: companyId},
-            {officeId: officeId },
-            { $or: [{status: 0}, {status: 1}, {status: 2}] }
-        ] }, {}, { sort : {created: 1} }, function(err, customers){
-        
-
-        if (err) { return next(err); }
-        next();
-        res.setHeader('Content-Type', 'application/json');
-        res.json(customers);
-    });
+            if (err) { return next(err); }
+            next();
+            res.setHeader('Content-Type', 'application/json');
+            res.json(customers);
+        });
+    } else {
+        res.json({});
+    }
 };
 
 exports.getById = function(req, res, next) {

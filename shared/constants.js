@@ -30,10 +30,12 @@ export const PRODUCT_TYPE_LABEL = {
 
 export const ITEM_UOM = {
         'NUMBER': '1',
-        'CARTON': '2'
+        'CARTON': '2',
+        'KG': '3'
 };
 
 export const ITEM_UOM_LABEL = {
         'NUMBER': 'NUMBER',
-        'CARTON': 'CARTON'
+        'CARTON': 'CARTON',
+        'KG': 'KiloGram'
 };

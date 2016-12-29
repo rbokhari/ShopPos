@@ -40,7 +40,7 @@ class ExpensePage extends Component {
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to="/expense/new" />}>
+                <FloatingActionButton style={fabStyle} secondary={true} containerElement={<Link to="/expense/new" />}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <ExpenseList expenses={expenses} />

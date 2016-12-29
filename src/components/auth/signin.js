@@ -1,11 +1,13 @@
 import React, { Component, PropTypes } from 'react';
-import {reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import TextField from 'material-ui/TextField';
+//import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import * as actions from '../../actions';
+import {signinUser} from '../../actions';
+import { materialTextField } from '../controls/index';
 
 class SignIn extends Component {
 
@@ -33,15 +35,17 @@ class SignIn extends Component {
     }
 
     render() {
-        const { handleSubmit, fields: {email, password}} = this.props;
+        //const { handleSubmit, fields: {email, password}} = this.props;
+        const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
+        
         return (
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                 <h2>Sign In</h2>
                 <div>
-                    <TextField name="name" floatingLabelText="Email" {...email} autoFocus />
+                    <Field name="email" component={materialTextField} label="User Name" autoFocus />
                 </div>
                 <div>
-                    <TextField type="password" name="password" floatingLabelText="Password" {...password} />
+                    <Field name="password" component={materialTextField} label="Password" type="password" />
                 </div>
                     {this.renderAlert()}
                 <div>
@@ -60,13 +64,25 @@ function mapStateToProps(state) {
     return { errorMessage: state.auth.error };
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        signinUser: bindActionCreators(actions.signinUser, dispatch)
-    };
-}
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         signinUser: bindActionCreators(actions.signinUser, dispatch)
+//     };
+// }
 
-export default reduxForm({
+// export default reduxForm({
+//     form: 'signin',
+//     fields: ['email', 'password']
+// }, mapStateToProps, mapDispatchToProps)(SignIn);
+
+SignIn = reduxForm({
     form: 'signin',
-    fields: ['email', 'password']
-}, mapStateToProps, mapDispatchToProps)(SignIn);
+})(SignIn);
+
+SignIn = connect(
+    mapStateToProps, 
+    {signinUser: signinUser}
+)(SignIn);
+
+
+export default SignIn;

@@ -6,12 +6,14 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const app = express();
-const router = require('./router');
 const mongoose = require('mongoose');
 const socket = require('socket.io');
 
+const router = require('./router');
+const config = require('./config');
+
 // DB Setup
-mongoose.connect('mongodb://127.0.0.1:27017/CoffeeShop');
+mongoose.connect(config.mongoDBAddress);    //setting in config file
 
 // App Setup
 //app.use(morgan('combined'));
@@ -28,7 +30,7 @@ app.use(function(req, res, next) {
 });
 
 // Server Setup
-const port = process.env.PORT || 3090;
+const port = process.env.PORT || config.serverListeningPort;
 const server = http.createServer(app);
 server.listen(port, '0.0.0.0', function() {
     console.log('Server listening on: ', port);
@@ -36,11 +38,10 @@ server.listen(port, '0.0.0.0', function() {
 
 // socket setup
 const io = socket(server);
-io.set( 'origins', '*http://localhost:8080' );
+io.set( 'origins', config.socketIOAddress );    // setting in config file
 //io.set( 'Credentials', 'false' );
 io.on('connection', function(socket){
   console.log('a user connected');
-
 });
 
 //io.socket.emit('customer', '1');

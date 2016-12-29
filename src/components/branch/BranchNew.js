@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
-
+import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
 import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import * as actions from '../../actions';
+import { materialTextField, materialCheckBox } from '../controls/index';
+import { createBranch } from '../../actions';
 
 class BranchNew extends Component {
 
     handleFormSubmit ( {name, displayName, location, officeNo, mobileNo, status} ) {
-        console.error("submit");
-
         this.props.createBranch({name, displayName, location, officeNo, mobileNo, status});
     }
 
@@ -41,7 +39,8 @@ class BranchNew extends Component {
             <RaisedButton type="submit" label="Create" primary={true} />
         ];
 
-        const { handleSubmit, fields: {name, displayName, location, officeNo, mobileNo, status}} = this.props;
+        const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
+
         return (
             
             <Dialog
@@ -51,22 +50,22 @@ class BranchNew extends Component {
                     
                     <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                         <div>
-                            <TextField name="name" floatingLabelText="Name" {...name} />
+                            <Field name="name" component={materialTextField} label="Name" autoFocus />
                         </div>
                         <div>
-                            <TextField name="displayName" floatingLabelText="Display Name" {...displayName} />
+                            <Field name="displayName" component={materialTextField} label="Display Name" />
                         </div>
                         <div>
-                            <TextField name="location" floatingLabelText="Location" {...location} />
+                            <Field name="location" component={materialTextField} label="Location" />
                         </div>
                         <div>
-                            <TextField name="officeNo" floatingLabelText="Office No" {...officeNo} />
+                            <Field name="officeNo" component={materialTextField} label="Office No" />
                         </div>
                         <div>
-                            <TextField name="mobileNo" floatingLabelText="Mobile No" {...mobileNo} />
+                            <Field name="mobileNo" component={materialTextField} label="Mobile No" />
                         </div>
                         <div>
-                            <TextField name="status" floatingLabelText="Status" {...status} />
+                            <Field name="status" component={materialCheckBox} label="Status"  />
                         </div>
                         <div>
                             <RaisedButton type="submit" label="Create" primary={true} />
@@ -85,7 +84,19 @@ function mapStateToProps(state) {
     };
 }
 
-export default reduxForm({
+// export default reduxForm({
+//     form: 'branch',
+//     fields: ['name', 'displayName', 'location', 'officeNo', 'mobileNo', 'status']
+// }, mapStateToProps, actions)(BranchNew);
+
+BranchNew = reduxForm({
     form: 'branch',
-    fields: ['name', 'displayName', 'location', 'officeNo', 'mobileNo', 'status']
-}, mapStateToProps, actions)(BranchNew);
+})(BranchNew);
+
+BranchNew = connect(
+    mapStateToProps, 
+    { createBranch: createBranch }
+)(BranchNew);
+
+
+export default BranchNew;

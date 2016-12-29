@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { Link } from 'react-router';
-import { reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
@@ -12,6 +13,7 @@ import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
 import { createExpense } from '../../actions';
+import { materialTextField, materialCheckBox } from '../controls/index';
 
 const styles = {
   block: {
@@ -43,27 +45,24 @@ class ExpenseNew extends Component {
     }
 
     render() {
-        const {handleSubmit, fields: { _id, created, description, amount } }  = this.props;
+        const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
 
         return (
             <form onSubmit={handleSubmit(this.saveExpense.bind(this))}>
                 <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
-                    <CardHeader title="Expense" subtitle={ _id.value === '0' ? 'Add New' : 'Edit'} />
+                    <CardHeader title="Expense" subtitle={ this.props.expense._id.value === '0' ? 'Add New' : 'Edit'} />
                     <CardText>
-                        <DatePicker name='created' floatingLabelText="Date" value={created.value != ''? new Date(created.value) : null}  
-                            mode="landscape" {...created} onChange={(e, val) => {return created.onChange(val)}} />
-                        <div>{created.value}
-                            <TextField name="amount" 
-                                floatingLabelText="Amount" {...amount} errorText={amount.touched && amount.error} />
+                        <Field name="created" component={DatePicker} floatingLabelText="Date"/>
+                        <div>
+                            <Field name="amount" component={materialTextField} label="Amount"/>
                         </div>
                         <div>
-                            <TextField name="description" 
-                                floatingLabelText="Description" {...description} />
+                            <Field name="description" component={materialTextField} label="Description"/>
                         </div>
                     </CardText>
                     <CardActions>
-                        <RaisedButton type='submit' icon={<ContentSave />} label={_id.value === '0' ? 'Save' : 'Update'} primary={true} />
-                        <RaisedButton icon={<ContentClear />} label="Cancel" linkButton containerElement={<Link to="/expense" />}/>
+                        <RaisedButton type='submit' icon={<ContentSave />} label={this.props.expense._id.value === '0' ? 'Save' : 'Update'} primary={true} />
+                        <RaisedButton icon={<ContentClear />} label="Cancel" containerElement={<Link to="/expense" />}/>
                     </CardActions>
                 </Card>
             </form>
@@ -116,8 +115,20 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-export default reduxForm({
-    form: 'expense',
-    fields: ['_id', 'created', 'amount', 'description' ],
-    validate: validateForm
-}, mapStateToProps, { createExpense: createExpense } )(ExpenseNew);
+// export default reduxForm({
+//     form: 'expense',
+//     fields: ['_id', 'created', 'amount', 'description' ],
+//     validate: validateForm
+// }, mapStateToProps, { createExpense: createExpense } )(ExpenseNew);
+
+ExpenseNew = reduxForm({
+    form: 'supplier',
+})(ExpenseNew);
+
+ExpenseNew = connect(
+    mapStateToProps, 
+    {createExpense: createExpense}
+)(ExpenseNew);
+
+
+export default ExpenseNew;

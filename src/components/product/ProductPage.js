@@ -54,7 +54,7 @@ class ProductPage extends Component {
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} linkButton containerElement={<Link to="/product/new" />}>
+                <FloatingActionButton style={fabStyle} secondary={true} containerElement={<Link to="/product/new" />}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <ProductList products={products} showName={this.getTypeName} />

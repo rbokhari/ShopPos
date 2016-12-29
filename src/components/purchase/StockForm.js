@@ -112,7 +112,7 @@ const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChang
                 </CardText>
                 <CardActions>
                     <RaisedButton icon={<ContentSave />}  label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></RaisedButton>
-                    <RaisedButton icon={<ContentClear />} label="Cancel" linkButton containerElement={<Link to="/purchase" />} />
+                    <RaisedButton icon={<ContentClear />} label="Cancel" containerElement={<Link to="/purchase" />} />
                 </CardActions>
             </Card>
         </form>
