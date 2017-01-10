@@ -217,8 +217,7 @@ exports.getAllByStatus = function(req, res, next) {
     const status = req.params.status;   // e.g. 0 = issue, 1 = Kitchen finished, 2 = devliered
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-console.log("companyId", companyId);
-console.log("officeId", officeId);
+
     if (companyId != '0' && officeId != '0') {
         Customer.find({ 
             $and: [
