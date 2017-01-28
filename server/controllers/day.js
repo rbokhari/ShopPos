@@ -1,3 +1,6 @@
+var fs = require('fs');
+//var path = require('path');
+
 const Day = require('../models/day');
 const nodemailer = require('nodemailer');
 
@@ -39,7 +42,7 @@ exports.createDay = function(req, res, next) {
     });
 };
 
-exports.closeDay = function(req, res) {
+exports.closeDay = function(req, res, next) {
     //res.json('Got a PUT request at category');
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
@@ -87,9 +90,16 @@ exports.closeDay = function(req, res) {
             console.log(err);
             return next(err); 
         }
-
+        next();
         res.send('Day close');
     });
+};
+
+exports.printCloseDay = function(req, res, next) {
+    const dayId = req.headers.dayid;
+    var wstream = fs.createWriteStream('pdf/' + dayId + '.cld');    // take this extension in service to get proper report print
+    wstream.end();
+    next();
 };
 
 exports.getAll = function(req, res, next) {

@@ -94,10 +94,9 @@ module.exports = function(app, io) {
     app.get('/expense/transaction/bydate', Expense.getByDate);
     app.get('/purchase/transaction/bydate', Purchase.getByDate);
 
-
     // Days Routes
     app.post('/day/create', Day.createDay);
-    app.put('/day/close', Day.closeDay);
+    app.put('/day/close', Day.closeDay, Day.printCloseDay);
     app.get('/day/', Day.getAll);
     //app.get('/day/:id', Day.getById);
     app.get('/day/open', Day.getOpenDay);

@@ -53,14 +53,11 @@ exports.createCustomer = function(req, res, next) {
 exports.updateCustomer = function(req, res, next) {
     // next();
     // res.json(req.body);
-    console.log(new Date());
-    console.log(new Date().now);
     const finishedDate = new Date().now; 
     var customerUpdate = {
         status: req.params.newStatus, 
         finished: new Date() 
     };
-    console.log(customerUpdate);
     Customer.update({_id: req.params.id}, customerUpdate, { multi: false }, function(err, numAffected) {
         if (err) { return next(err); }
         next();
@@ -74,12 +71,9 @@ exports.printReceipt = function(req, res, next) {
     const officeId = req.headers.officeid;
     const newStatus = req.params.newStatus;
 
-//console.log("creating pdf for " + id, companyId, officeId);
     Customer.find( { $and: [{ companyId: companyId },{ officeId: officeId }, { _id: id } ]}, function(err, customer) {
         if (err) { return next(err); }
 
-// console.log("customer is >>" + customer);
- //console.log("status is >> " + newStatus + " >>");
         if (newStatus != 3) { return next(); }  // when dispatch then print
 
         var wstream = fs.createWriteStream('pdf/'+id+'.txt');
