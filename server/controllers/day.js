@@ -1,4 +1,6 @@
 var fs = require('fs');
+var Excel = require('exceljs');
+var moment = require('moment');
 //var path = require('path');
 
 const Day = require('../models/day');
@@ -176,5 +178,106 @@ exports.getDayBetweenDates = function(req, res, next) {
 
         res.setHeader('Content-Type', 'application/json');
         res.json(days);
+    });
+};
+
+exports.getExcelBetweenDates = function(req, res, next) {
+
+    var startDay = new Date(2017, 0, 10);
+    var endDay = new Date(2017, 1, 10);
+    var oneDay = 1000 * 60 * 60 * 24;
+
+    var workbook = new Excel.Workbook();
+    workbook.creator = 'Me';
+    workbook.lastModifiedBy = 'Her';
+    workbook.created = new Date(1985, 8, 30);
+    workbook.modified = new Date();
+    workbook.lastPrinted = new Date(2016, 9, 27);
+
+    // Set workbook dates to 1904 date system 
+    workbook.properties.date1904 = true;
+
+    var worksheet = workbook.addWorksheet('Export Sheet');
+    //worksheet.mergeCells('A1:B2');
+    // worksheet.getCell('A1').value = 'I am merged';
+    // worksheet.getCell('C1').value = 'I am not';
+    // worksheet.getCell('C2').value = 'Neither am I';
+    //worksheet.getRow(2).commit(); // now rows 1 and two are committed. 
+
+    //var startCol = worksheet.getColumn('C');
+
+    var totalDays = Math.round((endDay - startDay)/oneDay);
+    var dateHeader = startDay;
+    var colDate = worksheet.getColumn(1);
+    colDate.header = 'Date'; 
+    for (i = 1; i< totalDays; i++ ){
+        var col = worksheet.getColumn(i+1);
+        col.dataValidation = {
+            type: 'date',
+            allowBlank: true
+        };
+        //col.header = new Date(dateHeader.setDate(startDay.getDate() + i));
+        col.header = moment(new Date(dateHeader.getTime() + (86400000 * i))).format('DD-MMM-YYYY') ;
+    }
+    worksheet.addRow();
+    var row = worksheet.getRow(2);
+    row.getCell(1).value = 'Day';
+    dateHeader = startDay;
+    for (i = 1; i< totalDays; i++ ){
+        row.getCell(i+1).value = moment(new Date(dateHeader.getTime() + (86400000 * i))).format('dddd') ;
+    }
+
+    row = worksheet.getRow(3);
+    row.getCell(1).value = 'Morning Sale';
+    row = worksheet.getRow(4);
+    row.getCell(1).value = 'Evening Sale';
+    row = worksheet.getRow(5);
+    row.getCell(1).value = 'Total Sale';
+    row = worksheet.getRow(6);
+    row.getCell(1).value = 'Net';
+    row = worksheet.getRow(7);
+    row.getCell(1).value = 'Total of Expanses';
+
+    // fetching days ID from 
+    Day.find({ 
+            $and: [ 
+                    { companyId: companyId }, 
+                    { officeId: officeId }, 
+                    { today: {
+                        $gte: startDay,
+                        $lte: closeDay
+                    }}
+                ] }, { _id: 1 }, function(err, days){
+
+        if (err) { return next(err); }
+        days = days.map(function(day,index){
+            return day._id;
+        });
+
+        if (days.length > 0) {        
+            Customer.find({ 
+                $and: [
+                    { companyId: companyId },
+                    { officeId: officeId },
+                    { status: 3 },
+                    { dayId: { $in: days }}
+                ] }, {}, { sort : {created: -1} }, function(err, customers){
+                
+                if (err) { return next(err); }
+
+                
+            });
+        }
+    });
+
+
+
+    workbook.xlsx.writeFile('excel/excel.xlsx')
+    .then(function() {
+        // done 
+        //res.setHeader('Content-Type', 'application/json');
+        //res.sendFile('./excel/excel.xlsx');
+        res.json({'done': Math.round((endDay - startDay)/oneDay)});
+        next();
     });
 };
