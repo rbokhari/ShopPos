@@ -50,7 +50,7 @@ class ExpenseNew extends Component {
         return (
             <form onSubmit={handleSubmit(this.saveExpense.bind(this))}>
                 <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
-                    <CardHeader title="Expense" subtitle={ this.props.expense._id.value === '0' ? 'Add New' : 'Edit'} />
+                    <CardHeader title="Expense" subtitle={ this.props.expense._id === '0' ? 'Add New' : 'Edit'} />
                     <CardText>
                         <Field name="created" component={DatePicker} floatingLabelText="Date"/>
                         <div>
@@ -59,9 +59,10 @@ class ExpenseNew extends Component {
                         <div>
                             <Field name="description" component={materialTextField} label="Description"/>
                         </div>
+                        id Value : {this.props.expense._id}
                     </CardText>
                     <CardActions>
-                        <RaisedButton type='submit' icon={<ContentSave />} label={this.props.expense._id.value === '0' ? 'Save' : 'Update'} primary={true} />
+                        <RaisedButton type='submit' icon={<ContentSave />} label={this.props.expense._id === '0' ? 'Save' : 'Update'} primary={true} />
                         <RaisedButton icon={<ContentClear />} label="Cancel" containerElement={<Link to="/expense" />}/>
                     </CardActions>
                 </Card>

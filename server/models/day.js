@@ -9,7 +9,10 @@ const daySchema = new Schema({
     officeId: { type: Schema.ObjectId },
     today: { type: Date, default: Date.now },
     close: { type: Date },
-    status: { type : Number }
+    status: { type : Number },
+    morningSale: { type: Number },
+    eveningSale: { type: Number },
+    netSale: { type: Number }
 });
 
 // Create model class

@@ -248,7 +248,7 @@ exports.getTransaction = function(req, res, next) {
     const toDate = new Date(req.query.toDate);
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-
+    
     Day.find({ 
             $and: [ 
                     { companyId: companyId }, 
@@ -260,6 +260,7 @@ exports.getTransaction = function(req, res, next) {
                 ] }, { _id: 1 }, function(err, days){
 
         if (err) { return next(err); }
+
         days = days.map(function(day,index){
             return day._id;
         });
@@ -278,6 +279,8 @@ exports.getTransaction = function(req, res, next) {
                 res.setHeader('Content-Type', 'application/json');
                 res.json(customers);
             });
+        } else {
+            res.json({});
         }
     });
 
