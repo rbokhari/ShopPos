@@ -3,12 +3,13 @@ var Excel = require('exceljs');
 var moment = require('moment');
 const nodemailer = require('nodemailer');
 var Q = require('q'); // We can now use promises!
+var async = require('async');
 //var path = require('path');
 
 const Day = require('../models/day');
 const Customer = require('../models/customer');
 const Expense = require('../models/expense');
-
+const Purchase = require('../models/purchase');
 
 exports.createDay = function(req, res, next) {
     const companyId = req.headers.companyid;
@@ -55,6 +56,7 @@ exports.closeDay = function(req, res, next) {
     const officeId = req.headers.officeid;
     const dayId = req.headers.dayid;
     const newDate = new Date();
+    console.log(companyId, officeId);
     // var transporter = nodemailer.createTransport({
     //     service: 'Mailgun',
     //     auth: {
@@ -89,61 +91,151 @@ exports.closeDay = function(req, res, next) {
         if (err) next(err);
         //console.log('day', day);
         var today = day.today;
+        var close = day.close;
+        var morningSale = 0;
+        var eveningSale = 0;
+        var netPurchases = 0;
+        var netExpenses = 0;
+        console.log("today 0: ", today);
         today.setHours(15);
         today.setMinutes(0);
 
-        Customer.aggregate([
-            { "$match": {
-                "$and": [
-                    { "dayId": parseInt(dayId) },
-                    { "created": {
-                            "$lte" : today
-                        }
-                    }
-                ]
-            }}, 
-            // { "$match": {
-            //     "created": {
-            //         "$lte": today 
-            //     }
-            // }},
-            {
-                "$unwind": "$products"
-            },
-            { "$group": {
-                "_id": "$dayId",
-                "total": { "$sum": "$products.price"}
-            }},
-
-        ], function(err, customer) {
-            console.log(customer);
-            const morningTotal = customer[0].total;
-
-
-
-            res.json({"total": morningTotal});
-            next();
+        var queries = [];
+        console.log("today : ", today);
+        // morning sale query
+        queries.push(function(cb) {
+            Customer.aggregate([
+                { $match: {
+                    $and: [
+                        // { companyId: companyId },
+                        // { officeId: officeId },
+                        { dayId: parseInt(dayId) },
+                        { created: { "$lt" : today } }
+                    ]
+                }}, 
+                {
+                    $unwind: "$products"
+                },
+                { $group: {
+                    _id: "$dayId",
+                    total: { $sum: "$products.price"}
+                }},
+            ], function(err, morningSale) {
+                if (err) { throw cb(err); }
+                cb(null, morningSale);
+            });
         });
 
+        // evening sale query
+        queries.push(function(cb) {
+            Customer.aggregate([
+                { "$match": {
+                    "$and": [
+                        // { "companyId": companyId },
+                        // { "officeId": officeId },
+                        { "dayId": parseInt(dayId) },
+                        { "created": { "$gte" : today } }
+                    ]
+                }}, 
+                {
+                    "$unwind": "$products"
+                },
+                { "$group": {
+                    "_id": "$dayId",
+                    "total": { "$sum": "$products.price"}
+                }},
+            ], function(err, eveningSale) {
+                if (err) { cb(err); }
+                cb(null, eveningSale);
+            });
+        });
+
+        today = day.today;
+        //console.log("today 2: ", today);
+        queries.push(function(cb) {
+            Purchase.aggregate([
+                { "$match": {
+                    "$and": [
+                        // { "companyId": companyId },
+                        // { "officeId": officeId },
+                        { "created": { "$gte": ISODate(today) }},
+                        { "created": { "$lte": ISODate(close) }}
+                    ]
+                } },
+                { "$group": {
+                    "_id": dayId,
+                    "total": { "$sum": "$total"}
+                }}
+            ], function(err, purchases) {
+                if (err) { cb(err); }
+                cb(null, purchases);
+            });
+
+        });
+
+        queries.push(function(cb) {
+            Expense.aggregate([
+                { "$match": {
+                    "$and": [
+                        // { "companyId": companyId },
+                        // { "officeId": officeId },
+                        { "created": { "$gte": today }},
+                        { "created": { "$lte": close }}
+                    ]
+                } },
+                { "$group": {
+                    "_id": dayId,
+                    "total": { "$sum": "$amount"}
+                }}
+            ], function(err, expenses) {
+                if (err) { cb(err); }
+                cb(null, expenses);
+            });
+
+        });
+
+        // executing all queries at once
+        async.parallel(queries, function(err, docs) {
+            if (err) { return next(err); }
+            //console.log(docs);
+            const result1 = docs[0];
+            const result2 = docs[1];
+            const result3 = docs[2];
+            const result4 = docs[3];
+            //console.log("result", result1);
+            if (result1.length > 0) { morningSale = result1[0].total; }
+            if (result2.length > 0) { eveningSale = result2[0].total; }
+            if (result3.length > 0) { netPurchases = result3[0].total; }
+            if (result4.length > 0) { netExpenses = result4[0].total; }
+
+            Day.update( { 
+                            $and: [ 
+                                    { _id: dayId } , 
+                                    { companyId: companyId }, 
+                                    { officeId: officeId }
+                                ] 
+                        }, 
+                        { 
+                            status: 1, 
+                            close: newDate, 
+                            morningSale: morningSale, 
+                            eveningSale: eveningSale, 
+                            netSale: morningSale + eveningSale,
+                            netPurchase: netPurchases,
+                            netExpense: netExpenses
+                        }, 
+                            function(err, existing) {
+                                if (err) { 
+                                    console.log(err);
+                                    return next(err); 
+                                }
+                                res.send('Day close');
+                                next();
+            });
+
+        });
     });
 
-
-
-    // Day.update( { $and: [ 
-    //                         { _id: dayId } , 
-    //                         { companyId: companyId }, 
-    //                         { officeId: officeId }
-    //                     ] }, 
-    //                 { status: 1, close: newDate }, 
-    //                     function(err, existing) {
-
-    //     if (err) { 
-    //         console.log(err);
-    //         return next(err); 
-    //     }
-    //     next();
-    //     res.send('Day close');
-    // });
 };
 
 exports.printCloseDay = function(req, res, next) {

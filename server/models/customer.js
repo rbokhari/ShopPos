@@ -11,6 +11,7 @@ const customerSchema = new Schema({
     dayId: { type: Number },
     mobileNumber: String,
     created: { type: Date, default: Date.now },
+    createdOffset: { type: Number, },
     finished: { type: Date, default: Date.now },
     option: { type: String },
     status: { type : Number },

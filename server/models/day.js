@@ -12,7 +12,9 @@ const daySchema = new Schema({
     status: { type : Number },
     morningSale: { type: Number },
     eveningSale: { type: Number },
-    netSale: { type: Number }
+    netSale: { type: Number },
+    netPurchase: { type: Number },
+    netExpense: { type: Number }
 });
 
 // Create model class

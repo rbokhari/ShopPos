@@ -59,7 +59,6 @@ class ExpenseNew extends Component {
                         <div>
                             <Field name="description" component={materialTextField} label="Description"/>
                         </div>
-                        id Value : {this.props.expense._id}
                     </CardText>
                     <CardActions>
                         <RaisedButton type='submit' icon={<ContentSave />} label={this.props.expense._id === '0' ? 'Save' : 'Update'} primary={true} />

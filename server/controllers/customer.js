@@ -24,6 +24,7 @@ exports.createCustomer = function(req, res, next) {
         carNumber: req.body.carNumber,
         mobileNumber: req.body.mobileNumber,
         created: new Date().now,
+        createdOffset: new Date().getTimezoneOffset(),
         option: req.body.option,
         status: req.body.status,
         products: productsItem

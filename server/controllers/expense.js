@@ -3,7 +3,8 @@ const Expense = require('../models/expense');
 exports.createExpense = function(req, res, next) {
     
     //const code = req.body.name;
-    const created = req.body.status;
+    console.log("expense body", req.body);
+    const created = req.body.created;
     const description = req.body.description;
     const amount = req.body.amount;
     const companyId = req.headers.companyid;
