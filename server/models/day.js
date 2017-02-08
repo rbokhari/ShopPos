@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+//mongoose.set('debug', true);
 // Define a model
 
 const daySchema = new Schema({
