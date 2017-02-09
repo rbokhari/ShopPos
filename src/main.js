@@ -104,6 +104,7 @@ ReactDOM.render(
                 <Route path="report" component={ReportPage} />
                 
                 <Route path="users" component={UserPage} />
+                <Route path="users/:id/edit" component={UserNew} />
                 <Route path="users/new" component={UserNew} />
 
                 <Route path="expense" component={ExpensePage} />

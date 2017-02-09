@@ -13,7 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 
 import { USER_ROLE, USER_ROLE_LABEL } from '../../../shared/constants';
-import { createUsers } from '../../actions';
+import { createUsers, loadUsers } from '../../actions';
 import { materialTextField, materialCheckBox, materialSelectField } from '../controls/index';
 
 
@@ -27,6 +27,16 @@ const styles = {
 };
 
 class UserNew extends Component {
+
+    constructor( props, context ) {
+        super( props, context );
+        //this.props.loadUsers();
+
+        this.state = {
+            //expense: Object.assign( {}, this.props.expense ),
+            errors: {}
+        };
+    }
 
     handleFormSubmit ( {email, password, branchId, roleId, status } ) {
         this.props.createUsers({ email, password, branchId, roleId, status })
@@ -57,14 +67,14 @@ class UserNew extends Component {
         return (
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                 <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
-                    <CardHeader title="Users" subtitle="Add New" />
+                    <CardHeader title="Users" subtitle={ this.props.user.id == '0' ? 'Add New' : 'Edit' } />
                     <CardText>
                         <div>
                             <Field name="email" component={materialTextField} label="User Name"/>
                         </div>
-                        <div>
+                        {this.props.user.id == '0' && <div>
                             <Field name="password" component={materialTextField} label="Password" type="password"/>
-                        </div>
+                        </div>}
                         <div>
                             <Field name="branchId" component={materialSelectField} label="Branch">
                                 {branches.map(branch=>
@@ -83,7 +93,7 @@ class UserNew extends Component {
                         </div>
                     </CardText>
                     <CardActions>
-                        <RaisedButton label={loading ? 'Saving...' : 'Save'} primary={true} type="submit" />
+                        <RaisedButton label={loading ? 'Saving...' : this.props.user.id == '0' ? 'Save' : 'Update' } primary={true} type="submit" />
                         <RaisedButton label="Cancel" containerElement={<Link to="/users" />} />
                     </CardActions>
                 </Card>
@@ -96,12 +106,49 @@ UserNew.contextTypes = {
     router: PropTypes.object.isRequired
 }
 
-function mapStateToProps(state) {
-    return { 
+function getUserById( users, id ) {
+    const user = users.filter(user => { 
+        return user.id == id 
+    });
+    if (user) return user[0];
+    return null;
+}
+
+function validateForm(values) {
+    const errors = {};
+
+    // if (!values.code) {
+    //     errors.name = 'Name required';
+    // }
+    return errors;
+}
+
+
+function mapStateToProps(state, ownProps) {
+    const userId = ownProps.params.id;
+
+    let user = {
+        id: '0', email: '', password: '', roleId: 0, status: 1
+    };
+
+    if (userId && state.users.length > 0 ) {
+        user = getUserById(state.users, userId);
+    }
+
+    console.error("user", state.users, user);
+
+    return {
+        user: user,
         branches: state.branch.all,
-        errorMessage: state.auth.error,
-        loading: false
-     };
+        loading: false,
+        initialValues: user
+    };
+
+    // return { 
+    //     branches: state.branch.all,
+    //     errorMessage: state.auth.error,
+    //     loading: false
+    //  };
 }
 
 // function mapDispatchToProps(dispatch) {
@@ -123,7 +170,7 @@ UserNew = reduxForm({
 
 UserNew = connect(
     mapStateToProps, 
-    { createUsers: createUsers }
+    { createUsers: createUsers, loadUsers: loadUsers }
 )(UserNew);
 
 export default UserNew;

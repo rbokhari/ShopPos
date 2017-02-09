@@ -34,6 +34,7 @@ import ActionCardTravel from 'material-ui/svg-icons/action/card-travel';
 import MenuList from './common/Menu.jsx';
 import BranchListDialog from './branch/BranchListDialog';
 import BranchCreateDialog from './branch/BranchNew';
+import UserPasswordChange from './user/UserPasswordChange';
 import LoadingDots from './common/LoadingDots';
 
 //var ThemeManager = new mui.styles.getMuiTheme();
@@ -69,8 +70,7 @@ class App extends React.Component {
         this._handleClose = this._handleClose.bind(this);
         this._loadBranch = this._loadBranch.bind(this);
         this._showCreateBranch = this._showCreateBranch.bind(this);
-
-
+        this._loadChangePassword = this._loadChangePassword.bind(this);
     }
 
     _handleClick() {
@@ -91,6 +91,10 @@ class App extends React.Component {
 
     _showCreateBranch() {
         this.props.showCreateBranch();
+    }
+
+    _loadChangePassword() {
+        this.props.loadPasswordChangeDialog();
     }
 
     renderDrawerMenu() {
@@ -191,6 +195,8 @@ class App extends React.Component {
                             { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Switch Branch" onTouchTap={this._loadBranch} />}
                             { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Create Branch" onTouchTap={this._showCreateBranch} />}
                             { user && user.roleId === USER_ROLE.ADMIN && <Divider />}
+                            <MenuItem primaryText="Change Password" onTouchTap={this._loadChangePassword } />
+                            { user && user.roleId === USER_ROLE.ADMIN && <Divider />}
                             <MenuItem primaryText="Sign out"  containerElement={<Link to={'/signout'} />} />
 
                             </IconMenu>
@@ -201,6 +207,7 @@ class App extends React.Component {
                     </AppBar>
                     <BranchListDialog open={false} />
                     <BranchCreateDialog open={false} />
+                    <UserPasswordChange open={false} />
                     <div style={{
                             border: '1px thick', 
                             display: 'flex',

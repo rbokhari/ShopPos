@@ -54,6 +54,9 @@ export const LOAD_USERS_SUCCESS                         = 'LOAD_USERS_SUCCESS';
 export const CREATE_USERS_SUCCESS                       = 'CREATE_USERS_SUCCESS';
 export const UPDATE_USERS_SUCCESS                       = 'UPDATE_USERS_SUCCESS';
 export const CREATE_USERS                               = 'CREATE_USERS';
+export const LOAD_PASSWORD_CHANGE_DIALOG                = 'LOAD_PASSWORD_CHANGE_DIALOG';
+export const UPDATE_PASSWORD_CHANGE_SUCCESS             = 'UPDATE_PASSWORD_CHANGE_SUCCESS';
+export const CLOSE_PASSWORD_CHANGE_DIALOG               = 'CLOSE_PASSWORD_CHANGE_DIALOG';
 
 export const LOAD_EXPENSE_SUCCESS                       = 'LOAD_EXPENSE_SUCCESS';
 export const CREATE_EXPENSE                             = 'CREATE_EXPENSE';
@@ -63,6 +66,7 @@ export const UPDATE_EXPENSE_SUCCESS                     = 'UPDATE_EXPENSE_SUCCES
 export const LOAD_REPORT_CUSTOMER_DATE_DATA_SUCCESS     = 'LOAD_REPORT_CUSTOMER_DATE_DATA_SUCCESS';
 export const LOAD_REPORT_EXPENSE_DATE_DATA_SUCCESS      = 'LOAD_REPORT_EXPENSE_DATE_DATA_SUCCESS';
 export const LOAD_REPORT_PURCHASE_DATE_DATA_SUCCESS     = 'LOAD_REPORT_PURCHASE_DATE_DATA_SUCCESS';
+export const DOWNLOAD_EXPENSE_DETAIL_REPORT_SUCCESS     = 'DOWNLOAD_EXPENSE_DETAIL_REPORT_SUCCESS';
 
 export const LOAD_OPEN_DAY                              = 'LOAD_OPEN_DAY';
 export const LOAD_OPEN_DAY_SUCCESS                      = 'LOAD_OPEN_DAY_SUCCESS';

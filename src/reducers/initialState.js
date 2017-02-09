@@ -6,6 +6,7 @@ export default {
         current: {},
         all: []
     },
+    isLoadPasswordDialog: false,
     day: {},
     user: {},
     items: [],

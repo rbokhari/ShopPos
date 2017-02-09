@@ -2,9 +2,11 @@ var fs = require('fs');
 var Excel = require('exceljs');
 var moment = require('moment');
 const nodemailer = require('nodemailer');
-var Q = require('q'); // We can now use promises!
+//var Q = require('q'); // We can now use promises!
 var async = require('async');
-//var path = require('path');
+var path = require('path');
+var mime = require('mime');
+var request = require('request');
 
 const Day = require('../models/day');
 const Customer = require('../models/customer');
@@ -320,7 +322,7 @@ exports.getDayBetweenDates = function(req, res, next) {
 exports.getExcelBetweenDates = function(req, res, next) {
 
     var startDay = new Date(2017, 0, 1);
-    var endDay = new Date(2017, 1, 1);
+    var endDay = new Date(2017, 1, 10);
     var oneDay = 1000 * 60 * 60 * 24;
 
     var workbook = new Excel.Workbook();
@@ -344,27 +346,55 @@ exports.getExcelBetweenDates = function(req, res, next) {
 
     var totalDays = Math.round((endDay - startDay)/oneDay);
     var dateHeader = startDay;
-    var startRow = 0;
-    const dateRow = worksheet.getRow(startRow + 1);
-    const dayRow = worksheet.getRow(startRow + 2);
-    const morningSaleRow = worksheet.getRow(startRow + 3);
-    const eveningSaleRow = worksheet.getRow(startRow + 4);
-    const totalSaleRow = worksheet.getRow(startRow + 5);
-    const netBalanceRow = worksheet.getRow(startRow + 6);
-    const expenseTotalRow = worksheet.getRow(startRow + 7);
-    const expenseRow = startRow + 8;
+    var startRow = 2;
+    
+    const titleRowNumber = startRow-1;
+    const titleRow = worksheet.getRow(titleRowNumber);
+
+    const dateRowNumber = startRow + 1;
+    const dateRow = worksheet.getRow(dateRowNumber);
+
+    const dayRowNumber = startRow + 2;
+    const dayRow = worksheet.getRow(dayRowNumber);
+
+    const morningSaleRowNumber = startRow + 3;
+    const morningSaleRow = worksheet.getRow(morningSaleRowNumber);
+
+    const eveningSaleRowNumber = startRow + 4;
+    const eveningSaleRow = worksheet.getRow(eveningSaleRowNumber);
+
+    const totalSaleRowNumber = startRow + 5;
+    const totalSaleRow = worksheet.getRow(totalSaleRowNumber);
+
+    const netBalanceRowNumber = startRow + 6;
+    const netBalanceRow = worksheet.getRow(netBalanceRowNumber);
+
+    const totalPurchaseRowNumber = startRow + 7;
+    const totalPurchaseRow = worksheet.getRow(totalPurchaseRowNumber);
+
+    const expenseTotalRowNumber = startRow + 9;
+    const expenseTotalRow = worksheet.getRow(expenseTotalRowNumber);
+
+    const expenseRow = expenseTotalRowNumber + 1;
 
     //worksheet.addRow();
+    titleRow.getCell(1).value = 'Expense Detail Report';
+    titleRow.getCell(1).font = { bold: true, size: 16, color: { argb: '03A9F4' }};
+
+    netBalanceRow.font = { bold: true, color: { argb: '009688' }};
+    totalPurchaseRow.font = { color: { argb: 'FF5722' } };
+    expenseTotalRow.font = { color: { argb: 'D21025' } };
+
     dateRow.getCell(1).value = 'Date';
-    dateRow.getCell(1).font = { bold: true };
+    dateRow.font = { bold: true };
     dayRow.getCell(1).value = 'Day';
-    dayRow.getCell(1).font = { bold: true };
+    dayRow.font = { bold: true };
     dateHeader = startDay;
     dateHeader.setHours(0);
     dateHeader.setMinutes(0);
     //console.log("dateHeader", dateHeader, moment(dateHeader).format('dddd'));
     //dateHeader.setDate(dateHeader.getFullYear(), dateHeader.getMonth(), dateHeader.getDate(), 0,0,0);
-    for (i = 0; i< totalDays; i++ ){
+    for (i = 0; i<totalDays; i++ ){
         dayRow.getCell(i+2).value = moment(new Date(dateHeader.getTime() + (86400000 * i))).format('dddd') ;
     }
     
@@ -376,6 +406,8 @@ exports.getExcelBetweenDates = function(req, res, next) {
     totalSaleRow.getCell(1).font = { bold: true };
     netBalanceRow.getCell(1).value = 'Net';
     netBalanceRow.getCell(1).font = { bold: true };
+    totalPurchaseRow.getCell(1).value = "Total Purchase";
+    totalPurchaseRow.getCell(1).font = { bold: true };
     expenseTotalRow.getCell(1).value = 'Total of Expanses';
     expenseTotalRow.getCell(1).font = { bold: true };
 
@@ -412,20 +444,13 @@ exports.getExcelBetweenDates = function(req, res, next) {
     });
 
     queries.push(function(cb) {
-        Purchase.aggregate([
-            { "$match": {
-                "$and": [
+        Purchase.find({ "$and": [
                     // { "companyId": companyId },
                     // { "officeId": officeId },
                     { "created": { "$gte": startDay, "$lte": endDay }},
                     //{ "created": { "$lte": newDate }}
                 ]
-            } },
-            { "$group": {
-                "_id": 1,
-                "total": { "$sum": "$total"}
-            }}
-        ], function(err, purchases) {
+            }, function(err, purchases) {
             if (err) { cb(err); }
             cb(null, purchases);
         });
@@ -443,20 +468,18 @@ exports.getExcelBetweenDates = function(req, res, next) {
         });
 
         for (i=0; i<expenses.length; i++){
-            worksheet.getRow(8+i).getCell(1).value = expenses[i].description;
+            worksheet.getRow(expenseRow+i).getCell(1).value = expenses[i].description;
         }
 
         for (i = 0; i< totalDays; i++ ){
-            expenseTotalRow.getCell(i+2).font = {
-                color: {argb: 'D21025'}
-            };
-            expenseTotalRow.getCell(i+2).value = { formula: 'SUM(' + columnToLetter(i+2) + '8:'+ columnToLetter(i+2) + (expenseRow + expenses.length - 1) + ')'};
-            var col = worksheet.getColumn(i+2);
-            col.dataValidation = {
-                type: 'date',
-                allowBlank: true
-            };
-            col.header = moment(new Date(dateHeader.getTime() + (86400000 * i))).format('DD-MMM-YYYY') ;
+            expenseTotalRow.getCell(i+2).value = { formula: 'SUM(' + columnToLetter(i+2) + expenseRow + ':'+ columnToLetter(i+2) + (expenseRow + expenses.length - 1) + ')'};
+            // var col = worksheet.getColumn(i+2);
+            // col.dataValidation = {
+            //     type: 'date',
+            //     allowBlank: true
+            // };
+            // col.header = moment(new Date(dateHeader.getTime() + (86400000 * i))).format('DD-MMM-YYYY') ;
+            dateRow.getCell(i+2).value = moment(new Date(dateHeader.getTime() + (86400000 * i))).format('DD-MMM-YYYY') ;
             dateRow.getCell(i+2).font = { bold: true };
             dayRow.getCell(i+2).font = { bold: true };
             var dayNumber = new Date(dateHeader.getTime() + (86400000 * i)).getDate();
@@ -477,6 +500,19 @@ exports.getExcelBetweenDates = function(req, res, next) {
                 totalSaleRow.getCell(i+2).value = dayTotal.length === 1 ? dayTotal[0].netSale : 0;
             }
 
+            // purchase calculation
+            var purchaseId = purchases.filter(function(item, index) {
+                var purchaseDate = new Date(item.created);
+                return (purchaseDate.getDate() === dayNumber && purchaseDate.getMonth() === monthNumber && purchaseDate.getFullYear() === yearNumber);
+            });
+            if (purchaseId.length > 0) {
+                var purchaseTotal = 0;
+                for (k=0; k< purchaseId.length; k++) {
+                    purchaseTotal = purchaseTotal + parseFloat(purchaseId[k].total);
+                }
+                totalPurchaseRow.getCell(i+2).value = purchaseTotal;
+            }
+
             var expenseId = expenses.filter(function(item, index) {
                 var expenseDate = new Date(item.created);
                 return (expenseDate.getDate() === dayNumber && expenseDate.getMonth() === monthNumber && expenseDate.getFullYear() === yearNumber);
@@ -490,41 +526,74 @@ exports.getExcelBetweenDates = function(req, res, next) {
                     row1.getCell(i+2).value = expenseId[j].amount;
                 }
             }
-            netBalanceRow.getCell(i+2).value = { formula: '(' + columnToLetter(i+2) + '5-' + columnToLetter(i+2) + '7)' };
+            netBalanceRow.getCell(i+2).value = { formula: '(' + columnToLetter(i+2) + totalSaleRowNumber + '-' +
+                                                             columnToLetter(i+2) + expenseTotalRowNumber + '-' +
+                                                             columnToLetter(i+2) + totalPurchaseRowNumber + ')' };
         }
         morningSaleRow.getCell(totalDays + 3).value = 'Total Morning : ';
-        morningSaleRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + (startRow + 3) + ':' + columnToLetter(totalDays+1) + (startRow + 3) + ')'};
+        morningSaleRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + morningSaleRowNumber + ':' + columnToLetter(totalDays+1) + morningSaleRowNumber + ')'};
 
         eveningSaleRow.getCell(totalDays + 3).value = 'Total Evening : ';
-        eveningSaleRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + (startRow + 4) + ':' + columnToLetter(totalDays+1) + (startRow + 4) + ')'};
+        eveningSaleRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + eveningSaleRowNumber + ':' + columnToLetter(totalDays+1) + eveningSaleRowNumber + ')'};
 
         totalSaleRow.getCell(totalDays + 3).value = 'Total Sale : ';
-        totalSaleRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + (startRow + 5) + ':' + columnToLetter(totalDays+1) + (startRow + 5) + ')'};
+        totalSaleRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + totalSaleRowNumber + ':' + columnToLetter(totalDays+1) + totalSaleRowNumber + ')'};
 
         netBalanceRow.getCell(totalDays + 3).value = 'Net Balance : ';
-        netBalanceRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + (startRow + 6) + ':' + columnToLetter(totalDays+1) + (startRow + 6) + ')'};
+        netBalanceRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + netBalanceRowNumber + ':' + columnToLetter(totalDays+1) + netBalanceRowNumber + ')'};
+
+        totalPurchaseRow.getCell(totalDays + 3).value = 'Total Purchase : ';
+        totalPurchaseRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + totalPurchaseRowNumber + ':' + columnToLetter(totalDays+1) + totalPurchaseRowNumber + ')'};
         
         expenseTotalRow.getCell(totalDays + 3).value = 'Total Expense : ';
-        expenseTotalRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + (startRow + 7 ) + ':' + columnToLetter(totalDays+1) + (startRow + 7) + ')'};
+        expenseTotalRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + expenseTotalRowNumber + ':' + columnToLetter(totalDays+1) + expenseTotalRowNumber + ')'};
         expenseTotalRow.getCell(totalDays + 4).font = { color: {argb: 'D21025'} };
 
         var fileName = new Date().getTime() + '.xlsx';
+        var fullPath = __dirname + '/../excel/' + fileName ;
 
-        workbook.xlsx.writeFile('excel/'+ fileName)
+// res.setHeader('Content-Type', 'application/xlsx');
+// res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
+// workbook.xlsx.write(res);
+// // res.end();
+//request().pipe(res);
+
+        workbook.xlsx.writeFile(fullPath)
                 .then(function() {
                     // done 
                     //res.setHeader('Content-Type', 'application/json');
                     //res.sendFile('./excel/excel.xlsx');
-                    console.log("excel file created");
+                    console.log("excel file created", fullPath);
                     //res.json({'done': Math.round((endDay - startDay)/oneDay)});
-                    var file = fs.readFile('excel/' + fileName, 'binary');
-
-                    //res.setHeader('Content-Length', file.size);
+                    // var file = fs.readFile(fullPath, 'binary');
+                    // //res.download(fullPath, fileName);
+                    // res.setHeader('Content-Length', file.size);
                     // res.setHeader('Content-Type', 'application/xlsx');
                     // res.setHeader('Content-Disposition', 'attachment; filename=ExcelFile.xlsx');
                     // res.write(file, 'binary');
                     // res.end();
-                    next();
+                    //next();
+                    // var file = fullPath;
+
+                    // var filename1 = path.basename(file);
+                    // var mimetype = mime.lookup(file);
+
+                    // res.setHeader('Content-disposition', 'attachment; filename=' + filename1);
+                    // res.setHeader('Content-type', 'application/mov');
+
+                    var filestream = fs.createReadStream(fullPath);
+                    filestream.pipe(res);
+                    res.writeHead(200, {
+                        'Content-Type': 'application/xlsx',
+                        'Content-Disposition': 'attachment; filename=some_file.xlsx',
+                    });
+                    res.end(filestream);
+
+                    // res.attachment(fullPath);
+                    // res.setHeader('Content-Type', 'application/xlsx');
+                    // res.setHeader('Content-Disposition', 'attachment; filename=ExcelFile.xlsx');
+                    //next();
+                    //res.download(fullPath);
                 });
     });
 

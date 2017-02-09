@@ -18,6 +18,18 @@ import usersApi from '../api/usersApi';
 import reportApi from '../api/ReportApi';
 import dayApi from '../api/dayApi';
 
+export function loadPasswordChangeDialog() {
+    return function( dispatch) {
+        dispatch( { type: types.LOAD_PASSWORD_CHANGE_DIALOG });
+    };
+}
+
+export function closePasswordChangeDialog() {
+    return function( dispatch) {
+        dispatch( { type: types.CLOSE_PASSWORD_CHANGE_DIALOG } );
+    };
+}
+
 export function loadBranch() {
     return function( dispatch ) {
         dispatch({ type: types.LOAD_BRANCH }); // this is redux-thunk in action 
@@ -691,6 +703,20 @@ export function loadExpenseTransaction(fromDate, toDate) {
             });
     };
 }
+
+export function loadExpenseDetailDownload(fromDate, toDate) {
+    return function(dispatch) {
+        return reportApi.getDownloadExpenseDetail(fromDate, toDate)
+            .then( data => {
+                dispatch( {
+                    type: types.DOWNLOAD_EXPENSE_DETAIL_REPORT_SUCCESS
+                });
+            }).catch( error => {
+                throw (error);
+            });
+    };
+}
+
 
 export function loadPurchaseTransaction(fromDate, toDate) {
     return function(dispatch) {

@@ -16,6 +16,10 @@ class ReportApi {
         return Api.get('purchase/transaction/byDate', { fromDate: fromDate, toDate: toDate });
     }
 
+    static getDownloadExpenseDetail(fromDate, toDate) {
+        return Api.get('day/excel');
+    }
+
 }
 
 export default ReportApi;
