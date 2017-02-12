@@ -1,4 +1,5 @@
 /*jshint esversion: 6 */
+import FileSaver from 'file-saver';
 
 import * as types from './types';
 import { browserHistory } from 'react-router';
@@ -708,9 +709,35 @@ export function loadExpenseDetailDownload(fromDate, toDate) {
     return function(dispatch) {
         return reportApi.getDownloadExpenseDetail(fromDate, toDate)
             .then( data => {
-                dispatch( {
-                    type: types.DOWNLOAD_EXPENSE_DETAIL_REPORT_SUCCESS
-                });
+                //return new Blob([data]);
+// var blob = new Blob([data], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+//     var objectUrl = URL.createObjectURL(blob);
+//     window.open(objectUrl);
+console.info("data length", data.data.length, data);
+                var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                console.log('blob length', blob.length);
+                var csvURL = window.URL.createObjectURL(blob);
+                var tempLink = document.createElement('a');
+                tempLink.href = csvURL;
+                tempLink.setAttribute('download', 'filename.xlsx');
+                tempLink.click();
+                //console.log("data", data);
+                // var file = new Blob([data], {
+                //     type: 'application/xlsx'
+                // });
+                // var fileURL = URL.createObjectURL(file);
+                // var a = document.createElement('a');
+                // a.href = fileURL;
+                // a.target = '_blank';
+                // a.download = 'ItemList.xlsx';
+                // document.body.appendChild(a);
+                // a.click();
+
+                // dispatch( {
+                //     type: types.DOWNLOAD_EXPENSE_DETAIL_REPORT_SUCCESS
+                // });
+            // }).then( blob => {
+            //     FileSaver.saveAs(blob, 'filename.xlsx');
             }).catch( error => {
                 throw (error);
             });

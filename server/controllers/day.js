@@ -2,6 +2,7 @@ var fs = require('fs');
 var Excel = require('exceljs');
 var moment = require('moment');
 const nodemailer = require('nodemailer');
+
 //var Q = require('q'); // We can now use promises!
 var async = require('async');
 var path = require('path');
@@ -321,8 +322,8 @@ exports.getDayBetweenDates = function(req, res, next) {
 
 exports.getExcelBetweenDates = function(req, res, next) {
 
-    var startDay = new Date(2017, 0, 1);
-    var endDay = new Date(2017, 1, 10);
+    var startDay = new Date(req.query.fromDate);
+    var endDay = new Date(req.query.toDate);
     var oneDay = 1000 * 60 * 60 * 24;
 
     var workbook = new Excel.Workbook();
@@ -552,48 +553,22 @@ exports.getExcelBetweenDates = function(req, res, next) {
         var fileName = new Date().getTime() + '.xlsx';
         var fullPath = __dirname + '/../excel/' + fileName ;
 
-// res.setHeader('Content-Type', 'application/xlsx');
-// res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
-// workbook.xlsx.write(res);
-// // res.end();
-//request().pipe(res);
+// res.writeHead(200, {
+//       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+//       'Content-Disposition': fileName,
+//     });
 
+//     workbook.xlsx.write(res);
+//res.end();
+//request().pipe(res);
+//stream.pipe(workbook.csv.createInputStream());
         workbook.xlsx.writeFile(fullPath)
                 .then(function() {
                     // done 
                     //res.setHeader('Content-Type', 'application/json');
                     //res.sendFile('./excel/excel.xlsx');
-                    console.log("excel file created", fullPath);
-                    //res.json({'done': Math.round((endDay - startDay)/oneDay)});
-                    // var file = fs.readFile(fullPath, 'binary');
-                    // //res.download(fullPath, fileName);
-                    // res.setHeader('Content-Length', file.size);
-                    // res.setHeader('Content-Type', 'application/xlsx');
-                    // res.setHeader('Content-Disposition', 'attachment; filename=ExcelFile.xlsx');
-                    // res.write(file, 'binary');
-                    // res.end();
-                    //next();
-                    // var file = fullPath;
-
-                    // var filename1 = path.basename(file);
-                    // var mimetype = mime.lookup(file);
-
-                    // res.setHeader('Content-disposition', 'attachment; filename=' + filename1);
-                    // res.setHeader('Content-type', 'application/mov');
-
-                    var filestream = fs.createReadStream(fullPath);
-                    filestream.pipe(res);
-                    res.writeHead(200, {
-                        'Content-Type': 'application/xlsx',
-                        'Content-Disposition': 'attachment; filename=some_file.xlsx',
-                    });
-                    res.end(filestream);
-
-                    // res.attachment(fullPath);
-                    // res.setHeader('Content-Type', 'application/xlsx');
-                    // res.setHeader('Content-Disposition', 'attachment; filename=ExcelFile.xlsx');
-                    //next();
-                    //res.download(fullPath);
+                    console.log("excel file created");
+                    
                 });
     });
 

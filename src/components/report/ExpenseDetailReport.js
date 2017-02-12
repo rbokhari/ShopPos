@@ -46,13 +46,13 @@ class ExpenseDetailReport extends Component {
         const { report } = this.props;
         report.fromDate.setHours(0,0,0);
         report.toDate.setHours(23,59,0);
-        this.props.loadExpenseDetailDownload(report.fromDate, report.toDate);
-            // .then(data => {
-            //     console.info(data);
-            // })
-            // .catch( error => {
-            //     console.info("error", error);
-            // });
+        this.props.loadExpenseDetailDownload(report.fromDate, report.toDate)
+            .then(data => {
+                alert('File created Successfully !');
+            })
+            .catch( error => {
+                console.info("error", error);
+            });
     }
 
     render() {
@@ -66,7 +66,7 @@ class ExpenseDetailReport extends Component {
                                 mode="landscape" onChange={this.handleFromDate} style={{display: 'inline-block'}} />
                             <DatePicker name='toDate' floatingLabelText="To Date" autoOk={true} defaultDate={this.props.report.toDate} 
                                 mode="landscape" onChange={this.handleToDate} style={{display: 'inline-block'}} minDate={this.props.report.fromDate} />
-                            <RaisedButton type='button' icon={<FindReplace />} label='Search' secondary={true} onClick={this.getData.bind(this)} />
+                            <RaisedButton type='button' icon={<FindReplace />} label='Generate Excel' secondary={true} onClick={this.getData.bind(this)} />
                         </div>
                     </CardText>
                 </Card>

@@ -17,7 +17,7 @@ class ReportApi {
     }
 
     static getDownloadExpenseDetail(fromDate, toDate) {
-        return Api.get('day/excel');
+        return Api.get('day/excel', { fromDate: fromDate, toDate: toDate } );
     }
 
 }

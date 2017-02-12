@@ -18,6 +18,7 @@ mongoose.connect(config.mongoDBAddress);    //setting in config file
 // App Setup
 //app.use(morgan('combined'));
 app.use(cors());
+app.use(express.static('excel'));
 app.use(bodyParser.json({ type: '*/*' }));
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
