@@ -713,7 +713,7 @@ export function loadExpenseDetailDownload(fromDate, toDate) {
 // var blob = new Blob([data], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
 //     var objectUrl = URL.createObjectURL(blob);
 //     window.open(objectUrl);
-console.info("data length", data.data.length, data);
+
                 var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                 console.log('blob length', blob.length);
                 var csvURL = window.URL.createObjectURL(blob);

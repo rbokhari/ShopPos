@@ -32,21 +32,19 @@ exports.createExpense = function(req, res, next) {
 
 };
 
-exports.updateExpense = function(req, res) {
+exports.updateExpense = function(req, res, next) {
     //res.json('Got a PUT request at category');
     const id = req.body._id;
     const code = req.body.name;
-    const created = req.body.status;
+    const created = req.body.created;
     const descrption = req.body.description;
     const amount = req.body.amount;
-    const companyId = req.headers.companyid;
-    const officeId = req.headers.officeid;
 
     Expense.update( { $and: [ { _id: id } , 
-                            { companyId: companyId }, 
-                            { officeId: officeId }
+                            // { companyId: companyId }, 
+                            // { officeId: officeId }
                         ] }, 
-                    { code: code, description: descrption, amount: amount, created: created }, 
+                    { description: descrption, amount: amount, created: created }, 
                         function(err, existingItem) {
 
         if (err) { return next(err); }

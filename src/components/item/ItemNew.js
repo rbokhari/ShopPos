@@ -68,15 +68,17 @@ class ItemNew extends Component {
                         </div>
                         
                         <div>
-                            <Field name="uom" component={materialSelectField} label="UOM">
+                            {this.props.item.uom}
+                            <Field name="uom" component={materialSelectField} value={this.props.item.uom} label="UOM">
                                 <MenuItem key={ITEM_UOM.NUMBER} value={ITEM_UOM.NUMBER} primaryText={ITEM_UOM_LABEL.NUMBER} />
                                 <MenuItem key={ITEM_UOM.KG} value={ITEM_UOM.KG} primaryText={ITEM_UOM_LABEL.KG} />
                                 <MenuItem key={ITEM_UOM.CARTON} value={ITEM_UOM.CARTON} primaryText={ITEM_UOM_LABEL.CARTON} />
                             </Field>
                         </div>
-                        <div>
+                        
+                        {this.props.user && this.props.user.roleId == 1 && <div>
                             <Field name="uomCount" component={materialTextField} label="Count"/>
-                        </div>
+                        </div>}
                         <div>
                             <Field name="description" component={materialTextField} label="Description" multiLine={true} rows={2} rowsMax={4}  />
                         </div>
@@ -140,8 +142,9 @@ function mapStateToProps(state, ownProps) {
     if (itemId && state.items.length > 0 ) {
         item = getItemById(state.items, itemId);
     }
-
+console.info('user', item);
     return {
+        user: state.auth.user,
         item: item,
         initialValues: item
     };

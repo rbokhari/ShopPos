@@ -7,7 +7,7 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
-import DatePicker from 'material-ui/DatePicker';
+import { DatePicker } from 'redux-form-material-ui';
 
 import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentClear from 'material-ui/svg-icons/content/clear';
@@ -26,6 +26,7 @@ const styles = {
 
 class ExpenseNew extends Component {
 
+    
     constructor( props, context ) {
         super( props, context );
 
@@ -45,14 +46,16 @@ class ExpenseNew extends Component {
     }
 
     render() {
-        const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
+        const {handleSubmit, pristine, reset, submitting, touched, error, warning, created }  = this.props;
 
         return (
             <form onSubmit={handleSubmit(this.saveExpense.bind(this))}>
                 <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
                     <CardHeader title="Expense" subtitle={ this.props.expense._id === '0' ? 'Add New' : 'Edit'} />
                     <CardText>
-                        <Field name="created" component={DatePicker} floatingLabelText="Date"/>
+                        <Field name="created" component={DatePicker} 
+                            formatDate={date => date.getDate() + '/' + (date.getMonth() +1) + '/' + date.getFullYear()} 
+                            floatingLabelText="Date"/>
                         <div>
                             <Field name="amount" component={materialTextField} label="Amount"/>
                         </div>
@@ -106,6 +109,7 @@ function mapStateToProps(state, ownProps) {
 
     if (expenseId && state.expenses.length > 0 ) {
         expense = getExpenseById(state.expenses, expenseId);
+        expense.created = new Date(expense.created);
     }
     console.info(expense);
 
