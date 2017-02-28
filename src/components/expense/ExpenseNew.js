@@ -5,14 +5,16 @@ import { Field, reduxForm } from 'redux-form';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import { DatePicker } from 'redux-form-material-ui';
+import MenuItem from 'material-ui/MenuItem';
 
 import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
-import { createExpense } from '../../actions';
+import { loadExpenseMasters, createExpense } from '../../actions';
 import { materialTextField, materialCheckBox } from '../controls/index';
 
 const styles = {
@@ -30,6 +32,8 @@ class ExpenseNew extends Component {
     constructor( props, context ) {
         super( props, context );
 
+        this.props.loadExpenseMasters();
+
         this.state = {
             //expense: Object.assign( {}, this.props.expense ),
             errors: {}
@@ -46,7 +50,7 @@ class ExpenseNew extends Component {
     }
 
     render() {
-        const {handleSubmit, pristine, reset, submitting, touched, error, warning, created }  = this.props;
+        const {handleSubmit, pristine, reset, submitting, touched, error, warning, created, masters }  = this.props;
 
         return (
             <form onSubmit={handleSubmit(this.saveExpense.bind(this))}>
@@ -56,6 +60,13 @@ class ExpenseNew extends Component {
                         <Field name="created" component={DatePicker} 
                             formatDate={date => date.getDate() + '/' + (date.getMonth() +1) + '/' + date.getFullYear()} 
                             floatingLabelText="Date"/>
+                        <div>
+                            <SelectField name='categoryId' hintText="select category" value={masters.categoryId} underlineShow={true}>
+                                {masters.map(master => {
+                                    <MenuItem key={master._id} value={master._id} primaryText={master.name} />
+                                })}
+                            </SelectField>
+                        </div>
                         <div>
                             <Field name="amount" component={materialTextField} label="Amount"/>
                         </div>
@@ -96,7 +107,6 @@ function validateForm(values) {
     // if (!values.code) {
     //     errors.name = 'Name required';
     // }
-
     return errors;
 }
 
@@ -111,28 +121,25 @@ function mapStateToProps(state, ownProps) {
         expense = getExpenseById(state.expenses, expenseId);
         expense.created = new Date(expense.created);
     }
-    console.info(expense);
+    console.info(state);
 
     return {
         expense: expense,
+        masters: state.expenseMasters,
         initialValues: expense
     };
 }
 
-// export default reduxForm({
-//     form: 'expense',
-//     fields: ['_id', 'created', 'amount', 'description' ],
-//     validate: validateForm
-// }, mapStateToProps, { createExpense: createExpense } )(ExpenseNew);
-
 ExpenseNew = reduxForm({
-    form: 'supplier',
+    form: 'expense',
 })(ExpenseNew);
 
 ExpenseNew = connect(
     mapStateToProps, 
-    {createExpense: createExpense}
+    {
+        loadExpenseMasters: loadExpenseMasters,
+        createExpense: createExpense
+    }
 )(ExpenseNew);
-
 
 export default ExpenseNew;

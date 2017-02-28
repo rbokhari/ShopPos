@@ -43,7 +43,7 @@ class Dashboard extends Component {
 
     handleCreateDay() {
         this.props.createDay()
-            .then(res=>{
+            .then(res => {
                 this.setState({load: 2});
             });
     }

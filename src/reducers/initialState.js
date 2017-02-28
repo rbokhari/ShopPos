@@ -16,6 +16,7 @@ export default {
     suppliers: [],
     purchaseOrders: [],
     users : [],
+    expenseMasters: [],
     expenses: [],
     reportParam: {
         fromDate: new Date(),

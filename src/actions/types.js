@@ -58,6 +58,11 @@ export const LOAD_PASSWORD_CHANGE_DIALOG                = 'LOAD_PASSWORD_CHANGE_
 export const UPDATE_PASSWORD_CHANGE_SUCCESS             = 'UPDATE_PASSWORD_CHANGE_SUCCESS';
 export const CLOSE_PASSWORD_CHANGE_DIALOG               = 'CLOSE_PASSWORD_CHANGE_DIALOG';
 
+export const LOAD_EXPENSE_MASTER_SUCCESS                = 'LOAD_EXPENSE_MASTER_SUCCESS';
+export const CREATE_EXPENSE_MASTER                      = 'CREATE_EXPENSE_MASTER';
+export const CREATE_EXPENSE_MASTER_SUCCESS              = 'CREATE_EXPENSE_MASTER_SUCCESS';
+export const UPDATE_EXPENSE_MASTER_SUCCESS              = 'UPDATE_EXPENSE_MASTER_SUCCESS';
+
 export const LOAD_EXPENSE_SUCCESS                       = 'LOAD_EXPENSE_SUCCESS';
 export const CREATE_EXPENSE                             = 'CREATE_EXPENSE';
 export const CREATE_EXPENSE_SUCCESS                     = 'CREATE_EXPENSE_SUCCESS';

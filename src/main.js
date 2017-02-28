@@ -28,6 +28,8 @@ import Dashboard from './components/common/Dashboard';
 import UserPage from './components/user/UserPage';
 import UserNew from './components/user/UserNew';
 
+import { ExpenseMasterList, ExpenseMasterPage, ExpenseMasterNew } from './components/expenseMaster';
+
 import ExpensePage from './components/expense/ExpensePage';
 import ExpenseNew from './components/expense/ExpenseNew';
 
@@ -107,9 +109,14 @@ ReactDOM.render(
                 <Route path="users/:id/edit" component={UserNew} />
                 <Route path="users/new" component={UserNew} />
 
+                <Route path="master" component={ExpenseMasterPage} />
+                <Route path="master/new" component={ExpenseMasterNew} />
+                <Route path="master/:id/edit" component={ExpenseMasterNew} />
+
                 <Route path="expense" component={ExpensePage} />
                 <Route path="expense/new" component={ExpenseNew} />
                 <Route path="expense/:id/edit" component={ExpenseNew} />
+
             </Route>
         </Router>
     </Provider>, 

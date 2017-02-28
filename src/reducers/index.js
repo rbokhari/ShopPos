@@ -10,6 +10,7 @@ import products from './productReducer';
 import customers from './customerReducer';
 import suppliers from './supplierReducer';
 import purchaseOrders from './purchaseOrderReducer';
+import expenseMasters from './expenseMasterReducer';
 import expenses from './expenseReducer';
 import users from './userReducer';
 import customerData from './reportCustomerReducer';
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   customers,
   suppliers,
   purchaseOrders,
+  expenseMasters,
   expenses,
   users,
   reportCustomerData: customerData,

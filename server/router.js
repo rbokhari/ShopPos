@@ -10,6 +10,7 @@ const Product = require('./controllers/product');
 const Customer = require('./controllers/customer');
 const Purchase = require('./controllers/purchase');
 const User = require('./controllers/user');
+const ExpenseMaster = require('./controllers/expenseMaster');
 const Expense = require('./controllers/expense');
 const Supplier = require('./controllers/supplier');
 const Day = require('./controllers/day');
@@ -82,6 +83,12 @@ module.exports = function(app, io) {
     app.put('/users/:id/update', User.updateUser);
     app.get('/users/', User.getAll);
     app.get('/users/:id', User.getById);
+
+    // Expense Master Routes
+    app.post('/expensemaster/create', ExpenseMaster.create);
+    app.put('/expensemaster/:id/update', ExpenseMaster.update);
+    app.get('/expensemaster/', ExpenseMaster.getAll);
+    app.get('/expensemaster/:id', ExpenseMaster.getById);
 
     // Expense Routes
     app.post('/expense/create', Expense.createExpense);

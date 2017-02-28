@@ -132,7 +132,13 @@ class App extends React.Component {
                     <Divider />
                     { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
                         <MenuItem primaryText="Expense" leftIcon={<ActionCardTravel />} 
-                             containerElement={<Link to={'/expense'} />} onTouchTap={this._handleClose} />}
+                            nestedListStyle={{ maxHeight: 100, overflow: 'auto' }}
+                            nestedItems={[
+                                    <MenuItem key={1} containerElement={<Link to={'/master'} />} 
+                                        primaryText="Master" leftIcon={<ActionCardTravel />} onTouchTap={this._handleClose} />,
+                                    <MenuItem key={2} containerElement={<Link to={'/expense'} />} 
+                                        primaryText="Expense" leftIcon={<ActionCardTravel />} onTouchTap={this._handleClose} />
+                            ]} />}
                     <Divider />
                     { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
                         <MenuItem primaryText="Reports" leftIcon={<ActionPrint />} 

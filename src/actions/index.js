@@ -13,6 +13,7 @@ import categoryApi from '../api/CategoryApi';
 import productApi from '../api/ProductApi';
 import customerApi from '../api/CustomerApi';
 import supplierApi from '../api/SupplierApi';
+import expenseMasterApi from '../api/expenseMasterApi';
 import expenseApi from '../api/expenseApi';
 import purchaseOrderApi from '../api/PurchaseOrderApi';
 import usersApi from '../api/usersApi';
@@ -624,6 +625,54 @@ export function createUsers( user ) {  // this becomes action to send to reducer
         //dispatch( beginAjaxCall() );
         return usersApi.saveUsers( user ).then( user => {
             user._id ? dispatch( updateUsersSuccess( user ) ) : dispatch( createUsersSuccess( user ));
+        }).catch( error => {
+            throw( error );
+        });
+    };
+}
+
+
+// Expense Master's Actions
+export function updateExpenseMasterSuccess( master ) {
+    return {
+        type: types.UPDATE_EXPENSE_MASTER_SUCCESS,
+        payload: master.data
+    };
+}
+
+export function createExpenseMasterSuccess( master ) {
+    return {
+        type: types.CREATE_EXPENSE_MASTER_SUCCESS,
+        payload: master.data
+    };
+}
+
+export function loadExpenseMastersSuccess( master ) {
+    console.info("loadExpenseMastersSuccess", master);
+    return {
+        type: types.LOAD_EXPENSE_MASTER_SUCCESS,
+        payload: master.data
+    };
+}
+
+export function loadExpenseMasters() {
+    return function( dispatch ) {
+        //dispatch( beginAjaxCall() );
+        return expenseMasterApi.getAllExpenseMasters().then( masters => {
+                dispatch(loadExpenseMastersSuccess( masters ) );
+            }
+        ).catch( error => {
+                console.error( error );
+            }
+        );
+    };
+}
+
+export function createExpenseMaster( master ) {  // this becomes action to send to reducer
+    return function( dispatch, getState ) {
+        //dispatch( beginAjaxCall() );
+        return expenseMasterApi.saveExpenseMaster( master ).then( master => {
+            master._id ? dispatch( updateExpenseMasterSuccess( master ) ) : dispatch( createExpenseMasterSuccess( master ) );
         }).catch( error => {
             throw( error );
         });
