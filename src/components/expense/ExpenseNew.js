@@ -5,10 +5,10 @@ import { Field, reduxForm } from 'redux-form';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
+//import SelectField from 'material-ui/SelectField';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
-import { DatePicker } from 'redux-form-material-ui';
+import { DatePicker, SelectField } from 'redux-form-material-ui';
 import MenuItem from 'material-ui/MenuItem';
 
 import ContentSave from 'material-ui/svg-icons/content/save';
@@ -41,6 +41,7 @@ class ExpenseNew extends Component {
     }
 
     saveExpense(props) {
+        props.categoryName = this.props.masters.filter(master => master._id == props.categoryId)[0].name;
         this.props.createExpense(props)
             .then(() => {
                 this.context.router.push('/expense');
@@ -50,7 +51,7 @@ class ExpenseNew extends Component {
     }
 
     render() {
-        const {handleSubmit, pristine, reset, submitting, touched, error, warning, created, masters }  = this.props;
+        const { handleSubmit, pristine, reset, submitting, touched, error, warning, masters }  = this.props;
 
         return (
             <form onSubmit={handleSubmit(this.saveExpense.bind(this))}>
@@ -61,11 +62,11 @@ class ExpenseNew extends Component {
                             formatDate={date => date.getDate() + '/' + (date.getMonth() +1) + '/' + date.getFullYear()} 
                             floatingLabelText="Date"/>
                         <div>
-                            <SelectField name='categoryId' hintText="select category" value={masters.categoryId} underlineShow={true}>
-                                {masters.map(master => {
+                            <Field name="categoryId" component={SelectField} hintText="master" floatingLabelText="Select Category">
+                                {masters.map(master => 
                                     <MenuItem key={master._id} value={master._id} primaryText={master.name} />
-                                })}
-                            </SelectField>
+                                )}
+                            </Field>
                         </div>
                         <div>
                             <Field name="amount" component={materialTextField} label="Amount"/>
@@ -114,7 +115,7 @@ function mapStateToProps(state, ownProps) {
     const expenseId = ownProps.params.id;
 
     let expense = {
-        _id: '0', description: '', amount: 0, created: ''
+        _id: '0', description: '', amount: 0, created: '', categoryId: 0, categoryName: ''
     };
 
     if (expenseId && state.expenses.length > 0 ) {

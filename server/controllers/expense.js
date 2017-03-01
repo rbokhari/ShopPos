@@ -6,6 +6,8 @@ exports.createExpense = function(req, res, next) {
     const created = req.body.created;
     const description = req.body.description;
     const amount = req.body.amount;
+    const categoryId = req.body.categoryId;
+    const categoryName = req.body.categoryName;
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
 
@@ -14,6 +16,8 @@ exports.createExpense = function(req, res, next) {
         created: created,
         description: description,
         amount: amount,
+        categoryId: categoryId,
+        categoryName: categoryName,
         companyId: companyId,
         officeId: officeId
     });

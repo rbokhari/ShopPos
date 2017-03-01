@@ -10,6 +10,8 @@ const expenseSchema = new Schema({
     created: { type: Date, default: Date.now },
     amount: { type: Number },
     description: { type: String },
+    categoryId: { type: Schema.ObjectId },
+    categoryName: { type: String }
 });
 
 // Create model class

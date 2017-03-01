@@ -52,7 +52,7 @@ class ExpenseMasterNew extends Component {
         return (
             <form onSubmit={handleSubmit(this.saveExpenseMaster.bind(this))}>
                 <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
-                    <CardHeader title="Expense Master" subtitle={ this.props.master._id === '0' ? 'Add New' : 'Edit'} />
+                    <CardHeader title="Expense Category" subtitle={ this.props.master._id === '0' ? 'Add New' : 'Edit'} />
                     <CardText>
                         <div>
                             <Field name="name" component={materialTextField} floatingLabelText="Name"/>

@@ -135,7 +135,7 @@ class App extends React.Component {
                             nestedListStyle={{ maxHeight: 100, overflow: 'auto' }}
                             nestedItems={[
                                     <MenuItem key={1} containerElement={<Link to={'/master'} />} 
-                                        primaryText="Master" leftIcon={<ActionCardTravel />} onTouchTap={this._handleClose} />,
+                                        primaryText="Category" leftIcon={<ActionCardTravel />} onTouchTap={this._handleClose} />,
                                     <MenuItem key={2} containerElement={<Link to={'/expense'} />} 
                                         primaryText="Expense" leftIcon={<ActionCardTravel />} onTouchTap={this._handleClose} />
                             ]} />}

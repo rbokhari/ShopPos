@@ -21,7 +21,7 @@ const cardStyle = {
 const ExpenseMasterList = ({masters}) => {
     return (
         <Card style={cardStyle} >
-            <CardHeader title="Expense Master " subtitle="Listing" />
+            <CardHeader title="Expense Category " subtitle="Listing" />
                 <Table>
                     <TableHeader>
                         <TableRow>
