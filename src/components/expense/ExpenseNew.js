@@ -122,7 +122,6 @@ function mapStateToProps(state, ownProps) {
         expense = getExpenseById(state.expenses, expenseId);
         expense.created = new Date(expense.created);
     }
-    console.info(state);
 
     return {
         expense: expense,

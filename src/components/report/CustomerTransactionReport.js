@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
@@ -84,6 +85,7 @@ class CustomerTransactionReport extends Component {
                                 <TableRow>
                                     <TableHeaderColumn style={{width: 5}}>Sr.</TableHeaderColumn>
                                     <TableHeaderColumn>Date</TableHeaderColumn>
+                                    <TableHeaderColumn>Bill No </TableHeaderColumn>
                                     <TableHeaderColumn>Customer</TableHeaderColumn>
                                     <TableHeaderColumn>Items</TableHeaderColumn>
                                     <TableHeaderColumn>Bill</TableHeaderColumn>
@@ -92,21 +94,14 @@ class CustomerTransactionReport extends Component {
                             <TableBody  displayRowCheckbox={false}>
                                 {this.props.customers && this.props.customers.map((customer, i) =>
                                     <TableRow key={i} >
-                                        <TableRowColumn style={{width: 5}}>
-                                            {i+1}
-                                        </TableRowColumn>
+                                        <TableRowColumn style={{width: 5}}>{i+1}</TableRowColumn>
+                                        <TableRowColumn>{Moment(customer.created).format('DD/MM/YYYY, h:mm a')}</TableRowColumn>
                                         <TableRowColumn>
-                                            {Moment(customer.created).format('DD/MM/YYYY, h:mm a')}
+                                            <Link to="s">{customer.billNo}</Link>
                                         </TableRowColumn>
-                                        <TableRowColumn>
-                                            {customer.carNumber} 
-                                        </TableRowColumn>
-                                        <TableRowColumn>
-                                            {customer.products.length}
-                                        </TableRowColumn>
-                                        <TableRowColumn>
-                                            {this.getAmount(customer.products).toFixed(3)}
-                                        </TableRowColumn>
+                                        <TableRowColumn>{customer.carNumber} </TableRowColumn>
+                                        <TableRowColumn>{customer.products.length}</TableRowColumn>
+                                        <TableRowColumn>{this.getAmount(customer.products).toFixed(3)}</TableRowColumn>
                                     </TableRow>
                                 )}
                             </TableBody>

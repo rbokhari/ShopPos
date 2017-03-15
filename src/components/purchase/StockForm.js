@@ -58,19 +58,24 @@ const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChang
                 <CardText>
                     <div>
                     <TextField name='billNo' floatingLabelText="Bill No" onChange={onChange} value={stock.billNo} />
-                    
-                    <DatePicker name='billDate' floatingLabelText="Bill Date" autoOk={true}  
-                                container="inline" mode="landscape" onChange={onBillDateChange} style={{display: 'inline-block'}} />
                     </div>
                     <div>
-                        <SelectField name='supplierId' hintText="select supplier" value={stock.supplierId} onChange={onUpdateSupplier} underlineShow={true}>
+                    
+                    {!stock._id && 
+                    <DatePicker name='billDate' floatingLabelText="Bill Date" value={stock.created} autoOk={true}  
+                                container="inline" mode="landscape" onChange={onBillDateChange} style={{display: 'inline-block'}} />}
+                    {stock._id && 
+                    <TextField name='billDate' floatingLabelText="Bill Date" value={stock.created}  />}
+                    </div>
+                    <div>
+                        <SelectField name='supplierId' floatingLabelText="Supplier" hintText="select supplier" value={stock.supplierId} onChange={onUpdateSupplier} underlineShow={true}>
                             {suppliers.map(supplier=>
                                 <MenuItem key={supplier._id} value={supplier._id} primaryText={supplier.name} />
                             )}
                         </SelectField>
                     </div>
                     <div>
-                        <TextField style={{margin:10}} name='amount' floatingLabelText="Bill Amount" onChange={onChange} value={stock.amount} />
+                        <TextField style={{margin:10}} name='amount' floatingLabelText="Bill Amount" onChange={onChange} value={stock.total} />
                     </div>
                     <h3>Items</h3>
                     <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 750 }} selectable={false}>
@@ -79,10 +84,11 @@ const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChang
                                 <TableHeaderColumn style={{width: 5}}>Sr.</TableHeaderColumn>
                                 <TableHeaderColumn>Item</TableHeaderColumn>
                                 <TableHeaderColumn>Stock</TableHeaderColumn>
-                                <TableHeaderColumn>Price</TableHeaderColumn>
+                                <TableHeaderColumn>T.Price</TableHeaderColumn>
+                                {!stock._id &&
                                 <TableHeaderColumn style={{width: 25}}>
                                     <IconButton onClick={onAddStock}><ContentAdd color={greenA200} /></IconButton>
-                                </TableHeaderColumn>
+                                </TableHeaderColumn>}
                             </TableRow>
                         </TableHeader>
                         <TableBody  displayRowCheckbox={false}>
@@ -97,21 +103,22 @@ const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChang
                                         </SelectField>
                                     </TableRowColumn>
                                     <TableRowColumn>
-                                        <TextField name='qty' onChange={onChange} value={itm.qty} onChange={onQuantityChange.bind(this, i)} underlineShow={true} />
+                                        <TextField name='qty' onChange={onChange} value={itm.qty} onChange={onQuantityChange.bind(this, i)} underlineShow={false} />
                                     </TableRowColumn>
                                     <TableRowColumn>
-                                        <TextField name='price' onChange={onChange} value={itm.price} onChange={onStockPriceChange.bind(this, i)} underlineShow={true} />
+                                        <TextField name='price' onChange={onChange} value={itm.price} onChange={onStockPriceChange.bind(this, i)} underlineShow={false} />
                                     </TableRowColumn>
+                                    {!stock._id &&
                                     <TableRowColumn style={{width: 25}}>
                                         <IconButton onClick={onRemoveStock.bind(this, i)}><ActionDelete color={red500} /></IconButton>
-                                    </TableRowColumn>
+                                    </TableRowColumn>}
                                 </TableRow>
                             )}
                         </TableBody>
                 </Table>
                 </CardText>
                 <CardActions>
-                    <RaisedButton icon={<ContentSave />}  label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></RaisedButton>
+                    {!stock._id && <RaisedButton icon={<ContentSave />}  label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></RaisedButton>}
                     <RaisedButton icon={<ContentClear />} label="Cancel" containerElement={<Link to="/purchase" />} />
                 </CardActions>
             </Card>

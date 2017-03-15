@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import { browserHistory } from 'react-router';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -36,11 +36,12 @@ class ExpensePage extends Component {
     }
 
     render() {
-        const {expenses} = this.props;
+        const {expenses, day} = this.props;
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} containerElement={<Link to="/expense/new" />}>
+                <FloatingActionButton style={fabStyle} secondary={true} onTouchTap={() => browserHistory.push('/expense/new')} 
+                    disabled={day==null} >
                     <ContentAdd />
                 </FloatingActionButton>
                 <ExpenseList expenses={expenses} />
@@ -55,7 +56,10 @@ ExpensePage.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
+    //var day = { _id:'0', today: '' };
+    console.info('day', state.day);
     return { 
+        day: state.day,
         expenses: state.expenses
     };
 }

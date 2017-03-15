@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -26,14 +26,14 @@ class PurchasePage extends Component {
     }
 
     render() {
-        const { purchases, suppliers } = this.props;
+        const { purchases, suppliers, day } = this.props;
         if (!purchases) {
             return (<div>Loading....</div>);
         }
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} containerElement={<Link to={'/purchase/new'} />}>
+                <FloatingActionButton style={fabStyle} secondary={true} onTouchTap={() => browserHistory.push('/purchase/new')} disabled={day==null}>
                     <ContentAdd />
                 </FloatingActionButton>
                 <PurchaseList purchases={purchases} suppliers={suppliers} />
@@ -44,6 +44,7 @@ class PurchasePage extends Component {
 
 function mapStateToProps(state, ownProps) {
     return { 
+        day: state.day,
         purchases: state.purchaseOrders,
         suppliers: state.suppliers 
     };

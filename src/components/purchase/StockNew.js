@@ -135,7 +135,7 @@ StockNew.contextTypes = {
 }
 
 function getStockById(stocks, id) {
-    const stock = stocks.filter(stock => stock.id == id);
+    const stock = stocks.filter(stock => stock._id == id);
     if (stock) return stock[0];
     return null;
 }
@@ -154,12 +154,11 @@ function mapStateToProps(state, ownProps) {
             price: 0
         }]
     };
-
-    // if (stockId && state.stocks.length > 0 ) {
-    //     stock = getStockById(state.stocks, stockId);
-    // }
-//console.info("items", state.items);
+    if (stockId && state.purchaseOrders.length > 0 ) {
+        stock = getStockById(state.purchaseOrders, stockId);
+    }
     return {
+        day: stock.day,
         stock: stock,
         items: state.items,
         suppliers: state.suppliers
