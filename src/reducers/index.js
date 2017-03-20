@@ -18,6 +18,7 @@ import expenseData from './reportExpenseReducer';
 import purchaseData from './reportPurchaseReducer';
 import day from './dayReducer';
 import isLoadPasswordDialog from './passwordReducer';
+import dialogReducer from './dialogReducer';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 
 const rootReducer = combineReducers({
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   company: companyReducer,
   branch: branchReducer,
   auth: authReducer,
+  dialog: dialogReducer,
   ajaxCallsInProgress, 
   day,
   isLoadPasswordDialog,

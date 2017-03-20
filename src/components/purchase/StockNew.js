@@ -56,7 +56,7 @@ class StockNew extends Component {
         });
     }
 
-    onUpdateBillDate(event, index, value) {
+    onUpdateBillDate(event, value) {
         const stock = this.props.stock;
         stock.billDate = value;
         this.setState({

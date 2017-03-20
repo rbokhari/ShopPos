@@ -26,6 +26,23 @@ export function loadPasswordChangeDialog() {
     };
 }
 
+export function loadCustomerDetailDialog(customer) {
+    return function (dispatch) {
+        dispatch( {
+            type: types.DIALOG_CUSTOMER_DETAIL_OPEN,
+            payload: customer
+        });
+    };
+}
+
+export function closeCustomerDetailDialog() {
+    return function (dispatch) {
+        dispatch( {
+            type: types.DIALOG_CUSTOMER_DETAIL_CLOSE
+        });
+    };
+}
+
 export function closePasswordChangeDialog() {
     return function( dispatch) {
         dispatch( { type: types.CLOSE_PASSWORD_CHANGE_DIALOG } );

@@ -42,7 +42,7 @@ const PurchaseList = ({purchases, suppliers}) => {
                             <TableRow key={purchase._id} >
                                 <TableRowColumn>{purchase.billNo}</TableRowColumn>
                                 <TableRowColumn>
-                                    {Moment(purchase.created).format('DD/MM/YYYY')}
+                                    {Moment(purchase.billDate).format('DD/MM/YYYY')} 
                                 </TableRowColumn>
                                 <TableRowColumn>
                                     {supplierName(purchase.supplierId)}

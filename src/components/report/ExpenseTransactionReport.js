@@ -85,6 +85,7 @@ class ExpenseTransactionReport extends Component {
                                     <TableHeaderColumn style={{width: 5}}>Sr.</TableHeaderColumn>
                                     <TableHeaderColumn>Code</TableHeaderColumn>
                                     <TableHeaderColumn>Date</TableHeaderColumn>
+                                    <TableHeaderColumn>Category</TableHeaderColumn>
                                     <TableHeaderColumn>Amount</TableHeaderColumn>
                                     <TableHeaderColumn>Description</TableHeaderColumn>
                                 </TableRow>
@@ -99,6 +100,7 @@ class ExpenseTransactionReport extends Component {
                                         <TableRowColumn>
                                             {Moment(expense.created).format('DD/MM/YYYY')}
                                         </TableRowColumn>
+                                        <TableRowColumn>{expense.categoryName}</TableRowColumn>
                                         <TableRowColumn>{expense.amount}</TableRowColumn>
                                         <TableRowColumn>{expense.description}</TableRowColumn>
                                     </TableRow>

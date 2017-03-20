@@ -79,3 +79,7 @@ export const UPDATE_CLOSE_DAY                           = 'UPDATE_CLOSE_DAY';
 export const UPDATE_CLOSE_DAY_SUCCESS                   = 'UPDATE_CLOSE_DAY_SUCCESS';
 export const CREATE_DAY                                 = 'CREATE_DAY';
 export const CREATE_DAY_SUCCESS                         = 'CREATE_DAY_SUCCESS';
+
+export const DIALOG_CUSTOMER_DETAIL_OPEN                = 'DIALOG_CUSTOMER_DETAIL_OPEN';
+export const DIALOG_CUSTOMER_DETAIL_CLOSE               = 'DIALOG_CUSTOMER_DETAIL_CLOSE';
+

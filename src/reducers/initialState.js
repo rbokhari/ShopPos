@@ -6,6 +6,10 @@ export default {
         current: {},
         all: []
     },
+    dialog: {
+        isCustomerDetailDialog: false,
+        customer: {},   // single customer detail
+    },
     isLoadPasswordDialog: false,
     day: {},
     user: {},

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import { Link } from 'react-router';
 //import { Field, FieldArray, reduxForm } from 'redux-form';     // its like a connect function (container) from redux library
@@ -60,12 +61,12 @@ const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChang
                     <TextField name='billNo' floatingLabelText="Bill No" onChange={onChange} value={stock.billNo} />
                     </div>
                     <div>
-                    
                     {!stock._id && 
-                    <DatePicker name='billDate' floatingLabelText="Bill Date" value={stock.created} autoOk={true}  
-                                container="inline" mode="landscape" onChange={onBillDateChange} style={{display: 'inline-block'}} />}
+                    <DatePicker name='billDate' floatingLabelText="Bill Date" value={stock.billDate} autoOk={false}  
+                        container="inline" mode="landscape" onChange={onBillDateChange} style={{display: 'inline-block'}} />} 
                     {stock._id && 
-                    <TextField name='billDate' floatingLabelText="Bill Date" value={stock.created}  />}
+                    <TextField name='billDate' floatingLabelText="Bill Date" 
+                        value={moment(stock.billDate).format('DD/MM/YYYY')}  />}
                     </div>
                     <div>
                         <SelectField name='supplierId' floatingLabelText="Supplier" hintText="select supplier" value={stock.supplierId} onChange={onUpdateSupplier} underlineShow={true}>
@@ -75,7 +76,7 @@ const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChang
                         </SelectField>
                     </div>
                     <div>
-                        <TextField style={{margin:10}} name='amount' floatingLabelText="Bill Amount" onChange={onChange} value={stock.total} />
+                        <TextField name='amount' floatingLabelText="Bill Amount" label='Bill Amount' onChange={onChange} value={stock.total} />
                     </div>
                     <h3>Items</h3>
                     <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 750 }} selectable={false}>

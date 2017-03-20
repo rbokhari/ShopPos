@@ -14,8 +14,7 @@ import DatePicker from 'material-ui/DatePicker';
 import Moment from 'moment';
 
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { loadCustomerTransaction } from '../../actions';
+import { loadCustomerTransaction,loadCustomerDetailDialog  } from '../../actions';
 //import * as actions from '../../actions';
 
 class CustomerTransactionReport extends Component {
@@ -27,6 +26,7 @@ class CustomerTransactionReport extends Component {
         this.getAmount = this.getAmount.bind(this);
         this.handleFromDate = this.handleFromDate.bind(this);
         this.handleToDate = this.handleToDate.bind(this);
+        //this.showCustomerDetail = this.showCustomerDetail.bind(this);
     }
 
     componentWillMount() {
@@ -55,6 +55,10 @@ class CustomerTransactionReport extends Component {
             // .catch( error => {
             //     console.info("error", error);
             // });
+    }
+
+    showCustomerDetail(customer) {
+        this.props.loadCustomerDetailDialog(customer);
     }
 
     getAmount(products) {
@@ -97,7 +101,7 @@ class CustomerTransactionReport extends Component {
                                         <TableRowColumn style={{width: 5}}>{i+1}</TableRowColumn>
                                         <TableRowColumn>{Moment(customer.created).format('DD/MM/YYYY, h:mm a')}</TableRowColumn>
                                         <TableRowColumn>
-                                            <Link to="s">{customer.billNo}</Link>
+                                            <MenuItem primaryText={customer.billNo} onTouchTap={this.showCustomerDetail.bind(this, customer)}  />
                                         </TableRowColumn>
                                         <TableRowColumn>{customer.carNumber} </TableRowColumn>
                                         <TableRowColumn>{customer.products.length}</TableRowColumn>
@@ -150,10 +154,11 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        loadCustomerTransaction: bindActionCreators(loadCustomerTransaction, dispatch)
-    };
-}
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         loadCustomerTransaction: loadCustomerTransaction,
+//         loadCustomerDetailDialog: loadCustomerDetailDialog
+//     };
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CustomerTransactionReport);
+export default connect(mapStateToProps, { loadCustomerTransaction, loadCustomerDetailDialog })(CustomerTransactionReport);

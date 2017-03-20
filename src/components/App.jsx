@@ -35,6 +35,7 @@ import MenuList from './common/Menu.jsx';
 import BranchListDialog from './branch/BranchListDialog';
 import BranchCreateDialog from './branch/BranchNew';
 import UserPasswordChange from './user/UserPasswordChange';
+import CustomerDetailDialog from './common/CustomerDetailDialog';
 import LoadingDots from './common/LoadingDots';
 
 //var ThemeManager = new mui.styles.getMuiTheme();
@@ -214,6 +215,7 @@ class App extends React.Component {
                     <BranchListDialog open={false} />
                     <BranchCreateDialog open={false} />
                     <UserPasswordChange open={false} />
+                    <CustomerDetailDialog open={true} />
                     <div style={{
                             border: '1px thick', 
                             display: 'flex',

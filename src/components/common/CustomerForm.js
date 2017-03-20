@@ -31,7 +31,7 @@ const CustomerForm = ( { customer, onChange, onSubmit, onCancel, errors } ) => {
             width: '100%',
             marginTop: 20
         }}>
-        <span>
+            <span>
                 <TextField name="carNumber" style={styles} floatingLabelText={customer.option==1 ? 'Car Number' : 'Table No'}  
                     onChange={onChange} value={customer.carNumber} />
                 <TextField name="mobileNumber" style={styles} floatingLabelText="Mobile No"  
@@ -44,11 +44,11 @@ const CustomerForm = ( { customer, onChange, onSubmit, onCancel, errors } ) => {
                         value="2"
                         label="Dine In" />
                 </RadioButtonGroup>
-                </span>
-                <RaisedButton backgroundColor="#a4c639" style={{marginLeft: 200, height: 70}} label="Send To Kitchen" primary={true}
-                    icon={<ContentSend />} onTouchTap={onSubmit} />
-                <RaisedButton backgroundColor="#aaaa39" style={{marginLeft: 10, height: 70}} label="Clear" secondary={true}
-                    icon={<ContentClear />} onTouchTap={onCancel} />
+            </span>
+            <RaisedButton backgroundColor="#a4c639" style={{marginLeft: 200, height: 70}} label="Send To Kitchen" primary={true}
+                icon={<ContentSend />} onTouchTap={onSubmit} />
+            <RaisedButton backgroundColor="#aaaa39" style={{marginLeft: 10, height: 70}} label="Clear" secondary={true}
+                icon={<ContentClear />} onTouchTap={onCancel} />
                 
         </Card>
     );
