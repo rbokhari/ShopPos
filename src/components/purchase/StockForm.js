@@ -51,35 +51,37 @@ const renderFields = ({ items }) => (
     )
 )
 
-const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChange, onItemSelect, onQuantityChange, onStockPriceChange, onUpdateSupplier, onAddStock, onRemoveStock, loading, errors } ) => {
+const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChange, onItemSelect, onQuantityChange, 
+                onStockPriceChange, onUpdateSupplier, onAddStock, onRemoveStock, 
+                onAddAmount, onUpdateAmountDate, onUpdateAmountAmount, loading, errors } ) => {
     return (
         <form>
             <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
                 <CardHeader title="Stock" subtitle="Add New" />
                 <CardText>
                     <div>
-                    <TextField name='billNo' floatingLabelText="Bill No" onChange={onChange} value={stock.billNo} />
+                        <TextField name='billNo' floatingLabelText="Bill No" onChange={onChange} value={stock.billNo} />
+
+                        {!stock._id && 
+                        <DatePicker name='billDate' floatingLabelText="Bill Date" value={stock.billDate} autoOk={false}  
+                            formatDate={d => moment(d).format('DD/MM/YYYY')} 
+                            container="inline" mode="landscape" onChange={onBillDateChange} style={{display: 'inline-block', marginLeft: 150}} />} 
+                        {stock._id && 
+                        <TextField name='billDate' floatingLabelText="Bill Date" 
+                            value={moment(stock.billDate).format('DD/MM/YYYY')}  />}
                     </div>
                     <div>
-                    {!stock._id && 
-                    <DatePicker name='billDate' floatingLabelText="Bill Date" value={stock.billDate} autoOk={false}  
-                        container="inline" mode="landscape" onChange={onBillDateChange} style={{display: 'inline-block'}} />} 
-                    {stock._id && 
-                    <TextField name='billDate' floatingLabelText="Bill Date" 
-                        value={moment(stock.billDate).format('DD/MM/YYYY')}  />}
-                    </div>
-                    <div>
-                        <SelectField name='supplierId' floatingLabelText="Supplier" hintText="select supplier" value={stock.supplierId} onChange={onUpdateSupplier} underlineShow={true}>
+                        <SelectField name='supplierId' floatingLabelText="Supplier" hintText="select supplier" value={stock.supplierId}
+                             onChange={onUpdateSupplier} underlineShow={true} >
                             {suppliers.map(supplier=>
                                 <MenuItem key={supplier._id} value={supplier._id} primaryText={supplier.name} />
                             )}
                         </SelectField>
-                    </div>
-                    <div>
-                        <TextField name='amount' floatingLabelText="Bill Amount" label='Bill Amount' onChange={onChange} value={stock.total} />
+
+                        <TextField name='amount' floatingLabelText="Bill Amount" onChange={onChange} disabled={true} value={stock.total} style={{marginLeft: 150}} />
                     </div>
                     <h3>Items</h3>
-                    <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 750 }} selectable={false}>
+                    <Table fixedHeader={true} fixedFooter={true} style={{ width: 750 }} selectable={false}>
                         <TableHeader displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={false}>
                             <TableRow>
                                 <TableHeaderColumn style={{width: 5}}>Sr.</TableHeaderColumn>
@@ -117,6 +119,39 @@ const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChang
                             )}
                         </TableBody>
                 </Table>
+
+                <h3>Amount Deduction</h3>
+                <Table selectable={false} style={{ width: 750 }}>
+                    <TableHeader displayRowCheckbox={false} displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={false} >
+                        <TableRow>
+                            <TableHeaderColumn>Date</TableHeaderColumn>
+                            <TableHeaderColumn>Amount</TableHeaderColumn>
+                            <TableHeaderColumn style={{width: 25}}>
+                                <IconButton onClick={onAddAmount}><ContentAdd color={greenA200} /></IconButton>
+                            </TableHeaderColumn>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={false}>
+                        {stock.amounts.map((amount, i) => 
+                            <TableRow key={i+100}>
+                                <TableRowColumn>
+                                    <DatePicker name='date' value={amount.date} hintText='Select Date' autoOk={false}  underlineShow={false} 
+                                        formatDate={d => moment(d).format('DD/MM/YYYY')} 
+                                        container="inline" mode="landscape" onChange={onUpdateAmountDate.bind(this,i)} style={{display: 'inline-block'}} />
+                                </TableRowColumn>
+                                <TableRowColumn>
+                                    <TextField name='amount' onChange={onUpdateAmountAmount.bind(this,i)} value={amount.amount} underlineShow={false} />
+                                </TableRowColumn>
+                                <TableRowColumn style={{width: 25}}>
+                                    <IconButton>
+                                        <ActionDelete color={red500} />
+                                    </IconButton>
+                                </TableRowColumn>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+
                 </CardText>
                 <CardActions>
                     {!stock._id && <RaisedButton icon={<ContentSave />}  label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></RaisedButton>}
@@ -138,7 +173,10 @@ StockForm.propTypes = {
     onAddStock: React.PropTypes.func.isRequired,
     onRemoveStock: React.PropTypes.func.isRequired,
     loading: React.PropTypes.bool,
-    errors: React.PropTypes.object
+    errors: React.PropTypes.object,
+    onAddAmount: React.PropTypes.func.isRequired,
+    onUpdateAmountDate: React.PropTypes.func.isRequired,
+    onUpdateAmountAmount: React.PropTypes.func.isRequired
 }
 
 export default StockForm;

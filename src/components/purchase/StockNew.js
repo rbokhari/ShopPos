@@ -31,6 +31,10 @@ class StockNew extends Component {
         this.onUpdateSupplier = this.onUpdateSupplier.bind(this);
         this.onUpdateStockPrice = this.onUpdateStockPrice.bind(this);
         this.onUpdateBillDate = this.onUpdateBillDate.bind(this);
+
+        this.onAddNewAmount = this.onAddNewAmount.bind(this);
+        this.onUpdateAmountDate = this.onUpdateAmountDate.bind(this);
+        this.onUpdateAmountAmount = this.onUpdateAmountAmount.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -83,6 +87,12 @@ class StockNew extends Component {
     onUpdateStockPrice(row, event) {
         const stock = this.props.stock;
         stock.items[row].price = event.target.value;
+        var amount = parseFloat(0);
+        stock.items.forEach((item, i) => { 
+            amount = parseFloat(amount) + parseFloat(item.price);
+        });
+        console.info('amount', amount);
+        stock.total = amount;
         this.setState({
             stock: stock
         });
@@ -103,6 +113,35 @@ class StockNew extends Component {
         this.setState({ stock: stock });
     }
 
+    // Amount Table Event START------------------------
+    onAddNewAmount(event) {
+        const stock = this.props.stock;
+        stock.amounts.push({
+            date: '',
+            amount: 0
+        });
+        this.setState({ stock: stock });
+        console.info(stock);
+    }
+
+    onUpdateAmountDate(index, event, value) {
+        //console.info(index, event, value);
+        const stock = this.props.stock;
+        stock.amounts[index].date = value;
+        this.setState({
+            stock: stock
+        });
+    }
+
+    onUpdateAmountAmount(index, event, value) {
+        const stock = this.props.stock;
+        stock.amounts[index].amount = value;
+        this.setState({
+            stock: stock
+        });
+    }
+    // Amount Table Event END ------------------------
+
     saveStock(event) {
         event.preventDefault();
         this.props.createPurchaseOrder(this.props.stock)
@@ -118,7 +157,8 @@ class StockNew extends Component {
             <StockForm onChange={this.updateStockState} onSave={this.saveStock} onBillDateChange={this.onUpdateBillDate}
                 onAddStock={this.onAddNewItem} onRemoveStock={this.onRemoveItem} onUpdateSupplier={this.onUpdateSupplier}
                 onItemSelect={this.onUpdateStockItem} onQuantityChange={this.onUpdateStockQty} onStockPriceChange={this.onUpdateStockPrice}
-                stock={this.props.stock} items={this.props.items} suppliers={this.props.suppliers} errors={this.state.errors} />
+                stock={this.props.stock} items={this.props.items} suppliers={this.props.suppliers} errors={this.state.errors}
+                onAddAmount={this.onAddNewAmount} onUpdateAmountDate={this.onUpdateAmountDate} onUpdateAmountAmount={this.onUpdateAmountAmount} />
         );
     }
 
@@ -152,6 +192,10 @@ function mapStateToProps(state, ownProps) {
             itemId: '',
             qty: 0,
             price: 0
+        }],
+        amounts: [{
+            amount: 0,
+            date: ''
         }]
     };
     if (stockId && state.purchaseOrders.length > 0 ) {

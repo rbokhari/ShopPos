@@ -120,9 +120,9 @@ class App extends React.Component {
                     { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
                         <MenuItem checked={true} primaryText="Items" leftIcon={<ActionShoppingBasket />} 
                              containerElement={<Link to={'/item'} />} onTouchTap={this._handleClose}  />}
-                    { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
-                        <MenuItem checked={true} primaryText="Purchase Order" leftIcon={<ActionShopping />} 
-                             containerElement={<Link to={'/purchase'} />} onTouchTap={this._handleClose}  />}
+                     
+                    <MenuItem checked={true} primaryText="Purchase Order" leftIcon={<ActionShopping />} 
+                            containerElement={<Link to={'/purchase'} />} onTouchTap={this._handleClose}  />
                     <Divider />
                     { this.props.user && this.props.user.roleId === USER_ROLE.ADMIN && 
                         <MenuItem primaryText="Category" leftIcon={<DeviceHub />} 
@@ -131,15 +131,15 @@ class App extends React.Component {
                         <MenuItem primaryText="Products" leftIcon={<ActionReceipt />} 
                              containerElement={<Link to={'/product'} />} onTouchTap={this._handleClose} />}
                     <Divider />
-                    { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
-                        <MenuItem primaryText="Expense" leftIcon={<ActionCardTravel />} 
-                            nestedListStyle={{ maxHeight: 100, overflow: 'auto' }}
-                            nestedItems={[
-                                    <MenuItem key={1} containerElement={<Link to={'/master'} />} 
-                                        primaryText="Category" leftIcon={<ActionCardTravel />} onTouchTap={this._handleClose} />,
-                                    <MenuItem key={2} containerElement={<Link to={'/expense'} />} 
-                                        primaryText="Expense" leftIcon={<ActionCardTravel />} onTouchTap={this._handleClose} />
-                            ]} />}
+                     
+                    <MenuItem primaryText="Expense" leftIcon={<ActionCardTravel />} 
+                        nestedListStyle={{ maxHeight: 100, overflow: 'auto' }}
+                        nestedItems={[
+                                <MenuItem key={1} containerElement={<Link to={'/master'} />} 
+                                    primaryText="Category" leftIcon={<ActionCardTravel />} onTouchTap={this._handleClose} />,
+                                <MenuItem key={2} containerElement={<Link to={'/expense'} />} 
+                                    primaryText="Expense" leftIcon={<ActionCardTravel />} onTouchTap={this._handleClose} />
+                        ]} />
                     <Divider />
                     { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
                         <MenuItem primaryText="Reports" leftIcon={<ActionPrint />} 

@@ -23,7 +23,8 @@ exports.createPurchase = function(req, res, next) {
         notes: req.body.notes,
         created: new Date().now,
         total: req.body.amount,
-        items: req.body.items 
+        items: req.body.items,
+        amounts: req.body.amounts
     });
 
     purchase.save(function(err){

@@ -469,7 +469,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
         });
 
         for (i=0; i<expenses.length; i++){
-            worksheet.getRow(expenseRow+i).getCell(1).value = expenses[i].description;
+            worksheet.getRow(expenseRow+i).getCell(1).value = expenses[i].categoryName;
         }
 
         for (i = 0; i< totalDays; i++ ){
@@ -520,7 +520,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
             });
             if (expenseId.length > 0) {
                 for (j=0; j< expenseId.length; j++) {
-                    var row1 = worksheet.getRow(getRowNuber(worksheet, expenseId[j].description)); // worksheet.getRow(10 + i);
+                    var row1 = worksheet.getRow(getRowNuber(worksheet, expenseId[j].categoryName)); // worksheet.getRow(10 + i);
                     // row1.getCell(i+2).font = {
                     //     color: {argb: 'D21025'}
                     // };

@@ -18,6 +18,12 @@ const purchaseSchema = new Schema({
         qty: { type: Number },
         price: { type: Number }
     }],
+    amounts: [
+        {
+            date: { type: Date },
+            amount: { type: Number }
+        }
+    ],
     status: {type : Number}
 });
 
