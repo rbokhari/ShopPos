@@ -568,7 +568,6 @@ exports.getExcelBetweenDates = function(req, res, next) {
                     //res.setHeader('Content-Type', 'application/json');
                     //res.sendFile('./excel/excel.xlsx');
                     console.log("excel file created");
-                    
                 });
     });
 

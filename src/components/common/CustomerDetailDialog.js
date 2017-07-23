@@ -64,7 +64,6 @@ class CustomerDetailDialog extends Component {
 // };
 
 function mapStateToProps(state, ownProps) {
-    console.info('customer', state.dialog);
     return {
         customerDialog: state.dialog.isCustomerDetailDialog,
         customer: state.dialog.customer

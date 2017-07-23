@@ -67,7 +67,7 @@ const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChang
                             formatDate={d => moment(d).format('DD/MM/YYYY')} 
                             container="inline" mode="landscape" onChange={onBillDateChange} style={{display: 'inline-block', marginLeft: 150}} />} 
                         {stock._id && 
-                        <TextField name='billDate' floatingLabelText="Bill Date" 
+                        <TextField name='billDate' floatingLabelText="Bill Date" style={{display: 'inline-block', marginLeft: 150}}
                             value={moment(stock.billDate).format('DD/MM/YYYY')}  />}
                     </div>
                     <div>
@@ -124,29 +124,37 @@ const StockForm = ( { stock, items, suppliers, onSave, onChange, onBillDateChang
                 <Table selectable={false} style={{ width: 750 }}>
                     <TableHeader displayRowCheckbox={false} displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={false} >
                         <TableRow>
+                            <TableHeaderColumn style={{width: 5}}>Sr.</TableHeaderColumn>
                             <TableHeaderColumn>Date</TableHeaderColumn>
                             <TableHeaderColumn>Amount</TableHeaderColumn>
+                            {!stock._id &&
                             <TableHeaderColumn style={{width: 25}}>
                                 <IconButton onClick={onAddAmount}><ContentAdd color={greenA200} /></IconButton>
-                            </TableHeaderColumn>
+                            </TableHeaderColumn>}
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
                         {stock.amounts.map((amount, i) => 
                             <TableRow key={i+100}>
+                                <TableRowColumn style={{width: 5}}>{i+1}</TableRowColumn>
                                 <TableRowColumn>
+                                    {!stock._id && 
                                     <DatePicker name='date' value={amount.date} hintText='Select Date' autoOk={false}  underlineShow={false} 
                                         formatDate={d => moment(d).format('DD/MM/YYYY')} 
-                                        container="inline" mode="landscape" onChange={onUpdateAmountDate.bind(this,i)} style={{display: 'inline-block'}} />
+                                        container="inline" mode="landscape" onChange={onUpdateAmountDate.bind(this,i)} style={{display: 'inline-block'}} />}
+                                    {stock._id && 
+                                    <TextField name='date' underlineShow={false} 
+                                        value={moment(amount.date).format('DD/MM/YYYY')}  />}
                                 </TableRowColumn>
                                 <TableRowColumn>
                                     <TextField name='amount' onChange={onUpdateAmountAmount.bind(this,i)} value={amount.amount} underlineShow={false} />
                                 </TableRowColumn>
+                                {!stock._id &&
                                 <TableRowColumn style={{width: 25}}>
                                     <IconButton>
                                         <ActionDelete color={red500} />
                                     </IconButton>
-                                </TableRowColumn>
+                                </TableRowColumn>}
                             </TableRow>
                         )}
                     </TableBody>

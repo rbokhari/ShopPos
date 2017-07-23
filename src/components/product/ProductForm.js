@@ -51,6 +51,7 @@ const ProductForm = ( {product, stock, categories, items, onSave, onChange, onSe
                         <SelectField name='type' floatingLabelText="Type" onChange={onTypeChange} value={product.type} >
                             <MenuItem key={PRODUCT_TYPE.KITCHEN} value={PRODUCT_TYPE.KITCHEN} primaryText={PRODUCT_TYPE_LABEL.KITCHEN} />
                             <MenuItem key={PRODUCT_TYPE.DIRECT} value={PRODUCT_TYPE.DIRECT} primaryText={PRODUCT_TYPE_LABEL.DIRECT} />
+                            <MenuItem key={PRODUCT_TYPE.NONKITCHEN} value={PRODUCT_TYPE.NONKITCHEN} primaryText={PRODUCT_TYPE_LABEL.NONKITCHEN} />
                         </SelectField>
                     </div>
                     <Checkbox label="Status" onCheck={onCheckCheck} checked={product.status==1} style={styles.checkbox}  />

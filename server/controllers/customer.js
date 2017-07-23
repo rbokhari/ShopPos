@@ -29,6 +29,7 @@ exports.createCustomer = function(req, res, next) {
         status: req.body.status,
         products: productsItem
     });
+    
     //customer.products = req.body.products;
     Customer.count({}, function(err, c) {
         if (err) { return next(err); }

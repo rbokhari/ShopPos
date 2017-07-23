@@ -114,13 +114,11 @@ class SalesBoard extends Component {
         const items = this.state.customer.products;
         var total = 0;
         _.each(items, (item, index) => {
-            total += item.price;
-
+            total += parseFloat(item.price);
             _.each(item.addons, (addon, index) => {
-                total += addon.price;
+                total += parseFloat(addon.price);
             });
         });
-
         var customer = this.state.customer;
         customer.total = parseFloat(Math.round(total * 100) / 100).toFixed(3);
         this.setState({ customer: customer });
@@ -298,7 +296,7 @@ class SalesBoard extends Component {
             <div>
                 <div style={{
                         display: 'inline-flex',
-                        flexFlow: 'row wrap',
+                        flexFlow: 'row wrap'
                     }}>
                     <Card style={{
                             flexGrow: 1,
@@ -307,27 +305,28 @@ class SalesBoard extends Component {
                         
                         <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total} rowSelectIndex={this.state.itemIndexNote}
                             onHandleIncrease={this.handleIncreaseQty} onHandleDecrease={this.handleDecreaseQty} onHandleDelete={this.handleDeleteItem}
-                            onHandleNote={this.handleAddNote} onHandleRowSelection={this.handleRowSelection} onHandleQuantity={this.handleOpenQuantity} errors={this.state.errors} />
+                            onHandleNote={this.handleAddNote} onHandleRowSelection={this.handleRowSelection} onHandleQuantity={this.handleOpenQuantity} 
+                            errors={this.state.errors} />
 
-        <Dialog
-            title="Add Customization" actions={actions} onRequestClose={this.handleCloseNote}
-            modal={true} open={this.state.openNote}
-            autoScrollBodyContent={true} >
+                        <Dialog
+                            title="Add Customization" actions={actions} onRequestClose={this.handleCloseNote}
+                            modal={true} open={this.state.openNote}
+                            autoScrollBodyContent={true} >
 
-                <textarea ref='tNote' style={{}} rows={3}></textarea>
-        </Dialog>
-        <Dialog
-            title="Quantity" actions={actionsQuantity} onRequestClose={this.handleCloseQuantity}
-            modal={true} open={this.state.openQuantity}
-            autoScrollBodyContent={true} contentStyle={{width:250, maxWidth:'none'}}>
+                                <textarea ref='tNote' style={{}} rows={3}></textarea>
+                        </Dialog>
+                        <Dialog
+                            title="Quantity" actions={actionsQuantity} onRequestClose={this.handleCloseQuantity}
+                            modal={true} open={this.state.openQuantity}
+                            autoScrollBodyContent={true} contentStyle={{width:250, maxWidth:'none'}}>
 
-                <input type="text" ref='tQuantity' style={{margin:5, fontSize: 18, width: 50}} onKeyDown={this.handleKeyQuantity} autoFocus />
-        </Dialog>
+                                <input type="text" ref='tQuantity' style={{margin:5, fontSize: 18, width: 50}} onKeyDown={this.handleKeyQuantity} autoFocus />
+                        </Dialog>
                     </Card>
                     <Card style={{
                             //flexGrow: 1,
                             marginLeft: 10,
-                            width: 400,
+                            width: 450,
                             minWidth: 300,
                             display: this.state.itemIndexNote > -1 ? 'none' : 'block'
                         }} >

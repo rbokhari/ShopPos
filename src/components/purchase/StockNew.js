@@ -92,7 +92,7 @@ class StockNew extends Component {
             amount = parseFloat(amount) + parseFloat(item.price);
         });
         console.info('amount', amount);
-        stock.total = amount;
+        stock.amount = amount;
         this.setState({
             stock: stock
         });

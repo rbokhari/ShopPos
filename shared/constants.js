@@ -20,12 +20,14 @@ export const CUSTOMER_STATUS = {
 
 export const PRODUCT_TYPE = {
         'KITCHEN': 0,
-        'DIRECT': 1
+        'DIRECT': 1,
+        'NONKITCHEN': 2
 };
 
 export const PRODUCT_TYPE_LABEL = {
         'KITCHEN': 'KITCHEN',
-        'DIRECT': 'DIRECT'
+        'DIRECT': 'DIRECT',
+        'NONKITCHEN': 'NON-KITCHEN',
 };
 
 export const ITEM_UOM = {

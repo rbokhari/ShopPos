@@ -68,7 +68,6 @@ class ItemNew extends Component {
                         </div>
                         
                         <div>
-                            {this.props.item.uom}
                             <Field name="uom" component={materialSelectField} value={this.props.item.uom} label="UOM">
                                 <MenuItem key={ITEM_UOM.NUMBER} value={ITEM_UOM.NUMBER} primaryText={ITEM_UOM_LABEL.NUMBER} />
                                 <MenuItem key={ITEM_UOM.KG} value={ITEM_UOM.KG} primaryText={ITEM_UOM_LABEL.KG} />

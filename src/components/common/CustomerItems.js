@@ -19,7 +19,7 @@ const styles = {
 const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecrease, onHandleDelete, onHandleNote, onHandleRowSelection, onHandleQuantity, rowSelectIndex, errors } ) => {
     
         return (
-            <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 750 }} selectable={true} onRowSelection={onHandleRowSelection.bind(this)}>
+            <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 1000 }} selectable={true} onRowSelection={onHandleRowSelection.bind(this)}>
                 <TableHeader  displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={true}>
                     <TableRow>
                         <TableHeaderColumn style={{width: 5}} >Sr</TableHeaderColumn>
