@@ -1,0 +1,16 @@
+Enrollment
+
+1. Teacher - Day - Time 
+	1	1	1
+	1	2	1
+
+
+------------------------------------------------------
+
+Student
+
+1. Student to assign a Group
+2. 
+
+
+St

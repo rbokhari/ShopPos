@@ -44,7 +44,7 @@ const BranchForm = ( {item, onSave, onChange, loading, errors} ) => {
     );
 }
 
-ItemForm.propTypes = {
+BranchForm.propTypes = {
     item: React.PropTypes.object.isRequired,
     onSave: React.PropTypes.func.isRequired,
     onChange: React.PropTypes.func.isRequired,
@@ -52,4 +52,4 @@ ItemForm.propTypes = {
     errors: React.PropTypes.object
 };
 
-export default ItemForm;
+export default BranchForm;

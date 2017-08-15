@@ -6,7 +6,7 @@ import Dialog from 'material-ui/Dialog';
 
 import Moment from 'moment';
 
-import Customer from './customer';
+import Customer from './Customer';
 import { closeCustomerDetailDialog } from '../../actions';
 
 const style = {
@@ -22,7 +22,6 @@ const style = {
         maxWidth: 1000
     }
 };
-
 
 class CustomerDetailDialog extends Component {
 

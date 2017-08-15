@@ -7,41 +7,42 @@ import reduxThunk from 'redux-thunk';
 import reduxLogger from 'redux-logger';
 import io from 'socket.io-client';
 
-import App from './components/App.jsx';
-import ItemPage from './components/item/ItemPage.js';
-import ItemNew from './components/item/ItemNew.js';
+// import App from './components/App.jsx';
+// import ItemPage from './components/item/ItemPage.js';
+// import ItemNew from './components/item/ItemNew.js';
 
-import StockNew from './components/purchase/StockNew';
-import PurchasePage from './components/purchase/PurchasePage';
+// import StockNew from './components/purchase/StockNew';
+// import PurchasePage from './components/purchase/PurchasePage';
 
-import CategoryType from './components/category/CategoryType';
-import CategoryPage from './components/category/CategoryPage';
-import CategoryNew from './components/category/CategoryNew';
+// import CategoryType from './components/category/CategoryType';
+// import CategoryPage from './components/category/CategoryPage';
+// import CategoryNew from './components/category/CategoryNew';
 
-import SupplierPage from './components/supplier/SupplierPage';
-import SupplierNew from './components/supplier/SupplierNew';
+// import SupplierPage from './components/supplier/SupplierPage';
+// import SupplierNew from './components/supplier/SupplierNew';
 
-import ProductPage from './components/product/ProductPage';
-import ProductNew from './components/product/ProductNew';
+// import ProductPage from './components/product/ProductPage';
+// import ProductNew from './components/product/ProductNew';
 
-import Dashboard from './components/common/Dashboard';
-import UserPage from './components/user/UserPage';
-import UserNew from './components/user/UserNew';
+// import Dashboard from './components/common/Dashboard';
+// import UserPage from './components/user/UserPage';
+// import UserNew from './components/user/UserNew';
 
-import { ExpenseMasterList, ExpenseMasterPage, ExpenseMasterNew } from './components/expenseMaster';
+// import { ExpenseMasterList, ExpenseMasterPage, ExpenseMasterNew } from './components/expenseMaster';
 
-import ExpensePage from './components/expense/ExpensePage';
-import ExpenseNew from './components/expense/ExpenseNew';
+// import ExpensePage from './components/expense/ExpensePage';
+// import ExpenseNew from './components/expense/ExpenseNew';
 
-import KitchenBoard from './components/common/kitchenBoard';
-import DispatchBoard from './components/common/DispatchBoard';
+// import KitchenBoard from './components/common/kitchenBoard';
+// import DispatchBoard from './components/common/DispatchBoard';
 
-import ReportPage from './components/report/ReportPage';
+// import ReportPage from './components/report/ReportPage';
 
-import SignIn from './components/auth/signin';
-import Signout from './components/auth/signout';
-import CreateAccount from './components/auth/createAccount';
-import RequireAuth from './components/auth/requireAuth';
+// import SignIn from './components/auth/signin';
+// import Signout from './components/auth/signout';
+// import CreateAccount from './components/auth/createAccount';
+// import RequireAuth from './components/auth/requireAuth';
+import routes from './routes';
 
 import { userInfo, loadCustomers} from './actions/index';
 import { AUTH_USER } from './actions/types';
@@ -71,53 +72,7 @@ socket.on('customer', function(data) {
 ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
-            <Route path="/" component={App}>
-                <IndexRoute component={RequireAuth(Dashboard)} />
-                
-                <Route path="signin" component={SignIn} />
-                <Route path="signout" component={Signout} />
-                <Route path="createAccount" component={CreateAccount} />
-
-                <Route path="item" component={ItemPage} />
-                <Route path="item/new" component={ItemNew} />
-                <Route path="item/:id/edit" component={ItemNew} />
-
-                <Route path="purchase" component={PurchasePage} />
-                <Route path="purchase/new" component={StockNew} />
-                <Route path="purchase/:id/edit" component={StockNew} />
-
-                <Route path="type" component={CategoryType} />
-                
-                <Route path="category" component={CategoryPage} />
-                <Route path="category/new" component={CategoryNew} />
-                <Route path="category/:id/edit" component={CategoryNew} />
-
-                <Route path="supplier" component={SupplierPage} />
-                <Route path="supplier/new" component={SupplierNew} />
-                <Route path="supplier/:id/edit" component={SupplierNew} />
-                
-                <Route path="product" component={ProductPage} />
-                <Route path="product/new" component={ProductNew} />
-                <Route path="product/:id/edit" component={ProductNew} />
-
-                <Route path="kitchen" component={KitchenBoard} />
-                <Route path="dispatch" component={DispatchBoard} />
-
-                <Route path="report" component={ReportPage} />
-                
-                <Route path="users" component={UserPage} />
-                <Route path="users/:id/edit" component={UserNew} />
-                <Route path="users/new" component={UserNew} />
-
-                <Route path="master" component={ExpenseMasterPage} />
-                <Route path="master/new" component={ExpenseMasterNew} />
-                <Route path="master/:id/edit" component={ExpenseMasterNew} />
-
-                <Route path="expense" component={ExpensePage} />
-                <Route path="expense/new" component={ExpenseNew} />
-                <Route path="expense/:id/edit" component={ExpenseNew} />
-
-            </Route>
+            {routes}
         </Router>
     </Provider>, 
     document.getElementById('container')

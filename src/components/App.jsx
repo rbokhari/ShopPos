@@ -199,7 +199,7 @@ class App extends React.Component {
                                 targetOrigin={{horizontal: 'right', vertical: 'top'}}
                                 anchorOrigin={{horizontal: 'right', vertical: 'top'}} >
 
-                            { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Switch Branch" onTouchTap={this._loadBranch} />}
+                            { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Switch Branch" containerElement={<Link to="/branch" />} />}
                             { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Create Branch" onTouchTap={this._showCreateBranch} />}
                             { user && user.roleId === USER_ROLE.ADMIN && <Divider />}
                             <MenuItem primaryText="Change Password" onTouchTap={this._loadChangePassword } />

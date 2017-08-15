@@ -1,0 +1,28 @@
+Steps to configure Coffee shop application
+-----------------------------------------
+
+1. isntall Node
+2. Install Mongodb
+3. Create config file with name 'mongod.cfg' with following data inside C:\Program Files\MongoDB\Server\3.4\
+
+systemLog:
+    destination: file
+    path: D:\VeApps\Data\log
+storage:
+    dbPath: D:\VeApps\Data\db
+
+4. After creating that config file run following command in command prompt (run as admin)
+	
+"C:\Program Files\MongoDB\Server\3.4\bin\mongod.exe" --config "C:\Program Files\MongoDB\Server\3.4\mongod.cfg" --install
+
+this will install service
+
+5. Now copy coffee shop application inside d:\veApps with server and client
+
+6. create server.bat file inside d:\veapps\server with following line in it
+
+node index.js
+
+7. Now run nssm package to create service for server running automatically, select that server.bat file 
+
+configure IIS for coffeeshop client application
