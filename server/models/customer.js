@@ -16,7 +16,10 @@ const customerSchema = new Schema({
     option: { type: String },
     status: { type : Number },
     products: [{
-        productId: { type: Schema.ObjectId },
+        productId: { 
+            type: Schema.ObjectId,
+            ref: 'product'
+        },
         productName: { type: String },
         categoryId: { type: Schema.ObjectId },
         categoryName: { type: String },
@@ -32,7 +35,10 @@ const customerSchema = new Schema({
         }],
         items: [{
             //_id: { type: Schema.ObjectId },
-            itemId: { type: Schema.ObjectId },
+            itemId: { 
+                type: Schema.ObjectId,
+                ref: 'item'
+            },
             itemName: { type: String },
             qty: { type: Number }
         }],

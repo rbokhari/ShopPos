@@ -53,23 +53,23 @@ class CategoryNew extends Component {
     render() {
         const { handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
         
-const renderAddons = ({fields}) => (
-    <div>
-        <RaisedButton type="button" onClick={()=> fields.push()} label='Add Addons' />
-        <ol>
-            {fields.map((addon, index) => (
-                <li key={index}>
-                    <Field name={`${addon}.name`} component={materialTextField} label="Addon Name" />
-                    <Field name={`${addon}.price`} component={materialTextField} label="Addon Price" />
-                    <IconButton tooltip="Delete" onClick={()=> fields.remove(index)}>
-                        <ActionDelete color={red500} />
-                    </IconButton>
-                </li>
-                )
-            )}
-        </ol>
-    </div>
-)
+        const renderAddons = ({fields}) => (
+            <div>
+                <RaisedButton type="button" onClick={()=> fields.push()} label='Add Addons' />
+                <ol>
+                    {fields.map((addon, index) => (
+                        <li key={index}>
+                            <Field name={`${addon}.name`} component={materialTextField} label="Addon Name" />
+                            <Field name={`${addon}.price`} component={materialTextField} label="Addon Price" />
+                            <IconButton tooltip="Delete" onClick={()=> fields.remove(index)}>
+                                <ActionDelete color={red500} />
+                            </IconButton>
+                        </li>
+                        )
+                    )}
+                </ol>
+            </div>
+        )
 
         return (
             <form onSubmit={handleSubmit(this.saveCategory.bind(this))}>

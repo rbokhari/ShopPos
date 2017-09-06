@@ -56,7 +56,7 @@ exports.getAll = function(req, res, next) {
 
             Branch.find({}, function(err, branches) {
                 if (err) { return next(err); }
-console.log("branch", branches);
+
                 res.setHeader('Content-Type', 'application/json');
                 const sendUsers = users.map(function(user, i) {
                     return {

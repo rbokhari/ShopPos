@@ -32,7 +32,7 @@ import ActionAssignmentReturned from 'material-ui/svg-icons/action/assignment-re
 import ActionCardTravel from 'material-ui/svg-icons/action/card-travel';
 
 import MenuList from './common/Menu.jsx';
-import BranchListDialog from './branch/BranchListDialog';
+//import BranchListDialog from './branch/BranchListDialog';
 import BranchCreateDialog from './branch/BranchNew';
 import UserPasswordChange from './user/UserPasswordChange';
 import CustomerDetailDialog from './common/CustomerDetailDialog';
@@ -87,7 +87,7 @@ class App extends React.Component {
     }
 
     _loadBranch() {
-        this.props.loadBranch();
+        //this.props.loadBranch();
     }
 
     _showCreateBranch() {
@@ -182,53 +182,67 @@ class App extends React.Component {
 
     render() {
         const { user, branch, displayTitle } = this.props;
-        return (
-            <MuiThemeProvider muiTheme={muiTheme}>
-                <div>
-                    <AppBar title={displayTitle}
-                        showMenuIconButton={true}
-                        onLeftIconButtonTouchTap={this._handleClick}
-                        onTitleTouchTap={this._handleClick} 
-                        iconElementRight={
-                            <IconMenu
-                                iconButtonElement={
-                                    <IconButton>
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                }
-                                targetOrigin={{horizontal: 'right', vertical: 'top'}}
-                                anchorOrigin={{horizontal: 'right', vertical: 'top'}} >
+        if (user) {
+            return (
+                <MuiThemeProvider muiTheme={muiTheme}>
+                    <div>
+                        <AppBar title={displayTitle}
+                            showMenuIconButton={true}
+                            onLeftIconButtonTouchTap={this._handleClick}
+                            onTitleTouchTap={this._handleClick} 
+                            iconElementRight={
+                                <IconMenu
+                                    iconButtonElement={
+                                        <IconButton>
+                                            <MoreVertIcon />
+                                        </IconButton>
+                                    }
+                                    targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                                    anchorOrigin={{horizontal: 'right', vertical: 'top'}} >
 
-                            { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Switch Branch" containerElement={<Link to="/branch" />} />}
-                            { user && user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Create Branch" onTouchTap={this._showCreateBranch} />}
-                            { user && user.roleId === USER_ROLE.ADMIN && <Divider />}
-                            <MenuItem primaryText="Change Password" onTouchTap={this._loadChangePassword } />
-                            { user && user.roleId === USER_ROLE.ADMIN && <Divider />}
-                            <MenuItem primaryText="Sign out"  containerElement={<Link to={'/signout'} />} />
-
-                            </IconMenu>
-                        } >
-
-                        {this.renderDrawerMenu()}
-                        
-                    </AppBar>
-                    <BranchListDialog open={false} />
-                    <BranchCreateDialog open={false} />
-                    <UserPasswordChange open={false} />
-                    <CustomerDetailDialog open={true} />
-                    <div style={{
-                            border: '1px thick', 
-                            display: 'flex',
-                            flexFlow: 'row wrap',
-                            maxWidth: 1600,
-                            width: '100%',
-                            margin: '3px auto 3px'
-                        }}>
-                        {this.props.children}
+                                    { user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Switch Branch" containerElement={<Link to="/branch" />} />}
+                                    { user.roleId === USER_ROLE.ADMIN && <MenuItem primaryText="Create Branch" onTouchTap={this._showCreateBranch} />}
+                                    { user.roleId === USER_ROLE.ADMIN && <Divider />}
+                                    <MenuItem primaryText="Change Password" onTouchTap={this._loadChangePassword } />
+                                    { user.roleId === USER_ROLE.ADMIN && <Divider />}
+                                    <MenuItem primaryText="Sign out"  containerElement={<Link to={'/signout'} />} />
+                                </IconMenu>
+                            } >
+                            {this.renderDrawerMenu()}
+                        </AppBar>
+                        {/* <BranchListDialog open={false} /> */}
+                        <BranchCreateDialog open={false} />
+                        <UserPasswordChange open={false} />
+                        <CustomerDetailDialog open={true} />
+                        <div style={{
+                                border: '1px thick', 
+                                display: 'flex',
+                                flexFlow: 'row wrap',
+                                maxWidth: 1600,
+                                width: '100%',
+                                margin: '3px auto 3px'
+                            }}>
+                            {this.props.children}
+                        </div>
                     </div>
-                </div>
-            </MuiThemeProvider>
-        );
+                </MuiThemeProvider>
+            );  
+        }else {
+            return (    // for showing only sigin, createAccount and signout form
+                <MuiThemeProvider muiTheme={muiTheme}>
+                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100vh'}}>
+                        <div style={{background: 'cyan', width: '60%', height: '100vh'}}>
+                            <img src='/public/ve.jpg' height='100%' width='100%' />
+                        </div>
+                        <div style={{width: '40%'}}>
+                            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                                {this.props.children}
+                            </div>
+                        </div>
+                    </div>
+                </MuiThemeProvider>
+            );
+        }
     }
 }
 

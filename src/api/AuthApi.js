@@ -21,6 +21,10 @@ class AuthApi {
         return Api.get('office');
     }
 
+    static activateBranch(id) {
+        return Api.put('office/' + id + '/activate');
+    }
+
     static signIn({email, password}) {
         return Api.post('signin', { email:email, password:password });
     }

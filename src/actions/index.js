@@ -64,7 +64,9 @@ export function loadBranches() {
                     payload: response.data
                 });
             })
-            .catch(error=> {});
+            .catch(error=> { 
+                throw(error); 
+            });
     };
 }
 
@@ -75,6 +77,19 @@ export function changeBranch(branch) {
             type: types.SWITCH_BRANCH,
             payload: branch
         }); // this is redux-thunk in action 
+    };
+}
+
+export function activateBranch(id) {
+    return function(dispatch) {
+        return authApi.activateBranch(id)
+            .then(res=> {
+                localStorage.setItem('officeId', res.data._id);
+                dispatch({ 
+                    type: types.SWITCH_BRANCH,
+                    payload: res.data
+                }); 
+            });
     };
 }
 
@@ -108,6 +123,7 @@ export function createBranch({name, displayName, location, officeNo, mobileNo, s
             })
             .catch((error) => {
                 dispatch(authError(error));
+                throw(error);
             });
     };
 }
@@ -190,6 +206,7 @@ export function signinUser( {email, password }) {
             .catch((error) => {
                 console.info("error", error);
                 dispatch(authError(`Bad login info ${error}`));
+                throw(error);
             });
     };
 }
@@ -198,17 +215,18 @@ export function userInfo() {
     return function(dispatch) {
         return authApi.userInfo()
                 .then(response => {
-                    localStorage.setItem('companyId', response.data.user.companyId);
-                    localStorage.setItem('officeId', response.data.user.officeId);
                     const data = response.data.user;
+                    localStorage.setItem('companyId', data.companyId);
+                    localStorage.setItem('officeId', data.officeId);
+                    
                     const company = {
                         companyId: data.company.companyId,
                         name: data.company.name,
                         displayName: data.company.displayName
                     };
                     dispatch({ 
-                            type: types.LOAD_COMPANY,
-                            payload: company
+                        type: types.LOAD_COMPANY,
+                        payload: company
                     });
 
                     const user = {
@@ -240,14 +258,39 @@ export function userInfo() {
 
                     }else if (data.roleId == USER_ROLE.ADMIN){
                         if (data.branch) {
-                            dispatch({ type: types.LOAD_BRANCH });
+                            //alert('hello ' + data.branch.length);
+                            const activeBranch = data.branch.filter((b, i) => {
+                                return b.isActive === 1;
+                            }).map((b,i) => {
+                                return {
+                                    branchId: b.branchId,
+                                    name: b.name,
+                                    displayName: b.displayName,
+                                    office: b.office,
+                                    mobile: b.mobile,
+                                    isActive: b.isActive
+                                };
+                            })[0];
+                            //dispatch({ type: types.LOAD_BRANCH });
+                            //alert("now");
+                            localStorage.setItem('officeId', activeBranch.branchId);
+                            dispatch({
+                                type: types.SWITCH_BRANCH,
+                                payload: activeBranch
+                            });
+
+                            // localStorage.setItem('officeId', branch.branchId);
+                            // dispatch({ 
+                            //     type: types.SWITCH_BRANCH,
+                            //     payload: branch
+                            // }); 
                         }else {
                             dispatch({ type: types.SHOW_CREATE_BRANCH });
                         }
                     }
                 })
                 .catch(error => {
-
+                    throw(error);
                 });
     };
 }
@@ -265,7 +308,10 @@ export function CompanyExists() {
         .then(response=>{
 
         })
-        .catch((error)=> {return {name: error.response.data.error}});
+        .catch((error)=> {
+            //return {name: error.response.data.error}
+            throw(error);
+        });
 }
 
 export function accountCreate({ name, displayName, location, contactNo, email, password, confirmPassword}) {
@@ -284,6 +330,7 @@ export function accountCreate({ name, displayName, location, contactNo, email, p
             .catch((error) => {
                 //console.error("error",error.response);
                 dispatch(authError(error.response.data.error));
+                throw(error);
             });
     };
 }
@@ -380,8 +427,8 @@ export function loadCategories() {
             }
         ).catch( error => {
                 console.error( error );
-            }
-        );
+                throw(error);
+        });
     };
 }
 
@@ -425,9 +472,8 @@ export function loadSuppliers() {
                 dispatch(loadSupplierSuccess( suppliers ) );
             }
         ).catch( error => {
-                console.error( error );
-            }
-        );
+            throw(error);
+        });
     };
 }
 
@@ -675,24 +721,25 @@ export function loadExpenseMastersSuccess( master ) {
 export function loadExpenseMasters() {
     return function( dispatch ) {
         //dispatch( beginAjaxCall() );
-        return expenseMasterApi.getAllExpenseMasters().then( masters => {
-                dispatch(loadExpenseMastersSuccess( masters ) );
-            }
-        ).catch( error => {
-                console.error( error );
-            }
-        );
+        return expenseMasterApi.getAllExpenseMasters()
+            .then( masters => {
+                    dispatch(loadExpenseMastersSuccess( masters ) );
+            })
+            .catch( error => {
+                throw(error);
+            });
     };
 }
 
 export function createExpenseMaster( master ) {  // this becomes action to send to reducer
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
-        return expenseMasterApi.saveExpenseMaster( master ).then( master => {
-            master._id ? dispatch( updateExpenseMasterSuccess( master ) ) : dispatch( createExpenseMasterSuccess( master ) );
-        }).catch( error => {
-            throw( error );
-        });
+        return expenseMasterApi.saveExpenseMaster( master )
+            .then( master => {
+                master._id ? dispatch( updateExpenseMasterSuccess( master ) ) : dispatch( createExpenseMasterSuccess( master ) );
+            }).catch( error => {
+                throw( error );
+            });
     };
 }
 
@@ -722,23 +769,22 @@ export function loadExpenses() {
     return function( dispatch ) {
         //dispatch( beginAjaxCall() );
         return expenseApi.getAllExpenses().then( expenses => {
-                dispatch(loadExpensesSuccess( expenses ) );
-            }
-        ).catch( error => {
-                console.error( error );
-            }
-        );
+            dispatch(loadExpensesSuccess( expenses ) );
+        }).catch( error => {
+            throw(error);
+        });
     };
 }
 
 export function createExpense( expense ) {  // this becomes action to send to reducer
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
-        return expenseApi.saveExpense( expense ).then( expense => {
-            expense._id ? dispatch( updateExpenseSuccess( expense ) ) : dispatch( createExpenseSuccess( expense ) );
-        }).catch( error => {
-            throw( error );
-        });
+        return expenseApi.saveExpense( expense )
+            .then( expense => {
+                expense._id ? dispatch( updateExpenseSuccess( expense ) ) : dispatch( createExpenseSuccess( expense ) );
+            }).catch( error => {
+                throw( error );
+            });
     };
 }
 
@@ -864,23 +910,23 @@ export function loadOpenDay() {
                 dispatch(loadOpenDaySuccess( day ) );
             }
         ).catch( error => {
-                console.error( error );
-            }
-        );
+            console.error( error );
+            throw(error);
+        });
     };
 }
 
 export function loadCloseDay() {
     return function( dispatch ) {
-        return dayApi.closeDay().then( res => {
+        return dayApi.closeDay()
+            .then( res => {
                 if (res.status == 200) {
                     localStorage.removeItem('dayId');
                     dispatch(loadCloseDaySuccess() );
                 }
             }).catch( error => {
-                console.error( error );
-            }
-        );
+                throw(error);
+            });
     };
 }
 

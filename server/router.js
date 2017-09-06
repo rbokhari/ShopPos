@@ -35,6 +35,7 @@ module.exports = function(app, io) {
     // Office Routes
     app.post('/office/create', Office.createOffice);
     app.put('/office/:id/update', Office.updateOffice);
+    app.put('/office/:id/activate', Office.deactivateAll, Office.activateOne);
     app.get('/office/', Office.getAll);
     app.get('/office/:id', Office.getById);
 

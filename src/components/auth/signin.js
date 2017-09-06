@@ -2,12 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-//import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-
-import {signinUser} from '../../actions';
+import { signinUser } from '../../actions';
 import { materialTextField } from '../controls/index';
+import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
+
 
 class SignIn extends Component {
 
@@ -31,7 +30,7 @@ class SignIn extends Component {
                     {this.props.errorMessage}
                 </div>
             );
-        }
+        }0
     }
 
     render() {
@@ -40,17 +39,25 @@ class SignIn extends Component {
         
         return (
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
-                <h2>Sign In</h2>
-                <div>
-                    <Field name="email" component={materialTextField} label="User Name" autoFocus />
-                </div>
-                <div>
-                    <Field name="password" component={materialTextField} label="Password" type="password" />
-                </div>
-                    {this.renderAlert()}
-                <div>
-                    <RaisedButton type="submit" primary={true} label='Sigin' ></RaisedButton>
-                </div>
+                <Card style={{ margin: '0 auto',}} >
+                    <CardHeader title="Sign In" />
+                    <CardText>
+                        <div>
+                            <Field name="email" component={materialTextField} label="User Name" autoFocus />
+                        </div>
+                        <div>
+                            <Field name="password" component={materialTextField} label="Password" type="password" />
+                        </div>
+                            {this.renderAlert()}
+                        <div>
+                            
+                        </div>
+                    </CardText>
+                    <CardActions>
+                        {this.renderAlert()}
+                        <RaisedButton type="submit" primary={true} label='Sigin' ></RaisedButton>
+                    </CardActions>
+                </Card>
             </form>
         );
     }
@@ -64,25 +71,10 @@ function mapStateToProps(state) {
     return { errorMessage: state.auth.error };
 }
 
-// function mapDispatchToProps(dispatch) {
-//     return {
-//         signinUser: bindActionCreators(actions.signinUser, dispatch)
-//     };
-// }
-
-// export default reduxForm({
-//     form: 'signin',
-//     fields: ['email', 'password']
-// }, mapStateToProps, mapDispatchToProps)(SignIn);
-
 SignIn = reduxForm({
     form: 'signin',
 })(SignIn);
 
-SignIn = connect(
-    mapStateToProps, 
-    {signinUser: signinUser}
-)(SignIn);
-
+SignIn = connect(mapStateToProps, { signinUser })(SignIn);
 
 export default SignIn;

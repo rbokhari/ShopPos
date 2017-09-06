@@ -1,7 +1,6 @@
 import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
-
 import App from './components/App.jsx';
 import { BranchPage } from './components/branch';
 import { ItemPage, ItemNew } from './components/item/';

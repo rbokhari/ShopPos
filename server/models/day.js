@@ -5,8 +5,14 @@ const Schema = mongoose.Schema;
 
 const daySchema = new Schema({
     _id: { type: Number, unique: true },
-    companyId: { type: Schema.ObjectId },
-    officeId: { type: Schema.ObjectId },
+    companyId: { 
+        type: Schema.ObjectId,
+        ref: 'company'
+    },
+    officeId: { 
+        type: Schema.ObjectId,
+        ref: 'office'
+    },
     today: { type: Date, default: Date.now },
     close: { type: Date },
     status: { type : Number },

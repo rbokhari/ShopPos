@@ -34,6 +34,21 @@ exports.createOffice = function(req, res, next) {
     });
 };
 
+exports.deactivateAll = function(req, res, next) {
+    Office.update({}, { $set: { isActive: 0} }, {multi: true}, function(err, existing) {
+        if (err) { return next(err); }
+        next();
+    });
+};
+
+exports.activateOne = function(req, res, next) {
+    Office.findByIdAndUpdate( req.params.id , { $set: { isActive: 1} }, function(err, branch) {
+        if (err) { return next(err); }
+
+        res.json(branch);
+    });
+};
+
 
 exports.updateOffice = function(req, res) {
     res.json('Got a PUT request at office');
@@ -65,7 +80,6 @@ exports.updateOffice = function(req, res) {
 
 exports.getAll = function(req, res, next) {
     const companyId = req.headers.companyid;
-
     Office.find({companyId: companyId}, function(err, offices){
         if (err) { return next(err); }
         res.setHeader('Content-Type', 'application/json');

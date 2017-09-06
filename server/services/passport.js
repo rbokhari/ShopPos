@@ -5,22 +5,23 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const LocalStrategy = require('passport-local');
 
-
 // create local Strategy
 const localOptions = { usernameField: 'email' };
 const localLogin = new LocalStrategy(localOptions, function(email, password, done) {
     // verify this username and password, call done with that user
-    User.findOne( {email: email }, function(err, user) {
-        if (err) { return done(err); }
-        if (!user) { return done(null, false); }    // if user not found
-        
-        // compare passwords
-        user.comparePassword(password, function(err, isMatch) {
+    User.findOne( {email: email })
+        .populate('companies company')
+        .exec(function(err, user) {
             if (err) { return done(err); }
-            if (!isMatch) { return done(null, false); }
+            if (!user) { return done(null, false); }    // if user not found
+            console.info('localLogin User', user);
+            // compare passwords
+            user.comparePassword(password, function(err, isMatch) {
+                if (err) { return done(err); }
+                if (!isMatch) { return done(null, false); }
 
-            return done(null, user);
-        });
+                return done(null, user);
+            });
     });
 });
 

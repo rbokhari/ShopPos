@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
 
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
@@ -30,14 +32,34 @@ class BranchPage extends Component {
     }
 
     render() {
-        const { branches } = this.props;
+        const { branches, company } = this.props;
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} onTouchTap={() => browserHistory.push('/branch/new')} >
+                <div style={{
+                    maxwidth: 1200,
+                    width: '100%',
+                }}>
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarTitle text={company.displayName} />
+                        </ToolbarGroup>
+                        <ToolbarGroup firstChild={true}>
+                            <ToolbarSeparator />
+                            <RaisedButton label="Edit" primary={true} />
+                        </ToolbarGroup>
+                    </Toolbar>
+                    <div style={{
+                        display: 'flex',
+                        flexFlow: 'row wrap'                 
+                    }}>
+                    <BranchList branches={branches} />
+                    </div>
+                </div>
+                {/* <FloatingActionButton style={fabStyle} secondary={true} onTouchTap={() => browserHistory.push('/branch/new')} >
                     <ContentAdd />
-                </FloatingActionButton>
-                <BranchList branches={branches} />
+                </FloatingActionButton> */}
+                
             </div>
         );
     }
@@ -49,10 +71,10 @@ BranchPage.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
-    console.info("branches", state.branch);
     return { 
         branches: state.branch.all,
-        branch: state.branch.current
+        branch: state.branch.current,
+        company: state.company
     };
 }
 

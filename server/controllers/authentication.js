@@ -21,7 +21,7 @@ exports.signin = function(req, res, next) {
     //     companyId: req.user.companyId,
     //     status: req.user.status
     // };
-    console.log("singin");
+    console.info('Authentication req', req);
     const user = req.user;
     var result = {
         userId: user._id,
@@ -32,13 +32,13 @@ exports.signin = function(req, res, next) {
     };
     if (user) {
         if (user.companyId) {
-            Company.findById(user.companyId, function(err,company) {
+            Company.findById(user.companyId, function(err, company) {
                 if (err) { return next(err); }
                 if (company) {
                     //result = { ...result, { companyName: company.name, companyDisplay: company.displayName }  } ;
                     result = Object.assign({}, result, { company: { companyId: company._id, name: company.name, displayName: company.displayName} });
 
-                    if (result.officeId !== 0) {
+                    if (result.officeId && result.officeId !== 0) {
                         Office.findById(result.officeId, function(err, branch) {
                             if (err) { return next(err); }
                             if (branch) {
@@ -51,7 +51,8 @@ exports.signin = function(req, res, next) {
                                                 name: branch.name, 
                                                 display: branch.displayName, 
                                                 office: branch.officeNo, 
-                                                mobile: branch.mobileNo
+                                                mobile: branch.mobileNo,
+                                                isActive: branch.isActive
                                             }
                                         ] 
                                     });
@@ -71,7 +72,8 @@ exports.signin = function(req, res, next) {
                                             name: branch.name,
                                             display: branch.display,
                                             office: branch.officeNo,
-                                            mobile: branch.mobileNo
+                                            mobile: branch.mobileNo,
+                                            isActive: branch.isActive
                                         }; 
                                     });
                                     
@@ -128,10 +130,24 @@ exports.user = function(req, res, next) {
                                             name: branch.name,
                                             displayName: branch.displayName,
                                             office: branch.officeNo,
-                                            mobile: branch.mobileNo
+                                            mobile: branch.mobileNo,
+                                            isActive: branch.isActive
                                         }; 
                                     });
-                                    result = Object.assign({}, result, { branch: branches });
+                                    const active = branches.filter(function(branch, i) {
+                                        return branch.isActive === 1;
+                                    }).map(function(branch, i) {
+                                        return {
+                                            branchId: branch.branchId,
+                                            name: branch.name,
+                                            displayName: branch.displayName,
+                                            office: branch.officeNo,
+                                            mobile: branch.mobileNo,
+                                            isActive: branch.isActive
+                                        };
+                                    });
+                                    console.log('active', active);
+                                    result = Object.assign({}, result, { branch: branches, officeId: active[0].branchId });
                                     //res.send( { user: result });
                                     res.send( { user: result });
                                 }

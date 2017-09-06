@@ -7,8 +7,14 @@ const bcrypt = require('bcrypt-nodejs');
 const userSchema = new Schema({
     email: { type: String, unique: true, lowercase: true },
     password: { type: String },
-    companyId: { type: Schema.ObjectId },
-    officeId: { type: Schema.ObjectId },
+    companyId: { 
+        type: Schema.ObjectId,
+        ref: 'companies'
+    },
+    officeId: { 
+        type: Schema.ObjectId,
+        ref: 'offices'
+    },
     roleId: { type: Number },
     status: { type: Number }
 });

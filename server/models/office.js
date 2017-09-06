@@ -2,15 +2,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Define a model
-
 const officeSchema = new Schema({
-    companyId: { type: Schema.ObjectId },
-    name: { type: String, lowercase: true },
+    companyId: { 
+        type: Schema.ObjectId,
+        ref: 'company'
+    },
+    name: { type: String },
     displayName: { type: String },
     location: { type: String },
     officeNo: { type:String },
     mobileNo: { type: String },
-    status: {type : Number}
+    status: {type : Number},
+    isActive: { type: Number }
 });
 
 // Create model class

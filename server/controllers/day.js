@@ -25,10 +25,9 @@ exports.createDay = function(req, res, next) {
             return res.status(422).send({ error: 'Day already open !'});
         }
 
-        Day.count({ $and: [ { companyId: companyId} , { officeId: officeId } ] }, function(err, cn){
+        //Day.count({ $and: [ { companyId: companyId} , { officeId: officeId } ] }, function(err, cn){
+        Day.count({  companyId: companyId }, function(err, cn){
             if (err) { return next(err); }
-
-            console.log("cn", cn);
 
             const day = new Day({
                 _id: cn+1,
@@ -38,8 +37,6 @@ exports.createDay = function(req, res, next) {
                 companyId: companyId,
                 officeId: officeId
             });
-
-            console.log("new day", day);
 
             day.save(function(err){
                 if (err) { return next(err); }
@@ -278,7 +275,7 @@ exports.getById = function(req, res, next) {
 exports.getOpenDay = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-    
+    console.log("getOpenDay");
     if (companyId != '0' && officeId != '0') {
         Day.findOne({ 
                 $and: [ 
