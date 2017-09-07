@@ -10,6 +10,8 @@ export const CLOSE_BRANCH_DIALOG                        = 'CLOSE_BRANCH_DIALOG';
 
 export const BEGIN_AJAX_CALL                            = 'BEGIN_AJAX_CALL';
 
+export const AUTH_LOADING_START                         = 'AUTH_LOADING_START';
+export const AUTH_LOADING_END                           = 'AUTH_LOADING_END';
 export const AUTH_USER                                  = 'AUTH_USER';
 export const UNAUTH_USER                                = 'UNAUTH_USER';
 export const AUTH_ERROR                                 = 'AUTH_ERROR';

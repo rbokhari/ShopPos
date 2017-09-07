@@ -75,7 +75,7 @@ class Dashboard extends Component {
 
         return (
             <div style={{
-                    maxwidth: 1200,
+                    //maxwidth: 1200,
                     width: '100%',
             }}>
                 <div style={{ display: 'flex', flexFlow:'row wrap'}}>
@@ -88,7 +88,7 @@ class Dashboard extends Component {
                     
                 </div>
 
-                <div style={{
+                <div id='dDashboard' style={{
                     display: 'flex',
                     flexFlow: 'row wrap'   ,
                     width: '100%'              

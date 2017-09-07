@@ -27,7 +27,6 @@ const CustomerForm = ( { customer, onChange, onSubmit, onCancel, errors } ) => {
     
     return (
         <Card style={{
-            maxWidth: 1400,
             width: '100%',
             marginTop: 20
         }}>

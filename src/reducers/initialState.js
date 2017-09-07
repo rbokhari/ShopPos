@@ -29,5 +29,6 @@ export default {
     reportCustomerData: [],
     reportExpenseData: [],
     reportPurchaseData: [],
-    ajaxCallsInProgress: 0
+    ajaxCallsInProgress: 0,
+    authLoading: true
 };

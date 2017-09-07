@@ -21,7 +21,10 @@ export default function(state = initialState.branch, action) {
             return { ...state, isCreateLoad: false, current: action.payload };
         case SWITCH_BRANCH:
             //return {...state, isLoad: false, current: all.filter(branch=> { return { branch._id === action.payload}} ) };
+            console.info('branches reducer', state, action.payload);
+            //const branch = state.all.filter(branch => branch.branchId == action.payload )[0];
             return { ...state, isLoad: false, current: action.payload };
+
     }
 
     return state;

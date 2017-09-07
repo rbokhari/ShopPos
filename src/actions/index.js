@@ -80,16 +80,16 @@ export function changeBranch(branch) {
     };
 }
 
-export function activateBranch(id) {
+export function activateBranch(branch) {
     return function(dispatch) {
-        return authApi.activateBranch(id)
-            .then(res=> {
-                localStorage.setItem('officeId', res.data._id);
+        //return authApi.activateBranch(id)
+        //    .then(res=> {
+                localStorage.setItem('officeId', branch._id);
                 dispatch({ 
                     type: types.SWITCH_BRANCH,
-                    payload: res.data
+                    payload: branch
                 }); 
-            });
+        //    });
     };
 }
 
@@ -213,11 +213,18 @@ export function signinUser( {email, password }) {
 
 export function userInfo() {
     return function(dispatch) {
+        dispatch({ type: types.AUTH_LOADING_START });
         return authApi.userInfo()
                 .then(response => {
+                    
                     const data = response.data.user;
                     localStorage.setItem('companyId', data.companyId);
-                    localStorage.setItem('officeId', data.officeId);
+
+                    const localOffice = localStorage.getItem('officeId');
+                    if (!localOffice && localOffice != '0') {
+                        localStorage.setItem('officeId', data.officeId);
+                        //activeOffice = data.officeId;
+                    }
                     
                     const company = {
                         companyId: data.company.companyId,
@@ -242,7 +249,8 @@ export function userInfo() {
                         payload: user
                     });
                     
-                    if (data.officeId !== '0' && data.roleId !== USER_ROLE.ADMIN) {
+                    //if (data.officeId !== '0' && data.roleId !== USER_ROLE.ADMIN) {
+                    if (!localOffice) { // && data.roleId !== USER_ROLE.ADMIN) {
                         const branch = {
                             branchId: data.branch.branchId,
                             name: data.branch.name,
@@ -256,21 +264,23 @@ export function userInfo() {
                             payload: branch
                         }); // this is redux-thunk in action
 
-                    }else if (data.roleId == USER_ROLE.ADMIN){
+                    }else {//if (data.roleId == USER_ROLE.ADMIN){
                         if (data.branch) {
                             //alert('hello ' + data.branch.length);
-                            const activeBranch = data.branch.filter((b, i) => {
-                                return b.isActive === 1;
-                            }).map((b,i) => {
-                                return {
-                                    branchId: b.branchId,
-                                    name: b.name,
-                                    displayName: b.displayName,
-                                    office: b.office,
-                                    mobile: b.mobile,
-                                    isActive: b.isActive
-                                };
-                            })[0];
+                            const activeBranch = data.branch
+                                                        .filter((b, i) => {
+                                                            return b.branchId === localOffice;
+                                                        })
+                                                        .map((b,i) => {
+                                                            return {
+                                                                branchId: b.branchId,
+                                                                name: b.name,
+                                                                displayName: b.displayName,
+                                                                office: b.office,
+                                                                mobile: b.mobile,
+                                                                isActive: b.isActive
+                                                            };
+                                                        })[0];
                             //dispatch({ type: types.LOAD_BRANCH });
                             //alert("now");
                             localStorage.setItem('officeId', activeBranch.branchId);
@@ -287,6 +297,7 @@ export function userInfo() {
                         }else {
                             dispatch({ type: types.SHOW_CREATE_BRANCH });
                         }
+                        dispatch({ type: types.AUTH_LOADING_END });
                     }
                 })
                 .catch(error => {

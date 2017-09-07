@@ -19,10 +19,10 @@ import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 import { activateBranch, loadBranches, showCreateBranch } from '../../actions';
 
 const cardStyle = {
-    display: 'inline-block',
+    display: 'flex',
     margin: '-25px 32px 16px 0',
-    flexGrow: 1,
-    width: 1500
+    flex: 1,
+    width: '100%'
 };
 
 const style = {
@@ -42,8 +42,8 @@ const style = {
         backgroundColor: '#E0E0E0'
     },
     div: {
-        width: 1495,
-        maxWidth: 1495
+        width: '100%'
+        //maxWidth: 1495
     }
 };
 
@@ -53,25 +53,22 @@ class BranchList extends Component {
         this.props.loadBranches();
     }
 
-    active(id) {
+    active(branch) {
         const { activateBranch, loadBranches } = this.props;
-        activateBranch(id)
-            .then(res=> {
-                loadBranches();
-            });
+        activateBranch(branch);
     }
 
     render() {
-        const {branches} = this.props;
+        const { branches, current } = this.props;
         return (
             <div style={style.div}>
             <h2>Branches</h2>
                 {branches.map(branch=>
-                    <Card key={branch._id} style={style.card} containerStyle={branch.isActive===1 ? style.activeBg : style.deactiveBg} >
+                    <Card key={branch._id} style={style.card} containerStyle={branch._id == current.branchId ? style.activeBg : style.deactiveBg} >
                         <CardHeader style={{width:400}}
                             title={
                                 <span style={{fontWeight: 'bold', color: '#3F51B5'}}>
-                                    {branch.name} 
+                                    {branch.name}  {branch._id}
                                 </span>
                             } 
                             subtitle={
@@ -88,7 +85,7 @@ class BranchList extends Component {
                         <CardActions>
                             <RaisedButton label="Edit" />
                             <RaisedButton label="Export" />
-                            {(!branch.isActive || branch.isActive===0) && <RaisedButton label="Activate" primary={true} onClick={this.active.bind(this, branch._id)} />}
+                            {branch._id != current.branchId && <RaisedButton label="Activate" primary={true} onClick={this.active.bind(this, branch)} />}
                         </CardActions>
                     </Card>
                 )}
@@ -175,7 +172,8 @@ class BranchList extends Component {
 
 function mapStateToProps(state, params) {
     return {
-        branches: state.branch.all
+        branches: state.branch.all,
+        current: state.branch.current
     }
 }
 

@@ -134,18 +134,20 @@ exports.user = function(req, res, next) {
                                             isActive: branch.isActive
                                         }; 
                                     });
-                                    const active = branches.filter(function(branch, i) {
-                                        return branch.isActive === 1;
-                                    }).map(function(branch, i) {
-                                        return {
-                                            branchId: branch.branchId,
-                                            name: branch.name,
-                                            displayName: branch.displayName,
-                                            office: branch.officeNo,
-                                            mobile: branch.mobileNo,
-                                            isActive: branch.isActive
-                                        };
-                                    });
+                                    const active = branches
+                                                        // .filter(function(branch, i) {
+                                                        //     return branch.isActive === 1;
+                                                        // })
+                                                        .map(function(branch, i) {
+                                                            return {
+                                                                branchId: branch.branchId,
+                                                                name: branch.name,
+                                                                displayName: branch.displayName,
+                                                                office: branch.officeNo,
+                                                                mobile: branch.mobileNo,
+                                                                isActive: branch.isActive
+                                                            };
+                                                        });
                                     console.log('active', active);
                                     result = Object.assign({}, result, { branch: branches, officeId: active[0].branchId });
                                     //res.send( { user: result });

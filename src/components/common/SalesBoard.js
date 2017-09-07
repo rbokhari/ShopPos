@@ -293,13 +293,14 @@ class SalesBoard extends Component {
         ];
 
         return (
-            <div>
+            <div id="dSalesboard" style={{width: '100%'}}>
                 <div style={{
-                        display: 'inline-flex',
+                        //width: '100%',
+                        display: 'flex',
                         flexFlow: 'row wrap'
                     }}>
                     <Card style={{
-                            flexGrow: 1,
+                            flex: 3,
                         }} >
                         <CardHeader title="Customer Order" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}/>
                         
@@ -326,8 +327,9 @@ class SalesBoard extends Component {
                     <Card style={{
                             //flexGrow: 1,
                             marginLeft: 10,
-                            width: 450,
-                            minWidth: 300,
+                            //width: 450,
+                            //minWidth: 300,
+                            flex: 2,
                             display: this.state.itemIndexNote > -1 ? 'none' : 'block'
                         }} >
                         <CardHeader title="Menu" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> 
@@ -348,10 +350,11 @@ class SalesBoard extends Component {
 
                     <div style={{
                             //flexGrow: 1,
+                            flex: 2,
                             display:'block',
                             marginLeft: 10,
-                            width: 400,
-                            minWidth: 300,
+                            //width: 400,
+                            //minWidth: 300,
                             display: this.state.itemIndexNote > -1 ? 'block' : 'none'
                         }}>
                             <Card style={{height: 290}}>

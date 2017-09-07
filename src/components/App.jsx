@@ -4,10 +4,14 @@ import { Link } from 'react-router';
 
 import mui from 'material-ui';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {Indigo500, Indigo700, Indigo100, pink400} from 'material-ui/styles/colors';
+import { deepPurple500 as primaryColor, 
+        Indigo700 as primaryColor2, 
+        Indigo100 as primaryColor3, 
+        teal500 as accent1Color} from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Divider from 'material-ui/Divider';
 import Drawer from 'material-ui/Drawer';
+import CircularProgress from 'material-ui/CircularProgress';
 
 import * as actions from '../actions';
 import { USER_ROLE } from '../../shared/constants';
@@ -47,12 +51,25 @@ injectTapEventPlugin();
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: Indigo500,
-    primary2Color: Indigo700,
-    primary3Color: Indigo100,
-    accent1Color: pink400,
+    primary1Color: primaryColor,
+    primary2Color: primaryColor2,
+    primary3Color: primaryColor3,
+    accent1Color: accent1Color,
   },
 });
+
+const style = {
+    container: {
+      position: 'absolute',
+      top: '50',
+      left: '50',
+      width: '30em',
+      height: '18em',
+      backgroundColor: 'red',
+      marginTop: '-9em', /*set to a negative number 1/2 of your height*/
+      marginLeft: '-15em' /*set to a negative number 1/2 of your width*/
+    }
+  };
 
 class App extends React.Component {
 
@@ -181,7 +198,12 @@ class App extends React.Component {
     // }
 
     render() {
-        const { user, branch, displayTitle } = this.props;
+        const { user, branch, displayTitle, authLoading } = this.props;
+        if (authLoading) return (
+                <div id="mydiv" className={style.container}>
+                    Loading...
+                </div>
+            );
         if (user) {
             return (
                 <MuiThemeProvider muiTheme={muiTheme}>
@@ -214,13 +236,12 @@ class App extends React.Component {
                         <BranchCreateDialog open={false} />
                         <UserPasswordChange open={false} />
                         <CustomerDetailDialog open={true} />
-                        <div style={{
-                                border: '1px thick', 
+                        <div id="first" style={{
+                                //border: '1px thick', 
                                 display: 'flex',
                                 flexFlow: 'row wrap',
-                                maxWidth: 1600,
-                                width: '100%',
-                                margin: '3px auto 3px'
+                                width: '98%',
+                                margin: '3px 1px auto 10px'   // top right bottom left
                             }}>
                             {this.props.children}
                         </div>
@@ -251,6 +272,7 @@ function mapStateToProps(state, ownProps) {
   //console.error("state", state.branch);
     const displayTitle = state.company === undefined ? '' : state.company.displayName + ' - ' + branch;
     return {
+        authLoading: state.auth.authLoading,
         user: state.auth.user,
         branch: branch,
         displayTitle,
