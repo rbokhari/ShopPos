@@ -42,7 +42,8 @@ const style = {
         backgroundColor: '#E0E0E0'
     },
     div: {
-        width: '100%'
+        width: '100%',
+        margin: '0 auto'
         //maxWidth: 1495
     }
 };
@@ -54,7 +55,7 @@ class BranchList extends Component {
     }
 
     active(branch) {
-        const { activateBranch, loadBranches } = this.props;
+        const { activateBranch } = this.props;
         activateBranch(branch);
     }
 
@@ -62,18 +63,18 @@ class BranchList extends Component {
         const { branches, current } = this.props;
         return (
             <div style={style.div}>
-            <h2>Branches</h2>
+                <h2>Branches</h2>
                 {branches.map(branch=>
                     <Card key={branch._id} style={style.card} containerStyle={branch._id == current.branchId ? style.activeBg : style.deactiveBg} >
                         <CardHeader style={{width:400}}
                             title={
                                 <span style={{fontWeight: 'bold', color: '#3F51B5'}}>
-                                    {branch.name}  {branch._id}
+                                    Display Name : {branch.displayName}
                                 </span>
                             } 
                             subtitle={
                                 <span>
-                                    <p>Display Name : {branch.displayName}</p>
+                                    <p>Name : {branch.name}</p>
                                     <p>Office :{branch.officeNo}</p>
                                     <p>GSM :{branch.mobileNo}</p>
                                     {/* <Toggle label="Activate" 
@@ -90,23 +91,23 @@ class BranchList extends Component {
                     </Card>
                 )}
                 <Card key={-1} style={style.card} containerStyle={style.deactiveBg} >
-                        <CardHeader style={{width:400}}
-                            title={
-                                <span style={{fontWeight: 'bold', color: '#3F51B5'}}>
-                                    Create New / Import 
-                                </span>
-                            } 
-                            subtitle={
-                                <span>
-                                    <p>Branch</p>
-                                </span>
-                            } />
-                        <CardActions>
-                            <RaisedButton label="New" onClick={()=> this.props.showCreateBranch()} />
-                            <RaisedButton label="Import" />
-                        </CardActions>
-                    </Card>
-                </div>
+                    <CardHeader style={{width:400}}
+                        title={
+                            <span style={{fontWeight: 'bold', color: '#3F51B5'}}>
+                                Create New / Import 
+                            </span>
+                        } 
+                        subtitle={
+                            <span>
+                                <p>Branch</p>
+                            </span>
+                        } />
+                    <CardActions>
+                        <RaisedButton label="New" onClick={()=> this.props.showCreateBranch()} />
+                        <RaisedButton label="Import" />
+                    </CardActions>
+                </Card>
+            </div>
         );
     }
 }

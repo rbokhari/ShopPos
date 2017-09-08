@@ -5,6 +5,8 @@ import * as types from './types';
 import { browserHistory } from 'react-router';
 import { USER_ROLE, PRODUCT_TYPE } from '../../shared/constants';
 
+import { showNotification, hideNotification } from './notification';
+
 import { beginAjaxCall } from './ajaxStatusActions';
 
 import authApi from '../api/AuthApi';
@@ -19,6 +21,37 @@ import purchaseOrderApi from '../api/PurchaseOrderApi';
 import usersApi from '../api/usersApi';
 import reportApi from '../api/ReportApi';
 import dayApi from '../api/dayApi';
+
+export {
+    showNotification, hideNotification
+};
+
+// export function showNotification(message) {
+//     return function(dispatch) {
+//         dispatch({
+//             type: types.NOTIFICATION_ERROR_SHOW,
+//             payload: message
+//         });
+//     };
+// }
+// export function showNotification(message) {
+//     return function( dispatch) {
+//         dispatch( { 
+//             type: types.NOTIFICATION_ERROR_SHOW,
+//             payload: message 
+//         });
+//     };
+// }
+
+
+// export function hideNotification() {
+//     return function(dispatch) {
+//         dispatch({
+//             type: types.NOTIFICATION_ERROR_HIDE
+//         });
+//     };
+// }
+
 
 export function loadPasswordChangeDialog() {
     return function( dispatch) {
@@ -84,11 +117,12 @@ export function activateBranch(branch) {
     return function(dispatch) {
         //return authApi.activateBranch(id)
         //    .then(res=> {
-                localStorage.setItem('officeId', branch._id);
-                dispatch({ 
-                    type: types.SWITCH_BRANCH,
-                    payload: branch
-                }); 
+        const currentBranch = { ...branch,  branchId: branch._id };
+        localStorage.setItem('officeId', branch._id);
+        dispatch({ 
+            type: types.SWITCH_BRANCH,
+            payload: currentBranch
+        }); 
         //    });
     };
 }
@@ -105,9 +139,10 @@ export function closeBranchDialog() {
     };
 } 
 
-export function createBranch({name, displayName, location, officeNo, mobileNo, status}) {
+//export function createBranch({name, displayName, location, officeNo, mobileNo, status}) {
+export function createBranch(newBranch) {
     return function(dispatch) {
-        return authApi.createBranch( {name, displayName, location, officeNo, mobileNo, status})
+        return authApi.createBranch(newBranch)
             .then(response => {
                 // update state to indicate user is authenticated
                 localStorage.setItem('officeId', response.data._id);
@@ -115,14 +150,14 @@ export function createBranch({name, displayName, location, officeNo, mobileNo, s
                     type: types.CREATE_BRANCH_SUCCESS,
                     payload: response.data 
                 });
-                dispatch({ 
-                    type: types.SWITCH_BRANCH,
-                    payload: response.data._id 
-                });
+                // dispatch({ 
+                //     type: types.SWITCH_BRANCH,
+                //     payload: response.data 
+                // });
                 // save the JWT token
             })
-            .catch((error) => {
-                dispatch(authError(error));
+            .catch(error => {
+                //dispatch(authError(error));
                 throw(error);
             });
     };
@@ -581,20 +616,21 @@ export function loadCustomersSuccess( customers ) {
 export function createCustomer( customer ) {  // this becomes action to send to reducer
     return function( dispatch, getState ) {
         //dispatch( beginAjaxCall() );
-        return customerApi.saveCustomer( customer ).then( customer => {
-            var isKitchen = false;
-            customer.data.products.filter((product, index) => {
-                if (product.type == PRODUCT_TYPE.KITCHEN) {
-                    isKitchen = true;
+        return customerApi.saveCustomer( customer )
+            .then(customer => {
+                var isKitchen = false;
+                customer.data.products.filter((product, index) => {
+                    if (product.type == PRODUCT_TYPE.KITCHEN) {
+                        isKitchen = true;
+                    }
+                });
+                if (!isKitchen) {
+                    dispatch(updateCustomerStatus(customer.data, 3));
                 }
+                customer._id ? dispatch( updateCustomerSuccess( customer ) ) : dispatch( createCustomerSuccess( customer ) );
+            }).catch( error => {
+                throw( error );
             });
-            if (!isKitchen) {
-                dispatch(updateCustomerStatus(customer.data, 3));
-            }
-            customer._id ? dispatch( updateCustomerSuccess( customer ) ) : dispatch( createCustomerSuccess( customer ) );
-        }).catch( error => {
-            throw( error );
-        });
     };
 }
 
@@ -953,3 +989,5 @@ export function createDay() {  // this becomes action to send to reducer
         });
     };
 }
+
+

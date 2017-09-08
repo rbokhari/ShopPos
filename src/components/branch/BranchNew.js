@@ -5,17 +5,27 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import { materialTextField, materialCheckBox } from '../controls/index';
-import { createBranch } from '../../actions';
+import { createBranch, showNotification, loadBranches } from '../../actions';
+
 
 class BranchNew extends Component {
 
-    handleFormSubmit ( {name, displayName, location, officeNo, mobileNo, status} ) {
-        this.props.createBranch({name, displayName, location, officeNo, mobileNo, status});
+    handleFormSubmit (props) {
+        const { createBranch, showNotification, loadBranches } = this.props;
+        createBranch(props)
+            .then(res=> {
+                showNotification('New branch created !');
+                loadBranches();
+            })
+            .catch(err => { 
+                showNotification(err.response.data.name);
+            });
     }
 
     handleClose() {
         //this.props.changeBranch();
-        this.props.closeBranchDialog();
+        alert('close');
+        //this.props.closeBranchDialog();
     }
 
     renderAlert() {
@@ -34,26 +44,23 @@ class BranchNew extends Component {
     
 
     render() {
-        const dialogActions = [
-            <RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleClose.bind(this)} />,
-            <RaisedButton type="submit" label="Create" primary={true} />
-        ];
-
         const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
 
+        const dialogActions = [
+            <RaisedButton type="submit" label="Create" primary={true} onClick={handleSubmit(this.handleFormSubmit.bind(this))} />,
+            <RaisedButton label="Cancel" onClick={this.handleClose.bind(this)} />
+        ];
+
         return (
-            
-            <Dialog
-                    title="Create Branch" actions={dialogActions}
+            <Dialog title="Create Branch" actions={dialogActions}
                     modal={true} open={this.props.open}
                     autoScrollBodyContent={true} >
-                    
-                    <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
+                    <form>
                         <div>
                             <Field name="name" component={materialTextField} label="Name" autoFocus />
                         </div>
                         <div>
-                            <Field name="displayName" component={materialTextField} label="Display Name" />
+                            <Field name="displayName" component={materialTextField} label="Display Name"  />
                         </div>
                         <div>
                             <Field name="location" component={materialTextField} label="Location" />
@@ -67,9 +74,9 @@ class BranchNew extends Component {
                         <div>
                             <Field name="status" component={materialCheckBox} label="Status"  />
                         </div>
-                        <div>
+                        {/* <div>
                             <RaisedButton type="submit" label="Create" primary={true} />
-                        </div>
+                        </div> */}
                     </form>
             </Dialog>
             
@@ -79,9 +86,20 @@ class BranchNew extends Component {
 
 function mapStateToProps(state) {
     return { 
-        errorMessage: state.auth.error,
+        errorMessage: state.error,
         open: state.branch.isCreateLoad 
     };
+}
+
+function validateForm(values) {
+    const errors = {};
+    if (!values.name) {
+        errors.name = 'Name is required';
+    }
+    if (!values.displayName) {
+        errors.uom = 'Display Name required';
+    }
+    return errors;
 }
 
 // export default reduxForm({
@@ -91,11 +109,12 @@ function mapStateToProps(state) {
 
 BranchNew = reduxForm({
     form: 'branch',
+    validate: validateForm
 })(BranchNew);
 
 BranchNew = connect(
     mapStateToProps, 
-    { createBranch: createBranch }
+    { createBranch, showNotification, loadBranches }
 )(BranchNew);
 
 

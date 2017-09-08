@@ -30,5 +30,9 @@ export default {
     reportExpenseData: [],
     reportPurchaseData: [],
     ajaxCallsInProgress: 0,
-    authLoading: true
+    authLoading: true,
+    notification: {
+        show: false,
+        message: ''
+    }
 };

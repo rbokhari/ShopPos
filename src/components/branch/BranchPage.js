@@ -33,16 +33,13 @@ class BranchPage extends Component {
 
     render() {
         const { branches, company } = this.props;
-
         return (
-            <div>
                 <div style={{
-                    maxwidth: 1200,
-                    width: '100%',
+                    width: '100%'
                 }}>
                     <Toolbar>
                         <ToolbarGroup>
-                            <ToolbarTitle text={company.displayName} />
+                            <ToolbarTitle text={`Company Detail - (Name : ${company.name}), (Display Name : ${company.displayName})`} />
                         </ToolbarGroup>
                         <ToolbarGroup firstChild={true}>
                             <ToolbarSeparator />
@@ -55,12 +52,7 @@ class BranchPage extends Component {
                     }}>
                     <BranchList branches={branches} />
                     </div>
-                </div>
-                {/* <FloatingActionButton style={fabStyle} secondary={true} onTouchTap={() => browserHistory.push('/branch/new')} >
-                    <ContentAdd />
-                </FloatingActionButton> */}
-                
-            </div>
+                </div>                
         );
     }
 

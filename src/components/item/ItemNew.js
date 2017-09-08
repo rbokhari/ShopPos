@@ -141,7 +141,6 @@ function mapStateToProps(state, ownProps) {
     if (itemId && state.items.length > 0 ) {
         item = getItemById(state.items, itemId);
     }
-console.info('user', item);
     return {
         user: state.auth.user,
         item: item,

@@ -20,6 +20,7 @@ import day from './dayReducer';
 import isLoadPasswordDialog from './passwordReducer';
 import dialogReducer from './dialogReducer';
 import ajaxCallsInProgress from './ajaxStatusReducer';
+import notification from './notificationReducer';
 
 const rootReducer = combineReducers({
   form,
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
   expenseMasters,
   expenses,
   users,
+  notification,
   reportCustomerData: customerData,
   reportExpenseData: expenseData,
   reportPurchaseData: purchaseData

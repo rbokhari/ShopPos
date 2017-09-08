@@ -10,11 +10,17 @@ class AuthApi {
         return Api.post('account/create', { name, displayName, location, contactNo, email, password });
     }
 
-    static createBranch( { name, displayName, location, officeNo, mobileNo, status }) {
-        const branch = {
-            name, displayName, location, officeNo, mobileNo, status
-        };
-        return Api.post('office/create', branch);
+    // static createBranch( { name, displayName, location, officeNo, mobileNo, status }) {
+    //     const branch = {
+    //         name, displayName, location, officeNo, mobileNo, status
+    //     };
+    //     return Api.post('office/create', branch);
+    // }
+    static createBranch(newBranch) {
+        // const branch = {
+        //     name, displayName, location, officeNo, mobileNo, status
+        // };
+        return Api.post('office/create', newBranch);
     }
 
     static loadBranches() {

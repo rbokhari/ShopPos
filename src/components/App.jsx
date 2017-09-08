@@ -41,6 +41,7 @@ import BranchCreateDialog from './branch/BranchNew';
 import UserPasswordChange from './user/UserPasswordChange';
 import CustomerDetailDialog from './common/CustomerDetailDialog';
 import LoadingDots from './common/LoadingDots';
+import Notification from './common/Notification';
 
 //var ThemeManager = new mui.styles.getMuiTheme();
 //var Colors = mui.Styles.Colors
@@ -198,7 +199,7 @@ class App extends React.Component {
     // }
 
     render() {
-        const { user, branch, displayTitle, authLoading } = this.props;
+        const { user, branch, displayTitle, authLoading, notification, hideNotification } = this.props;
         if (authLoading) return (
                 <div id="mydiv" className={style.container}>
                     Loading...
@@ -236,12 +237,12 @@ class App extends React.Component {
                         <BranchCreateDialog open={false} />
                         <UserPasswordChange open={false} />
                         <CustomerDetailDialog open={true} />
+                        <Notification notification={notification} onHideHandle={hideNotification} />
                         <div id="first" style={{
-                                //border: '1px thick', 
                                 display: 'flex',
                                 flexFlow: 'row wrap',
                                 width: '98%',
-                                margin: '3px 1px auto 10px'   // top right bottom left
+                                margin: '10px 1px auto 10px'   // top right bottom left
                             }}>
                             {this.props.children}
                         </div>
@@ -277,6 +278,7 @@ function mapStateToProps(state, ownProps) {
         branch: branch,
         displayTitle,
         authenticated: state.auth.authenticated,
+        notification: state.notification,
         loading: state.ajaxCallsInProgress > 0
     };
 }

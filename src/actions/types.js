@@ -85,3 +85,5 @@ export const CREATE_DAY_SUCCESS                         = 'CREATE_DAY_SUCCESS';
 export const DIALOG_CUSTOMER_DETAIL_OPEN                = 'DIALOG_CUSTOMER_DETAIL_OPEN';
 export const DIALOG_CUSTOMER_DETAIL_CLOSE               = 'DIALOG_CUSTOMER_DETAIL_CLOSE';
 
+export const NOTIFICATION_ERROR_SHOW                    = 'NOTIFICATION_ERROR_SHOW';
+export const NOTIFICATION_ERROR_HIDE                    = 'NOTIFICATION_ERROR_HIDE';

@@ -13,7 +13,9 @@ exports.createOffice = function(req, res, next) {
     Office.findOne( { name: name }, function(err, existing) {
         if (err) { return next(err); }
         if (existing) {
-            return res.status(422).send({ error: 'Code is in use !'});
+            return res
+                .status(422)
+                .send( { name: 'Name already exists !'} );
         }
         const office = new Office({
             name: name,
