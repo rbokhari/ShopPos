@@ -5,27 +5,27 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import { materialTextField, materialCheckBox } from '../controls/index';
-import { createBranch, showNotification, loadBranches } from '../../actions';
+import { createBranch, loadBranches, closeBranchDialog, successNotification, errorNotification } from '../../actions';
 
 
 class BranchNew extends Component {
 
     handleFormSubmit (props) {
-        const { createBranch, showNotification, loadBranches } = this.props;
+        const { createBranch, successNotification, errorNotification, loadBranches } = this.props;
         createBranch(props)
             .then(res=> {
-                showNotification('New branch created !');
+                successNotification('New branch created !');
                 loadBranches();
             })
             .catch(err => { 
-                showNotification(err.response.data.name);
+                errorNotification(err.response.data.name);
             });
     }
 
     handleClose() {
         //this.props.changeBranch();
-        alert('close');
-        //this.props.closeBranchDialog();
+        //alert('close');
+        this.props.closeBranchDialog();
     }
 
     renderAlert() {
@@ -48,7 +48,7 @@ class BranchNew extends Component {
 
         const dialogActions = [
             <RaisedButton type="submit" label="Create" primary={true} onClick={handleSubmit(this.handleFormSubmit.bind(this))} />,
-            <RaisedButton label="Cancel" onClick={this.handleClose.bind(this)} />
+            <RaisedButton label="Cancel" secondary={true} onClick={this.handleClose.bind(this)} />
         ];
 
         return (
@@ -57,7 +57,7 @@ class BranchNew extends Component {
                     autoScrollBodyContent={true} >
                     <form>
                         <div>
-                            <Field name="name" component={materialTextField} label="Name" autoFocus />
+                            <Field name="name" component={materialTextField} label="Name" />
                         </div>
                         <div>
                             <Field name="displayName" component={materialTextField} label="Display Name"  />
@@ -97,7 +97,7 @@ function validateForm(values) {
         errors.name = 'Name is required';
     }
     if (!values.displayName) {
-        errors.uom = 'Display Name required';
+        errors.displayName = 'Display Name required';
     }
     return errors;
 }
@@ -114,7 +114,7 @@ BranchNew = reduxForm({
 
 BranchNew = connect(
     mapStateToProps, 
-    { createBranch, showNotification, loadBranches }
+    { createBranch, loadBranches, closeBranchDialog, successNotification, errorNotification }
 )(BranchNew);
 
 

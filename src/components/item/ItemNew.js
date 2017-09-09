@@ -87,7 +87,7 @@ class ItemNew extends Component {
                     </CardText>
                     <CardActions>
                         <RaisedButton type='submit' icon={<ContentSave />} label={this.props.item._id.value === 0 ? 'Save' : 'Update'} primary={true} ></RaisedButton>
-                        <RaisedButton icon={<ContentClear />} label="Cancel" containerElement={<Link to="/item" />} />
+                        <RaisedButton icon={<ContentClear />} label="Cancel" secondary={true} containerElement={<Link to="/item" />} />
                     </CardActions>
                 </Card>
             </form>

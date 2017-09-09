@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
+import { connect } from 'react-redux';
 
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
-import { connect } from 'react-redux';
-import * as actions from '../../actions';
+import { loadBranches } from '../../actions';
 import BranchList from './BranchList';
 
 const cardHeight = 400;
@@ -32,14 +32,14 @@ class BranchPage extends Component {
     }
 
     render() {
-        const { branches, company } = this.props;
+        const { branches, company, muiTheme } = this.props;
         return (
                 <div style={{
                     width: '100%'
                 }}>
                     <Toolbar>
                         <ToolbarGroup>
-                            <ToolbarTitle text={`Company Detail - (Name : ${company.name}), (Display Name : ${company.displayName})`} />
+                            <ToolbarTitle text={`Company Detail - (Name : ${company.name}), (Display Name : ${company.displayName} )`} />
                         </ToolbarGroup>
                         <ToolbarGroup firstChild={true}>
                             <ToolbarSeparator />
@@ -50,7 +50,7 @@ class BranchPage extends Component {
                         display: 'flex',
                         flexFlow: 'row wrap'                 
                     }}>
-                    <BranchList branches={branches} />
+                        <BranchList branches={branches} />
                     </div>
                 </div>                
         );
@@ -70,4 +70,4 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-export default connect(mapStateToProps, actions)(BranchPage);
+export default connect(mapStateToProps, { loadBranches})(BranchPage);

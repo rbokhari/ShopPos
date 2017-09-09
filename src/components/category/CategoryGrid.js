@@ -2,10 +2,11 @@ import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
 const styles = {
-    backgroundColor: '#4B77BE',
+    //backgroundColor: '#4B77BE',
     margin: 10,
     //width: 120,
-    height: 50
+    height: 50,
+    color: '#BDBDBD'
 };
 
 const CategoryGrid = ( { categories, onCategorySelect, loading, errors } ) => {

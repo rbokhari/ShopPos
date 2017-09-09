@@ -78,7 +78,7 @@ class SupplierNew extends Component {
                 </CardText>
                 <CardActions>
                     <RaisedButton type='submit' icon={<ContentSave />} label={ this.props.supplier._id == '0' ? 'Save' : 'Update' } primary={true} />
-                    <RaisedButton icon={<ContentClear />} label="Cancel" containerElement={<Link to="/supplier" />}/>
+                    <RaisedButton icon={<ContentClear />} label="Cancel" secondary={true} containerElement={<Link to="/supplier" />}/>
                 </CardActions>
             </Card>
         </form>

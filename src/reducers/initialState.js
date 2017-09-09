@@ -32,6 +32,7 @@ export default {
     ajaxCallsInProgress: 0,
     authLoading: true,
     notification: {
+        type: 'message',
         show: false,
         message: ''
     }

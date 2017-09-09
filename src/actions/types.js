@@ -86,4 +86,5 @@ export const DIALOG_CUSTOMER_DETAIL_OPEN                = 'DIALOG_CUSTOMER_DETAI
 export const DIALOG_CUSTOMER_DETAIL_CLOSE               = 'DIALOG_CUSTOMER_DETAIL_CLOSE';
 
 export const NOTIFICATION_ERROR_SHOW                    = 'NOTIFICATION_ERROR_SHOW';
-export const NOTIFICATION_ERROR_HIDE                    = 'NOTIFICATION_ERROR_HIDE';
+export const NOTIFICATION_SUCCESS_SHOW                  = 'NOTIFICATION_SUCCESS_SHOW';
+export const NOTIFICATION_HIDE                          = 'NOTIFICATION_HIDE';

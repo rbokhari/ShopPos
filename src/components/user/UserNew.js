@@ -94,7 +94,7 @@ class UserNew extends Component {
                     </CardText>
                     <CardActions>
                         <RaisedButton label={loading ? 'Saving...' : this.props.user.id == '0' ? 'Save' : 'Update' } primary={true} type="submit" />
-                        <RaisedButton label="Cancel" containerElement={<Link to="/users" />} />
+                        <RaisedButton label="Cancel" secondary={true} containerElement={<Link to="/users" />} />
                     </CardActions>
                 </Card>
             </form>
@@ -130,12 +130,9 @@ function mapStateToProps(state, ownProps) {
     let user = {
         id: '0', email: '', password: '', roleId: 0, status: 1
     };
-
     if (userId && state.users.length > 0 ) {
         user = getUserById(state.users, userId);
     }
-
-    console.error("user", state.users, user);
 
     return {
         user: user,

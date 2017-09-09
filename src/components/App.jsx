@@ -2,13 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
 
-import mui from 'material-ui';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { deepPurple500 as primaryColor, 
-        Indigo700 as primaryColor2, 
-        Indigo100 as primaryColor3, 
-        teal500 as accent1Color} from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
+
 import Divider from 'material-ui/Divider';
 import Drawer from 'material-ui/Drawer';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -35,13 +33,15 @@ import ActionAssignmentDone from 'material-ui/svg-icons/action/assignment-turned
 import ActionAssignmentReturned from 'material-ui/svg-icons/action/assignment-returned';
 import ActionCardTravel from 'material-ui/svg-icons/action/card-travel';
 
-import MenuList from './common/Menu.jsx';
+import { muiTheme } from './theme';
+
+//import MenuList from './common/Menu.jsx';
 //import BranchListDialog from './branch/BranchListDialog';
 import BranchCreateDialog from './branch/BranchNew';
 import UserPasswordChange from './user/UserPasswordChange';
 import CustomerDetailDialog from './common/CustomerDetailDialog';
 import LoadingDots from './common/LoadingDots';
-import Notification from './common/Notification';
+import NotificationBar from './common/NotificationBar';
 
 //var ThemeManager = new mui.styles.getMuiTheme();
 //var Colors = mui.Styles.Colors
@@ -50,14 +50,14 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 injectTapEventPlugin();
 
-const muiTheme = getMuiTheme({
-  palette: {
-    primary1Color: primaryColor,
-    primary2Color: primaryColor2,
-    primary3Color: primaryColor3,
-    accent1Color: accent1Color,
-  },
-});
+// const muiTheme = getMuiTheme({
+//   palette: {
+//     primary1Color: primaryColor,
+//     primary2Color: primaryColor2,
+//     primary3Color: primaryColor3,
+//     accent1Color: accent1Color,
+//   },
+// });
 
 const style = {
     container: {
@@ -208,7 +208,7 @@ class App extends React.Component {
         if (user) {
             return (
                 <MuiThemeProvider muiTheme={muiTheme}>
-                    <div>
+                    <div style={{width: '100%', position: 'relative'}}>
                         <AppBar title={displayTitle}
                             showMenuIconButton={true}
                             onLeftIconButtonTouchTap={this._handleClick}
@@ -237,14 +237,19 @@ class App extends React.Component {
                         <BranchCreateDialog open={false} />
                         <UserPasswordChange open={false} />
                         <CustomerDetailDialog open={true} />
-                        <Notification notification={notification} onHideHandle={hideNotification} />
+                        <NotificationBar notification={notification} onHideHandle={hideNotification} />
                         <div id="first" style={{
                                 display: 'flex',
                                 flexFlow: 'row wrap',
                                 width: '98%',
-                                margin: '10px 1px auto 10px'   // top right bottom left
+                                //left: '50%',
+                                //margin: '10px 1px auto 10px',   // top right bottom left,
+                                margin: '0 auto',
+                                position: 'relative'
                             }}>
-                            {this.props.children}
+                            <div style={{margin: '0 auto'}}>
+                                {this.props.children}
+                            </div>
                         </div>
                     </div>
                 </MuiThemeProvider>
@@ -270,7 +275,6 @@ class App extends React.Component {
 
 function mapStateToProps(state, ownProps) {
     const branch = state.branch == undefined ? '' : state.branch.current.displayName; 
-  //console.error("state", state.branch);
     const displayTitle = state.company === undefined ? '' : state.company.displayName + ' - ' + branch;
     return {
         authLoading: state.auth.authLoading,

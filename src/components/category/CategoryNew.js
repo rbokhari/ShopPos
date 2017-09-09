@@ -55,7 +55,7 @@ class CategoryNew extends Component {
         
         const renderAddons = ({fields}) => (
             <div>
-                <RaisedButton type="button" onClick={()=> fields.push()} label='Add Addons' />
+                <RaisedButton type="button" secondary={true} onClick={()=> fields.push()} label='Add Addons' />
                 <ol>
                     {fields.map((addon, index) => (
                         <li key={index}>
@@ -92,7 +92,7 @@ class CategoryNew extends Component {
                 </CardText>
                 <CardActions>
                     <RaisedButton type='submit' icon={<ContentSave />} label={ this.props.category._id == '0' ? 'Save' : 'Update'} primary={true} />
-                    <RaisedButton icon={<ContentClear />} label="Cancel" containerElement={<Link to="/category" />}/>
+                    <RaisedButton icon={<ContentClear />} label="Cancel" secondary={true} containerElement={<Link to="/category" />}/>
                 </CardActions>
             </Card>
         </form>

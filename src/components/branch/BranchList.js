@@ -1,20 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import Toggle from 'material-ui/Toggle';
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
-import {GridList, GridTile} from 'material-ui/GridList';
+import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import IconButton from 'material-ui/IconButton';
-import Subheader from 'material-ui/Subheader';
-import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import ActionFavorite from 'material-ui/svg-icons/action/favorite';
-import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
+
+import { Icons, Colors } from '../theme';
 
 import { activateBranch, loadBranches, showCreateBranch } from '../../actions';
 
@@ -36,10 +27,10 @@ const style = {
         //backgroundColor: '#A5D6A7'
     },
     activeBg: {
-        backgroundColor: '#4FC3F7'
+        backgroundColor: Colors.enabledColor
     },
     deactiveBg: {
-        backgroundColor: '#E0E0E0'
+        backgroundColor: Colors.disabledColor
     },
     div: {
         width: '100%',
@@ -65,7 +56,7 @@ class BranchList extends Component {
             <div style={style.div}>
                 <h2>Branches</h2>
                 {branches.map(branch=>
-                    <Card key={branch._id} style={style.card} containerStyle={branch._id == current.branchId ? style.activeBg : style.deactiveBg} >
+                    <Card key={branch._id} style={style.card} containerStyle={branch._id === current.branchId ? style.activeBg : style.deactiveBg } >
                         <CardHeader style={{width:400}}
                             title={
                                 <span style={{fontWeight: 'bold', color: '#3F51B5'}}>
@@ -75,18 +66,19 @@ class BranchList extends Component {
                             subtitle={
                                 <span>
                                     <p>Name : {branch.name}</p>
+                                    <p>Location : {branch.location}</p>
                                     <p>Office :{branch.officeNo}</p>
                                     <p>GSM :{branch.mobileNo}</p>
-                                    {/* <Toggle label="Activate" 
-                                        defaultToggled={branch.isActive===1 ? true : false } 
-                                        disabled={branch.isActive===1 ? true : false}
-                                        onToggle={(e, input) => console.info(e, input)} /> */}
                                 </span>
                             } />
                         <CardActions>
-                            <RaisedButton label="Edit" />
-                            <RaisedButton label="Export" />
-                            {branch._id != current.branchId && <RaisedButton label="Activate" primary={true} onClick={this.active.bind(this, branch)} />}
+                            {branch._id != current.branchId && 
+                                <IconButton tooltip='Activate Branch' onClick={this.active.bind(this, branch)}>
+                                    <Icons.Done color={Colors.primaryColor} />
+                                </IconButton>}
+                            <IconButton tooltip='Edit Branch'><Icons.Edit color={Colors.accentColor1} /></IconButton>
+                            <IconButton tooltip='Export Branch'><Icons.Redo /></IconButton>
+                            <IconButton tooltip='Delete Branch'><Icons.Delete color='red' /></IconButton>
                         </CardActions>
                     </Card>
                 )}
@@ -103,8 +95,8 @@ class BranchList extends Component {
                             </span>
                         } />
                     <CardActions>
-                        <RaisedButton label="New" onClick={()=> this.props.showCreateBranch()} />
-                        <RaisedButton label="Import" />
+                        <IconButton onClick={()=> this.props.showCreateBranch()} tooltip='Add Branch'><Icons.Add /></IconButton>
+                        <IconButton tooltip='Import Branch'><Icons.Undo /></IconButton>
                     </CardActions>
                 </Card>
             </div>

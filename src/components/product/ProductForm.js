@@ -91,7 +91,7 @@ const ProductForm = ( {product, stock, categories, items, onSave, onChange, onSe
                 </CardText>
                 <CardActions>
                     <RaisedButton icon={<ContentSave />} label={loading ? 'Saving...' : 'Save'} primary={true} onTouchTap={onSave}></RaisedButton>
-                    <RaisedButton icon={<ContentClear />} label="Cancel" linkButton containerElement={<Link to="/product" />} />
+                    <RaisedButton icon={<ContentClear />} label="Cancel" secondary={true} linkButton containerElement={<Link to="/product" />} />
                 </CardActions>
             </Card>
         </form>

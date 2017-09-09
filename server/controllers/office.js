@@ -31,7 +31,16 @@ exports.createOffice = function(req, res, next) {
             if (err) { return next(err); }
 
             // respond to request indicating the Office was created
-            res.json(office);
+            res.json({
+                branchId: office._id,
+                name: name,
+                displayName: displayName,
+                location: location,
+                officeNo: officeNo,
+                mobileNo: mobileNo,
+                companyId: companyId,
+                status: status                    
+            });
         });
     });
 };

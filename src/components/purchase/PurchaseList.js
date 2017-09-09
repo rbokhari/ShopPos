@@ -8,6 +8,8 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 import ImageEdit from 'material-ui/svg-icons/image/edit';
 import {blueA700, red500, greenA700} from 'material-ui/styles/colors';
 
+import BusyIndicator from '../common/BusyIndicator';
+
 const cardStyle = {
   display: 'inline-block',
   margin: '-25px 32px 16px 0',
@@ -26,6 +28,7 @@ const PurchaseList = ({purchases, suppliers}) => {
     return (
         <Card style={cardStyle} >
             <CardHeader title="Purchase Order " subtitle="Listing" />
+            <CardText>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -38,6 +41,7 @@ const PurchaseList = ({purchases, suppliers}) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
+                        {purchases.length == 0 && <TableRow key={0} ><TableRowColumn colSpan='6'><BusyIndicator /></TableRowColumn></TableRow>}
                         {purchases.map(purchase => 
                             <TableRow key={purchase._id} >
                                 <TableRowColumn>{purchase.billNo}</TableRowColumn>
@@ -55,7 +59,8 @@ const PurchaseList = ({purchases, suppliers}) => {
                             </TableRow>
                         )}
                     </TableBody>
-                </Table>                
+                </Table> 
+                </CardText>               
         </Card>
     );
 }

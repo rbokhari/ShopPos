@@ -5,7 +5,7 @@ import * as types from './types';
 import { browserHistory } from 'react-router';
 import { USER_ROLE, PRODUCT_TYPE } from '../../shared/constants';
 
-import { showNotification, hideNotification } from './notification';
+import { hideNotification, successNotification, errorNotification } from './notification';
 
 import { beginAjaxCall } from './ajaxStatusActions';
 
@@ -23,7 +23,7 @@ import reportApi from '../api/ReportApi';
 import dayApi from '../api/dayApi';
 
 export {
-    showNotification, hideNotification
+    hideNotification, successNotification, errorNotification
 };
 
 // export function showNotification(message) {

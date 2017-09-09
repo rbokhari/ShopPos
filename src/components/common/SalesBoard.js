@@ -28,7 +28,7 @@ class SalesBoard extends Component {
             // categories: this.props.categories,
             // products: this.props.products,
             filterProducts: [],
-            snakbarStatus: false,
+            //snakbarStatus: false,
             openNote: false,
             openQuantity: false,
             itemIndexNote: -1,
@@ -269,12 +269,14 @@ class SalesBoard extends Component {
         var customer = this.state.customer;
         this.props.createCustomer( customer )
             .then(res => {
-                this.setState({
-                    snakbarStatus: true
-                });
+                this.props.successNotification('New Customer added !');
+                // this.setState({
+                //     snakbarStatus: true
+                // });
                 this.clearCustomer();
             }, err => {
                 console.error(err);
+                this.props.errorNotification('Something went wrong !');
             });
     }
 
@@ -376,10 +378,10 @@ class SalesBoard extends Component {
 
                     </div>
                     
-                    <Snackbar open={this.state.snakbarStatus}
+                    {/* <Snackbar open={this.state.snakbarStatus}
                         message="New Customer Added !"
                         autoHideDuration={2000}
-                        onRequestClose={()=> this.setState({snakbarStatus: false})} />
+                        onRequestClose={()=> this.setState({snakbarStatus: false})} /> */}
                 </div>
                 <CustomerForm customer={this.state.customer} 
                     onChange={this.handleCustomerFormChange} 
@@ -410,6 +412,7 @@ function mapDispatchToProps(dispatch) {
         createCustomer: bindActionCreators(actions.createCustomer, dispatch),
         loadCategories: bindActionCreators(actions.loadCategories, dispatch),
         loadProducts: bindActionCreators(actions.loadProducts, dispatch),
+        successNotification: bindActionCreators(actions.successNotification, dispatch),
     };
 }
 
