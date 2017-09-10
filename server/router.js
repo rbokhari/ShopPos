@@ -70,7 +70,7 @@ module.exports = function(app, io) {
                 Customer.printReceipt, 
                 (req, res, next) => { io.sockets.emit('customer', '1'); });
     app.get('/customer/:status', Customer.getAllByStatus); //, (req, res) => { console.log("socket emit here"); io.sockets.emit('customer', '1'); } );
-    app.get('/customer/:id', Customer.getById);
+    app.get('/customer/:dayId/day', Customer.getCustomersByDayId);
 
     // Purchase Routes
     app.post('/purchase/create', Purchase.createPurchase);
@@ -105,6 +105,7 @@ module.exports = function(app, io) {
     // Days Routes
     app.post('/day/create', Day.createDay);
     app.put('/day/close', Day.closeDay, Day.printCloseDay);
+    app.get('/day/:id/print', Day.printThisDay);
     app.get('/day/', Day.getAll);
     //app.get('/day/:id', Day.getById);
     app.get('/day/open', Day.getOpenDay);

@@ -15,6 +15,7 @@ import { ExpensePage, ExpenseNew } from './components/expense';
 import { KitchenBoard, DispatchBoard } from './components/common';
 import { ReportPage } from './components/report';
 import { SignIn, Signout, CreateAccount, RequireAuth } from './components/auth';
+import { DayPage } from './components/day';
 
 const routes = <Route path="/" component={App}>
                 <IndexRoute component={RequireAuth(Dashboard)} />
@@ -43,6 +44,8 @@ const routes = <Route path="/" component={App}>
                 <Route path="supplier/new" component={SupplierNew} />
                 <Route path="supplier/:id/edit" component={SupplierNew} />
                 
+                <Route path="day" component={DayPage} />
+
                 <Route path="product" component={ProductPage} />
                 <Route path="product/new" component={ProductNew} />
                 <Route path="product/:id/edit" component={ProductNew} />

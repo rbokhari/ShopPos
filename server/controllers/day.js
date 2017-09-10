@@ -240,6 +240,13 @@ exports.printCloseDay = function(req, res, next) {
     next();
 };
 
+exports.printThisDay = function(req, res, next) {
+    const dayId = req.params.id;
+    var wstream = fs.createWriteStream('pdf/' + dayId + '.cld');    // take this extension in service to get proper report print
+    wstream.end();
+    res.send(200);
+};
+
 exports.getAll = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
@@ -247,13 +254,14 @@ exports.getAll = function(req, res, next) {
         $and: [ 
             { companyId: companyId }, 
             { officeId: officeId }
-        ]}, function(err, days){
-            
+        ]}, {}, { sort: {_id: -1} }, function(err, days) {
+
         if (err) { return next(err); }
-        res.setHeader('Content-Type', 'application/json');
+        //res.setHeader('Content-Type', 'application/json');
         res.json(days);
     });
 };
+
 
 exports.getById = function(req, res, next) {
     const companyId = req.headers.companyid;
@@ -275,7 +283,6 @@ exports.getById = function(req, res, next) {
 exports.getOpenDay = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-    console.log("getOpenDay");
     if (companyId != '0' && officeId != '0') {
         Day.findOne({ 
                 $and: [ 

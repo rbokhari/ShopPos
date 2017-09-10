@@ -234,12 +234,13 @@ class SalesBoard extends Component {
         });
     }
 
-    handleProductSelect(id, productName, categoryId, categoryName, qty, price, type, items) {
+    handleProductSelect(id, productName, productNameAr, categoryId, categoryName, qty, price, type, items) {
         //const itemsCount = this.state.customerItems.length;
         const product = {
             //id: itemsCount + 1,
             productId: id,
             productName: productName,
+            productNameAr: productNameAr,
             categoryId: categoryId,
             categoryName: categoryName,
             qty: qty,
@@ -266,17 +267,19 @@ class SalesBoard extends Component {
     }
 
     handleCustomerFormSubmit() {
-        var customer = this.state.customer;
-        this.props.createCustomer( customer )
+        const { createCustomer, successNotification, errorNotification } = this.props;
+        const customer = this.state.customer;
+        console.info('customer new', customer);
+        createCustomer( customer )
             .then(res => {
-                this.props.successNotification('New Customer added !');
+                successNotification('New Customer added !');
                 // this.setState({
                 //     snakbarStatus: true
                 // });
                 this.clearCustomer();
             }, err => {
                 console.error(err);
-                this.props.errorNotification('Something went wrong !');
+                errorNotification('Something went wrong !');
             });
     }
 

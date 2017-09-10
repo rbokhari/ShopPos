@@ -37,8 +37,7 @@ const style = {
         verticalAlign:'top'
     },
     div: {
-        width: 1495,
-        maxWidth: 1495
+        width: '1800px'
     }
 };
 
@@ -67,7 +66,7 @@ class Customers extends React.Component {
             return (
                 <ListItem key={index} leftCheckbox={<Checkbox />} initiallyOpen={true}
                     rightIcon={<Badge badgeContent={product.qty} primary={true} />}
-                primaryText={<span>{product.productName} <span style={{color: lightBlack}} >[{product.categoryName}]</span></span>} 
+                    primaryText={<span>{product.productName}111 <span style={{color: yellow50}} >[{product.categoryName}]</span></span>} 
                     nestedItems={product.addons.length > 0 && [
                         product.addons.map((addon, i) => {
                             return <ListItem key={i+index} style={{margin:-1}} secondaryText={addon.name} leftIcon={<ContentAddCircle />} />
@@ -83,8 +82,8 @@ class Customers extends React.Component {
                     <Card key={customer._id} style={style.card}>
                         <CardHeader style={{width:400}}
                             title={
-                                <span style={{fontWeight: 'bold', color: '#3F51B5'}}>
-                                    Bill : {customer.billNo} @ {Moment(customer.created).format('dddd h:mm')}&nbsp; 
+                                <span style={{fontWeight: 'bold', color: yellow50}}>
+                                    Bill : {customer.billNo} @ {Moment(customer.created).format('dddd h:mm')}&nbsp;
                                     {customer.option==='1' ? 
                                         <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>Take Away </span> : 
                                         <span style={{backgroundColor:blue500, padding:2, color:yellow50}}>Dine In </span>
@@ -101,7 +100,7 @@ class Customers extends React.Component {
                         </List>
                         <CardActions>
                             { customer.status === CUSTOMER_STATUS.ISSUED && 
-                                <RaisedButton label="Start" icon={<ActionDone />} onTouchTap={this.handleUpdate.bind(this, customer, CUSTOMER_STATUS.START)} />}
+                                <RaisedButton label="Start" icon={<ActionDone />} primary={true} onTouchTap={this.handleUpdate.bind(this, customer, CUSTOMER_STATUS.START)} />}
                             { customer.status === CUSTOMER_STATUS.START && 
                                 <RaisedButton label="Finish" icon={<ActionDoneAll />} primary={true} onTouchTap={this.handleUpdate.bind(this, customer, CUSTOMER_STATUS.FINISH)} />}
                             { customer.status === CUSTOMER_STATUS.FINISH && 

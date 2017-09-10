@@ -12,7 +12,7 @@ import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 
-import { createCategory } from '../../actions';
+import { createCategory, successNotification, errorNotification } from '../../actions';
 import { materialTextField, materialCheckBox } from '../controls/index';
 
 const styles = {
@@ -35,18 +35,15 @@ class CategoryNew extends Component {
         };
     }
 
-    componentWillReceiveProps( nextProps ) {
-        // if ( this.props.category.id != nextProps.category.id ) {
-        //     this.setState( { category: Object.assign( {}. nextProps.category ) } );
-        // }
-    }
-
     saveCategory(props) {
-        this.props.createCategory(props)
+        const { createCategory, successNotification, errorNotification } = this.props;
+        createCategory(props)
             .then(() => {
+                successNotification('Category added successfully !');
                 this.context.router.push('/category');
             }, (error) => {
                 console.info(error);
+                errorNotification('Something went wrong !');
             });
     }
 
@@ -119,11 +116,9 @@ function getCategoryById( categories, id ) {
 
 function validateForm(values) {
     const errors = {};
-
     if (!values.name) {
         errors.name = 'Name required';
     }
-
     return errors;
 }
 
@@ -151,7 +146,7 @@ CategoryNew = reduxForm({
 
 CategoryNew = connect(
     mapStateToProps, 
-    {createCategory: createCategory}
+    {createCategory, successNotification, errorNotification}
 )(CategoryNew);
 
 export default CategoryNew;

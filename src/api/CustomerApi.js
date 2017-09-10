@@ -16,6 +16,10 @@ class CustomerApi {
   static updateCustomerStatus( customer, newStatus ) {
     return Api.put(`customer/${customer._id}/${newStatus}`, customer);
   }
+
+  static getAllCustomersByDayId(dayId) {
+    return Api.get(`customer/${dayId}/day`);
+  }
   
 }
 

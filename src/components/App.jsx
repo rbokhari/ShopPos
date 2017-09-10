@@ -33,7 +33,7 @@ import ActionAssignmentDone from 'material-ui/svg-icons/action/assignment-turned
 import ActionAssignmentReturned from 'material-ui/svg-icons/action/assignment-returned';
 import ActionCardTravel from 'material-ui/svg-icons/action/card-travel';
 
-import { muiTheme } from './theme';
+import { muiTheme, Icons } from './theme';
 
 //import MenuList from './common/Menu.jsx';
 //import BranchListDialog from './branch/BranchListDialog';
@@ -131,6 +131,9 @@ class App extends React.Component {
                          containerElement={<Link to="/kitchen" />} onTouchTap={this._handleClose}  />
                     <MenuItem checked={true} primaryText="Dispatch Board" leftIcon={<ActionAssignmentDone />} 
                          containerElement={<Link to="/dispatch" />} onTouchTap={this._handleClose}  />
+                    <Divider />
+                    <MenuItem checked={true} primaryText="Days" leftIcon={<Icons.ActionToday />} 
+                         containerElement={<Link to="/day" />} onTouchTap={this._handleClose}  />
                     <Divider />
                     { this.props.user && (this.props.user.roleId === USER_ROLE.BRANCH_MANAGER || this.props.user.roleId === USER_ROLE.ADMIN) && 
                         <MenuItem checked={true} primaryText="Suppliers" leftIcon={<ActionShoppingBasket />} 

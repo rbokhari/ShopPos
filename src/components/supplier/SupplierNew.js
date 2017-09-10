@@ -11,7 +11,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
-import { createSupplier } from '../../actions';
+import { createSupplier, successNotification, errorNotification } from '../../actions';
 
 import { materialTextField, materialCheckBox } from '../controls/index';
 
@@ -25,30 +25,23 @@ const styles = {
 };
 
 class SupplierNew extends Component {
-
     constructor( props, context ) {
         super( props, context );
-
         this.state = {
             supplier: Object.assign( {}, this.props.supplier ),
             errors: {}
         };
     }
 
-    componentWillReceiveProps( nextProps ) {
-        // if ( this.props.category.id != nextProps.category.id ) {
-        //     this.setState( { category: Object.assign( {}. nextProps.category ) } );
-        // }
-    }
-
     saveSupplier(props) {
-        //console.log(props);
-
-        this.props.createSupplier(props)
+        const { createSupplier, successNotification, errorNotification } = this.props;
+        createSupplier(props)
             .then(() => {
+                successNotification('Supplier added successfully !');
                 this.context.router.push('/supplier');
             }, (error) => {
                 console.info(error);
+                errorNotification('Something went wrong !');
             });
     }
 
@@ -57,7 +50,7 @@ class SupplierNew extends Component {
 
         return (
             <form onSubmit={handleSubmit(this.saveSupplier.bind(this))}>
-            <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0',}} >
+            <Card style={{ flexGrow: 1, margin: '16px 32px 16px 0'}} >
                 <CardHeader title="Supplier" subtitle={ this.props.supplier._id == '0' ? 'Add New' : 'Modify'}  />
                 <CardText>
                     <div>
@@ -130,18 +123,22 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-// export default reduxForm({
-//     form: 'supplier',
-// }, mapStateToProps, { createSupplier: createSupplier } )(SupplierNew);
+function validateForm(values) {
+    const errors = {};
+    if (!values.name) {
+        errors.name = 'Name is required';
+    }
+    return errors;
+}
 
 SupplierNew = reduxForm({
     form: 'supplier',
+    validate: validateForm
 })(SupplierNew);
 
 SupplierNew = connect(
     mapStateToProps, 
-    {createSupplier: createSupplier}
+    {createSupplier, successNotification, errorNotification}
 )(SupplierNew);
-
 
 export default SupplierNew;

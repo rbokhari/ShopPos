@@ -233,6 +233,30 @@ exports.getAllByStatus = function(req, res, next) {
     }
 };
 
+exports.getCustomersByDayId = function(req, res, next) {
+    const dayId = req.params.dayId;   // e.g. 0 = issue, 1 = Kitchen finished, 2 = devliered
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+
+    if (companyId != '0' && officeId != '0') {
+        Customer.find({ 
+            $and: [
+                {companyId: companyId},
+                {officeId: officeId },
+                { dayId: dayId }
+            ] }, {}, { sort : {created: 1} }, function(err, customers){
+            
+
+            if (err) { return next(err); }
+            next();
+            res.setHeader('Content-Type', 'application/json');
+            res.json(customers);
+        });
+    } else {
+        res.json({});
+    }
+};
+
 exports.getById = function(req, res, next) {
     console.log("unnessary load , check this");
     // Customer.find({ _id: req.params.id }, function(err, customer){

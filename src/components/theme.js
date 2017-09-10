@@ -19,6 +19,9 @@ import Done from 'material-ui/svg-icons/action/done-all';
 import Delete from 'material-ui/svg-icons/action/delete-forever';
 import FavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 import ActionFavorite from 'material-ui/svg-icons/action/favorite';
+import ActionToday from 'material-ui/svg-icons/action/today';
+import ActionPrint from 'material-ui/svg-icons/action/print';
+import PersonPin from 'material-ui/svg-icons/maps/person-pin';
         
 
 const muiTheme = getMuiTheme({
@@ -58,7 +61,10 @@ const Icons = {
     Done,
     Delete,
     FavoriteBorder,
-    ActionFavorite
+    ActionFavorite,
+    ActionToday,
+    ActionPrint,
+    PersonPin
 };
 
 const Colors = {

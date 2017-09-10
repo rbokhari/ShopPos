@@ -21,7 +21,6 @@ exports.signin = function(req, res, next) {
     //     companyId: req.user.companyId,
     //     status: req.user.status
     // };
-    console.info('Authentication req', req);
     const user = req.user;
     var result = {
         userId: user._id,
@@ -148,13 +147,14 @@ exports.user = function(req, res, next) {
                                                                 isActive: branch.isActive
                                                             };
                                                         });
-                                    console.log('active', active);
                                     result = Object.assign({}, result, { branch: branches, officeId: active[0].branchId });
                                     //res.send( { user: result });
+                                    console.log('done');
                                     res.send( { user: result });
                                 }
                             });
                         }else {
+                            console.log('done all');
                             res.send({ user: result });
                         }
                     }

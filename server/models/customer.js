@@ -21,6 +21,7 @@ const customerSchema = new Schema({
             ref: 'product'
         },
         productName: { type: String },
+        productNameAr: { type: String },
         categoryId: { type: Schema.ObjectId },
         categoryName: { type: String },
         qty: { type: Number },

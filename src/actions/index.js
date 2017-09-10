@@ -6,6 +6,7 @@ import { browserHistory } from 'react-router';
 import { USER_ROLE, PRODUCT_TYPE } from '../../shared/constants';
 
 import { hideNotification, successNotification, errorNotification } from './notification';
+import { loadOpenDay, loadCloseDay, createDay, loadDays, printDay } from './day';
 
 import { beginAjaxCall } from './ajaxStatusActions';
 
@@ -23,7 +24,8 @@ import reportApi from '../api/ReportApi';
 import dayApi from '../api/dayApi';
 
 export {
-    hideNotification, successNotification, errorNotification
+    hideNotification, successNotification, errorNotification,
+    loadOpenDay, loadCloseDay, createDay, loadDays, printDay
 };
 
 // export function showNotification(message) {
@@ -917,77 +919,3 @@ export function loadPurchaseTransaction(fromDate, toDate) {
             });
     };
 }
-
-// Days's Actions
-export function updateDaySuccess( day ) {
-    return {
-        type: types.UPDATE_DAY_SUCCESS,
-        payload: day.data
-    };
-}
-
-export function createDaySuccess( day ) {
-    return {
-        type: types.CREATE_DAY_SUCCESS,
-        payload: day.data
-    };
-}
-
-export function loadOpenDaySuccess( day ) {
-    return { 
-        type: types.LOAD_OPEN_DAY_SUCCESS,
-        payload: day.data
-    };
-}
-
-export function loadCloseDaySuccess() {
-    return {
-        type: types.UPDATE_CLOSE_DAY_SUCCESS,
-        payload: { _id: '0', today: ''}
-    };
-}
-
-export function loadOpenDay() {
-    return function( dispatch ) {
-        //dispatch( beginAjaxCall() );
-        return dayApi.openDay().then( day => {
-                if (day.data !== null) {
-                    localStorage.setItem('dayId', day.data._id);
-                }
-                dispatch(loadOpenDaySuccess( day ) );
-            }
-        ).catch( error => {
-            console.error( error );
-            throw(error);
-        });
-    };
-}
-
-export function loadCloseDay() {
-    return function( dispatch ) {
-        return dayApi.closeDay()
-            .then( res => {
-                if (res.status == 200) {
-                    localStorage.removeItem('dayId');
-                    dispatch(loadCloseDaySuccess() );
-                }
-            }).catch( error => {
-                throw(error);
-            });
-    };
-}
-
-export function createDay() {  // this becomes action to send to reducer
-    return function( dispatch, getState ) {
-        //dispatch( beginAjaxCall() );
-        return dayApi.createDay().then( day => {
-            console.info("day", day);
-            localStorage.setItem('dayId', day.data._id);
-            dispatch(createDaySuccess(day));
-        }).catch( error => {
-            throw( error );
-        });
-    };
-}
-
-

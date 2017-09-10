@@ -13,7 +13,7 @@ import IconButton from 'material-ui/IconButton';
 
 import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentClear from 'material-ui/svg-icons/content/clear';
-import {blue500, red500, greenA200} from 'material-ui/styles/colors';
+import { red500, greenA200} from 'material-ui/styles/colors';
 import ContentAdd from 'material-ui/svg-icons/content/add-circle';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 
@@ -36,11 +36,11 @@ const ProductForm = ( {product, stock, categories, items, onSave, onChange, onSe
                 <CardText>
                     <div>
                         <TextField name='code' floatingLabelText="Product Code" onChange={onChange} value={product.code} disabled={true} defaultValue="Auto Number" />
-                        <TextField name='price' style={{margin: 10}} floatingLabelText="Price" onChange={onChange} value={product.price} />                        
+                        <TextField name='price' style={{marginLeft: 150}} floatingLabelText="Price" onChange={onChange} value={product.price} />                        
                     </div>
                     <div>
                         <TextField name='name' floatingLabelText="Product Name" onChange={onChange} value={product.name} />
-                        <TextField name='nameAr' floatingLabelText="Name Arabic" onChange={onChange} value={product.nameAr} />
+                        <TextField name='nameAr' style={{marginLeft: 150}} floatingLabelText="Name Arabic" onChange={onChange} value={product.nameAr} />
                     </div>
                     <div>
                         <SelectField name='categoryId' floatingLabelText="Category" onChange={onSelectChange} value={product.categoryId} >
@@ -48,10 +48,11 @@ const ProductForm = ( {product, stock, categories, items, onSave, onChange, onSe
                             <MenuItem key={category._id} value={category._id} primaryText={category.name} />
                         )}
                         </SelectField>
-                        <SelectField name='type' floatingLabelText="Type" onChange={onTypeChange} value={product.type} >
+                        <SelectField name='type' floatingLabelText="Type" style={{marginLeft: 150}} onChange={onTypeChange} value={product.type} >
                             <MenuItem key={PRODUCT_TYPE.KITCHEN} value={PRODUCT_TYPE.KITCHEN} primaryText={PRODUCT_TYPE_LABEL.KITCHEN} />
                             <MenuItem key={PRODUCT_TYPE.DIRECT} value={PRODUCT_TYPE.DIRECT} primaryText={PRODUCT_TYPE_LABEL.DIRECT} />
                             <MenuItem key={PRODUCT_TYPE.NONKITCHEN} value={PRODUCT_TYPE.NONKITCHEN} primaryText={PRODUCT_TYPE_LABEL.NONKITCHEN} />
+                            <MenuItem key={PRODUCT_TYPE.PHONECARD} value={PRODUCT_TYPE.PHONECARD} primaryText={PRODUCT_TYPE_LABEL.PHONECARD} />
                         </SelectField>
                     </div>
                     <Checkbox label="Status" onCheck={onCheckCheck} checked={product.status==1} style={styles.checkbox}  />

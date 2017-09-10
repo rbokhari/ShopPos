@@ -14,8 +14,7 @@ class KitchenBoard extends Component {
     render() {
         return (
             <div style={{
-                    maxwidth: 1200,
-                    width: '100%',
+                    width: '98%',
             }}>
                 <Toolbar>
                     <ToolbarGroup>

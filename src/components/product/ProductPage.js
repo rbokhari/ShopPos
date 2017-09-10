@@ -27,25 +27,28 @@ class ProductPage extends Component {
 
     constructor(props, context) {
         super(props, context);
-
         this.props.loadProducts();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        // if (this.props.branch.branchId !== localStorage.getItem('officeId')) {
-        //     this.props.loadProducts();
-        // }
     }
 
     getCategoryNameById(id) {
     }
 
     getTypeName(value) {
-        if (value == PRODUCT_TYPE.KITCHEN) {
-            return PRODUCT_TYPE_LABEL.KITCHEN;
-        } else if (value == PRODUCT_TYPE.DIRECT) {
-            return PRODUCT_TYPE_LABEL.DIRECT;
+        switch(value) {
+            case PRODUCT_TYPE.KITCHEN:
+                return PRODUCT_TYPE_LABEL.KITCHEN;
+            case PRODUCT_TYPE.DIRECT:
+                return PRODUCT_TYPE_LABEL.DIRECT;
+            case PRODUCT_TYPE.NONKITCHEN:
+                return PRODUCT_TYPE_LABEL.NONKITCHEN;
+            case PRODUCT_TYPE.PHONECARD:
+            return PRODUCT_TYPE_LABEL.PHONECARD;
         }
+        // if (value == PRODUCT_TYPE.KITCHEN) {
+        //     return PRODUCT_TYPE_LABEL.KITCHEN;
+        // } else if (value == PRODUCT_TYPE.DIRECT) {
+        //     return PRODUCT_TYPE_LABEL.DIRECT;
+        // }
         return '';
     }
 

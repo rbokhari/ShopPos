@@ -21,13 +21,15 @@ export const CUSTOMER_STATUS = {
 export const PRODUCT_TYPE = {
         'KITCHEN': 0,
         'DIRECT': 1,
-        'NONKITCHEN': 2
+        'NONKITCHEN': 2,
+        'PHONECARD': 3
 };
 
 export const PRODUCT_TYPE_LABEL = {
         'KITCHEN': 'KITCHEN',
         'DIRECT': 'DIRECT',
         'NONKITCHEN': 'NON-KITCHEN',
+        'PHONECARD': 'PHONE CARD'
 };
 
 export const ITEM_UOM = {

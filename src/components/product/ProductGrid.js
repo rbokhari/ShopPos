@@ -17,7 +17,7 @@ const ProductGrid = ( { products, onProductSelect, loading, errors } ) => {
             {products.map(product=>
                 <RaisedButton id={product._id} name={product._id} key={product._id} 
                     label={product.name} secondary={true} style={style}
-                    onTouchTap={onProductSelect.bind(this, product._id, product.name, product.categoryId, product.categoryName, 1, product.price, product.type, product.items)} />
+                    onTouchTap={onProductSelect.bind(this, product._id, product.name, product.nameAr, product.categoryId, product.categoryName, 1, product.price, product.type, product.items)} />
             )}
         </div>
     );
