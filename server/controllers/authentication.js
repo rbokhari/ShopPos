@@ -1,3 +1,4 @@
+var async = require('async');
 const jwt = require('jwt-simple');
 const User = require('../models/user');
 const Company = require('../models/company');
@@ -53,7 +54,8 @@ exports.signin = function(req, res, next) {
                                                 mobile: branch.mobileNo,
                                                 isActive: branch.isActive
                                             }
-                                        ] 
+                                        ] ,
+                                        officeId: branch._id
                                     });
                                 //res.send({ user: result });
                                 res.send( { token: tokenForUser(user), user: result });
@@ -76,7 +78,7 @@ exports.signin = function(req, res, next) {
                                         }; 
                                     });
                                     
-                                    result = Object.assign({}, result, { branch: branches });
+                                    result = Object.assign({}, result, { branch: branches, officeId: branches[0].branchId });
                                     //res.send( { user: result });
                                     res.send( { token: tokenForUser(user), user: result });
                                 }
@@ -103,67 +105,141 @@ exports.user = function(req, res, next) {
         officeId: user.officeId ? user.officeId : 0
     };
     if (user) {
+        var queries = [];
         if (user.companyId) {
-            Company.findById(user.companyId, function(err,company) {
-                if (err) { return next(err); }
-                if (company) {
-                    //result = { ...result, { companyName: company.name, companyDisplay: company.displayName }  } ;
-                    result = Object.assign({}, result, { company: { companyId: company._id, name: company.name, displayName: company.displayName} });
-
-                    if (user.officeId) {
-                        Office.findById(user.officeId, function(err, branch) {
-                            if (err) { return next(err); }
-                            if (branch) {
-                                result = Object.assign({}, result, { branch: { branchId: branch._id, name: branch.name, displayName: branch.displayName, office: branch.officeNo, mobile: branch.mobileNo} });
-                                res.send({ user: result });
-                            }
-                        });
-                    }else {
-                        if (user.roleId == CONSTANT.USER_ROLE.ADMIN) {
-                            Office.find({companyId: user.companyId}, function(err, existingBranches) {
-                                if (err) { return next(err); }
-                                if (existingBranches) {
-                                    const branches = existingBranches.map(function(branch, i){
-                                        return {
-                                            branchId: branch._id,
-                                            name: branch.name,
-                                            displayName: branch.displayName,
-                                            office: branch.officeNo,
-                                            mobile: branch.mobileNo,
-                                            isActive: branch.isActive
-                                        }; 
-                                    });
-                                    const active = branches
-                                                        // .filter(function(branch, i) {
-                                                        //     return branch.isActive === 1;
-                                                        // })
-                                                        .map(function(branch, i) {
-                                                            return {
-                                                                branchId: branch.branchId,
-                                                                name: branch.name,
-                                                                displayName: branch.displayName,
-                                                                office: branch.officeNo,
-                                                                mobile: branch.mobileNo,
-                                                                isActive: branch.isActive
-                                                            };
-                                                        });
-                                    result = Object.assign({}, result, { branch: branches, officeId: active[0].branchId });
-                                    //res.send( { user: result });
-                                    console.log('done');
-                                    res.send( { user: result });
-                                }
-                            });
-                        }else {
-                            console.log('done all');
-                            res.send({ user: result });
-                        }
-                    }
-                }
+            queries.push(function(cb) {
+                Company.findById(user.companyId, function(err,company) {
+                    if (err) { cb(err); }
+                    
+                    cb(null, company);
+                });
             });
         }
+        if (user.officeId) {
+            queries.push(function(cb) {
+                Office.findById(user.officeId, function(err, branch) {
+                    if (err) { cb(err); }
+                    
+                    cb(null, branch);
+                });
+            });
+        }else {
+            queries.push(function(cb) {
+                Office.find({companyId: user.companyId}, function(err, existingBranches) {
+                    if (err) { cb(err); }
+                    
+                    cb(null, existingBranches);
+                });
+            });
+        }
+        async.parallel(queries, function(err, docs) {
+            if (err) { return next(err); }
+            const result1 = docs[0];
+            const result2 = docs[1];
+            //const branch = JSON.get(result2);
+            result = Object.assign({}, result, { 
+                company: { companyId: result1._id, name: result1.name, displayName: result1.displayName}
+            });
+            //console.log('instanceof', resu)
+            if (result2 instanceof Array) {
+                const branches = result2.map(function(branch, i){
+                    return {
+                        branchId: branch._id,
+                        name: branch.name,
+                        displayName: branch.displayName,
+                        office: branch.officeNo,
+                        mobile: branch.mobileNo,
+                        isActive: branch.isActive
+                    }; 
+                });
+                result = Object.assign({}, result, { branch: branches, officeId: branches[0].branchId });
+            } else {
+                result = Object.assign({}, result, { 
+                    branch: { branchId: result2._id, name: result2.name, displayName: result2.displayName, office: result2.officeNo, mobile: result2.mobileNo} 
+                });
+            }
+            res.send( { user: result });
+        });
+
+
+        // if (user.companyId) {
+        //     Company.findById(user.companyId, function(err,company) {
+        //         console.log('start 2'); 
+        //         if (company) {
+        //             //result = { ...result, { companyName: company.name, companyDisplay: company.displayName }  } ;
+        //             result = Object.assign({}, result, { company: { companyId: company._id, name: company.name, displayName: company.displayName} });
+
+        //             if (user.officeId) {
+        //                 console.log('start 3'); 
+        //                 Office.findById(user.officeId, function(err, branch) {
+        //                     if (err) { return next(err); }
+        //                     if (branch) {
+        //                         result = Object.assign({}, result, { branch: { branchId: branch._id, name: branch.name, displayName: branch.displayName, office: branch.officeNo, mobile: branch.mobileNo} });
+        //                         res.send({ user: result });
+        //                     }
+        //                 });
+        //             }else {
+        //                 console.log('start 4'); 
+        //                 if (user.roleId == CONSTANT.USER_ROLE.ADMIN) {
+        //                     console.log('start 5 ' + user.companyId); 
+        //                     Office.find({companyId: user.companyId}, function(err, existingBranches) {
+        //                         console.log('office error : '); 
+        //                         if (err) { return next(err); }
+        //                         console.log('start 6'); 
+        //                         if (existingBranches) {
+        //                             const branches = existingBranches.map(function(branch, i){
+        //                                 return {
+        //                                     branchId: branch._id,
+        //                                     name: branch.name,
+        //                                     displayName: branch.displayName,
+        //                                     office: branch.officeNo,
+        //                                     mobile: branch.mobileNo,
+        //                                     isActive: branch.isActive
+        //                                 }; 
+        //                             });
+        //                             // const active = {
+        //                             //             branchId: branches[0].branchId,
+        //                             //             name: branches[0].name,
+        //                             //             displayName: branches[0].displayName,
+        //                             //             office: branches[0].officeNo,
+        //                             //             mobile: branches[0].mobileNo,
+        //                             //             isActive: branches[0].isActive
+        //                             //         };
+        //                             //branches
+        //                                                 // .filter(function(branch, i) {
+        //                                                 //     return branch.isActive === 1;
+        //                                                 // })
+        //                                                 // .map(function(branch, i) {
+        //                                                 //     return {
+        //                                                 //         branchId: branch.branchId,
+        //                                                 //         name: branch.name,
+        //                                                 //         displayName: branch.displayName,
+        //                                                 //         office: branch.officeNo,
+        //                                                 //         mobile: branch.mobileNo,
+        //                                                 //         isActive: branch.isActive
+        //                                                 //     };
+        //                                                 // });
+        //                             result = Object.assign({}, result, { branch: branches, officeId: branches[0].branchId });
+        //                             //res.send( { user: result });
+        //                             console.log('start 7'); 
+        //                             res.send( { user: result });
+        //                         }
+        //                     });
+        //                 }else {
+        //                     console.log('start 8'); 
+        //                     res.send({ user: result });
+        //                 }
+        //                 console.log('start 10'); 
+        //             }
+        //             console.log('start 11'); 
+        //         }
+        //         console.log('start 12'); 
+        //     });
+        // }
     }
     //res.send( {user: req.user });
 };
+
 
 exports.createAccount = function(req, res, next) {
     
@@ -270,3 +346,4 @@ exports.signup = function(req, res, next) {
         });
     });
 };
+

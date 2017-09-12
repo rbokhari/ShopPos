@@ -304,82 +304,59 @@ class SalesBoard extends Component {
                         display: 'flex',
                         flexFlow: 'row wrap'
                     }}>
-                    <Card style={{
-                            flex: 3,
-                        }} >
-                        <CardHeader title="Customer Order" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}/>
-                        
-                        <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total} rowSelectIndex={this.state.itemIndexNote}
-                            onHandleIncrease={this.handleIncreaseQty} onHandleDecrease={this.handleDecreaseQty} onHandleDelete={this.handleDeleteItem}
-                            onHandleNote={this.handleAddNote} onHandleRowSelection={this.handleRowSelection} onHandleQuantity={this.handleOpenQuantity} 
-                            errors={this.state.errors} />
-
-                        <Dialog
-                            title="Add Customization" actions={actions} onRequestClose={this.handleCloseNote}
-                            modal={true} open={this.state.openNote}
-                            autoScrollBodyContent={true} >
-
-                                <textarea ref='tNote' style={{}} rows={3}></textarea>
-                        </Dialog>
-                        <Dialog
-                            title="Quantity" actions={actionsQuantity} onRequestClose={this.handleCloseQuantity}
-                            modal={true} open={this.state.openQuantity}
-                            autoScrollBodyContent={true} contentStyle={{width:250, maxWidth:'none'}}>
-
-                                <input type="text" ref='tQuantity' style={{margin:5, fontSize: 18, width: 50}} onKeyDown={this.handleKeyQuantity} autoFocus />
-                        </Dialog>
-                    </Card>
-                    <Card style={{
-                            //flexGrow: 1,
-                            marginLeft: 10,
-                            //width: 450,
-                            //minWidth: 300,
-                            flex: 2,
-                            display: this.state.itemIndexNote > -1 ? 'none' : 'block'
-                        }} >
-                        <CardHeader title="Menu" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> 
+                        <Card style={{flex: 3}}>
+                            <CardHeader title="Customer Order" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}/>
                             
-                        </CardHeader>
+                            <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total} rowSelectIndex={this.state.itemIndexNote}
+                                onHandleIncrease={this.handleIncreaseQty} onHandleDecrease={this.handleDecreaseQty} onHandleDelete={this.handleDeleteItem}
+                                onHandleNote={this.handleAddNote} onHandleRowSelection={this.handleRowSelection} onHandleQuantity={this.handleOpenQuantity} 
+                                errors={this.state.errors} />
 
-                        <CategoryGrid categories={this.props.categories} 
-                            loading={false} errors={this.state.errors}
-                            onCategorySelect={this.handleCategorySelect} />
-                        
-                        <Divider />
+                            <Dialog
+                                title="Add Customization" actions={actions} onRequestClose={this.handleCloseNote}
+                                modal={true} open={this.state.openNote}
+                                autoScrollBodyContent={true} >
 
-                        <ProductGrid products={this.state.filterProducts} 
-                            loading={false} errors={this.state.errors}
-                            onProductSelect={this.handleProductSelect} />
+                                    <textarea ref='tNote' style={{}} rows={3}></textarea>
+                            </Dialog>
+                            <Dialog
+                                title="Quantity" actions={actionsQuantity} onRequestClose={this.handleCloseQuantity}
+                                modal={true} open={this.state.openQuantity}
+                                autoScrollBodyContent={true} contentStyle={{width:250, maxWidth:'none'}}>
+
+                                    <input type="text" ref='tQuantity' style={{margin:5, fontSize: 18, width: 50}} onKeyDown={this.handleKeyQuantity} autoFocus />
+                            </Dialog>
+                        </Card>
+                        <Card style={{flex: 2, marginLeft: 10, display: this.state.itemIndexNote > -1 ? 'none' : 'block'}}>
+                            <CardHeader title="Category" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> </CardHeader>
+
+                            <CategoryGrid categories={this.props.categories} 
+                                loading={false} errors={this.state.errors}
+                                onCategorySelect={this.handleCategorySelect} />
                             
-                    </Card>
+                            <Divider />
+                            <CardHeader title="Menu" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> </CardHeader>
+                            <ProductGrid products={this.state.filterProducts} 
+                                loading={false} errors={this.state.errors}
+                                onProductSelect={this.handleProductSelect} />
+                                
+                        </Card>
+                        <Card style={{flex: 2, marginLeft: 10, display: this.state.itemIndexNote > -1 ? 'block' : 'none'}}>
+                            <CardHeader title="Add On" subtitle="Click to select Add On" style={{fontStyle: 'bold'}} style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> </CardHeader>
 
-                    <div style={{
-                            //flexGrow: 1,
-                            flex: 2,
-                            display:'block',
-                            marginLeft: 10,
-                            //width: 400,
-                            //minWidth: 300,
-                            display: this.state.itemIndexNote > -1 ? 'block' : 'none'
-                        }}>
-                            <Card style={{height: 290}}>
-                                <CardHeader title="Add On" style={{fontStyle: 'bold'}} style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> 
-                                </CardHeader>
+                            <CategoryAddOnGrid style={{flex: '1'}} categories={this.props.categories} loading={false} errors={this.state.errors}
+                                onAddOnSelect={this.handleAddOnAdd} categoryId={this.state.categoryId} />
 
-                                <CategoryAddOnGrid categories={this.props.categories} loading={false} errors={this.state.errors}
-                                    onAddOnSelect={this.handleAddOnAdd} categoryId={this.state.categoryId} />
+                            <hr />
+                            <CardHeader title="Selected AddOns" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> </CardHeader>
 
-                            </Card>
-                            <br />
+                            <CustomerAddonSelected style={{flex: '1'}} customer={this.state.customer} productIndex={this.state.itemIndexNote}
+                                onAddOnDelete={this.handleAddOnDelete} />
+                        </Card>
+                            {/* <br />
                             <Card style={{height: 250}}>
-                                <CardHeader title="Selected AddOns" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> 
-                                </CardHeader>
+                            </Card> */}
 
-                                <CustomerAddonSelected customer={this.state.customer} productIndex={this.state.itemIndexNote}
-                                    onAddOnDelete={this.handleAddOnDelete} />
-                            </Card>
-
-                    </div>
                     
                     {/* <Snackbar open={this.state.snakbarStatus}
                         message="New Customer Added !"

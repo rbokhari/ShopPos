@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+//mongoose.Promise = global.Promise;
 const Schema = mongoose.Schema;
 //mongoose.set('debug', true);
 // Define a model

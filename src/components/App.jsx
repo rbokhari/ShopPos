@@ -82,8 +82,9 @@ class App extends React.Component {
         };
 
         if (this.props.authenticated) {
+            console.info('inside auth');
             this.props.userInfo();
-        }
+        } else console.info('else auth');
 
         this._handleClick = this._handleClick.bind(this);
         this._handleClose = this._handleClose.bind(this);
@@ -245,12 +246,10 @@ class App extends React.Component {
                                 display: 'flex',
                                 flexFlow: 'row wrap',
                                 width: '98%',
-                                //left: '50%',
-                                //margin: '10px 1px auto 10px',   // top right bottom left,
                                 margin: '0 auto',
                                 position: 'relative'
                             }}>
-                            <div style={{margin: '0 auto'}}>
+                            <div style={{margin: '0 auto', width: '100%'}}>
                                 {this.props.children}
                             </div>
                         </div>

@@ -18,7 +18,7 @@ mongoose.connect(config.mongoDBAddress);    //setting in config file
 // App Setup
 //app.use(morgan('combined'));
 app.use(cors());
-app.use(express.static('excel'));
+//app.use(express.static('excel'));
 app.use(bodyParser.json({ type: '*/*' }));
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -27,6 +27,8 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Credentials', false);
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, CompanyId, OfficeId, DayId");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD");
+
+    console.log("GOT REQUEST !", req.url);
     next();
 });
 
@@ -44,6 +46,6 @@ io.set( 'origins', config.socketIOAddress );    // setting in config file
 io.on('connection', function(socket){
   console.log('a user connected');
 });
-
 //io.socket.emit('customer', '1');
+
 router(app, io);

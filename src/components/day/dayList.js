@@ -34,8 +34,8 @@ const DayList = ({days, user, onPrintDay}) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
-                        {days.length == 0 && <TableRow key={0} ><TableRowColumn colSpan='8'><BusyIndicator /></TableRowColumn></TableRow>}
-                        {days.map( (day, index) =>
+                        {days && days.length == 0 && <TableRow key={0} ><TableRowColumn colSpan='8'><BusyIndicator /></TableRowColumn></TableRow>}
+                        {days && days.map( (day, index) =>
                             <TableRow key={index}>
                                 <TableRowColumn>
                                     {Moment(day.today).format('DD/MM/YYYY, h:mm a')} 

@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-//import { createStore, applyMiddleware } from 'redux';
 import { Router, browserHistory } from 'react-router';
-//import reduxThunk from 'redux-thunk';
-//import reduxLogger from 'redux-logger';
 import io from 'socket.io-client';
 
 import routes from './routes';
@@ -31,7 +28,7 @@ if (token) {
 }
 
 const socket = io('http://localhost:3090');
-//var socket = io('http://localhost', {transports: ['websocket', 'polling', 'flashsocket']});
+    //var socket = io('http://localhost', {transports: ['websocket', 'polling', 'flashsocket']});
 socket.on('customer', function(data) {
     store.dispatch(loadCustomers());
 });

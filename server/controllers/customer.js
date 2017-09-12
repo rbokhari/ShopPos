@@ -224,7 +224,7 @@ exports.getAllByStatus = function(req, res, next) {
             
 
             if (err) { return next(err); }
-            next();
+            //next();
             res.setHeader('Content-Type', 'application/json');
             res.json(customers);
         });

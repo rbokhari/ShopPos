@@ -23,7 +23,7 @@ module.exports = function(app, io) {
     app.post('/signup', Authentication.signup);
     app.post('/signin', requireLocal, Authentication.signin);
     app.post('/account/create', Authentication.createAccount);
-    app.get('/user/', requireAuth, Authentication.user);
+    app.get('/user/', requireAuth,  Authentication.user);
 
     // Company Routes
     app.post('/company/exists', Company.companyExists);

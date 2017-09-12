@@ -6,6 +6,7 @@ import Moment from 'moment';
 import * as actions from '../../actions';
 import SalesBoard from './SalesBoard';
 import DayGrid from './DayGrid';
+import { Colors } from '../theme';
 
 const style = {
     box: {
@@ -32,7 +33,7 @@ class Dashboard extends Component {
 
         this.props.loadOpenDay()
             .then(res => {
-
+                //alert('open day loaded');
             });
     }
 
@@ -75,11 +76,14 @@ class Dashboard extends Component {
 
         return (
             <div style={{
-                    //maxwidth: 1200,
-                    width: '100%',
+                //maxwidth: 1200,
+                width: '100%',
             }}>
                 <div style={{ display: 'flex', flexFlow:'row wrap'}}>
-                    <h1 style={{flexGrow: 1}}>Sales Board : <span style={{color: '#4CAF50'}}> {Moment(this.props.day.today).format('dddd DD/MM/YYYY h:mm')}</span></h1>
+                    <h1 style={{flexGrow: 1}}>
+                        <span style={{color: Colors.primaryColor3}}> Sales Board : {Moment(this.props.day.today).format('dddd DD/MM/YYYY h:mm a')}</span>
+
+                    </h1>
                     <DayGrid style={{flexGrow: 1}} day={this.props.day} 
                         onCreateDay={this.handleCreateDay}
                         onSelectDay={this.handleSelectDay}
@@ -91,10 +95,9 @@ class Dashboard extends Component {
                 <div id='dDashboard' style={{
                     display: 'flex',
                     flexFlow: 'row wrap'   ,
-                    width: '100%'              
+                    width: '100%'
                 }}>
                     <SalesBoard />
-
                 </div>
             </div>
         );

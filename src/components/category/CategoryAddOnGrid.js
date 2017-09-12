@@ -17,7 +17,7 @@ const CategoryAddOnGrid = ( { categories, categoryId, onAddOnSelect, loading, er
     return (
         <div >
             {category.addons.map(addon=>
-                <RaisedButton backgroundColor="#BBB9B7" labelColor="#fff" id={addon._id} name={addon._id} key={addon._id} 
+                <RaisedButton secondary={true} id={addon._id} name={addon._id} key={addon._id} 
                     label={addon.name} 
                     style={styles}
                     onTouchTap={onAddOnSelect.bind(this, addon._id, addon.name, addon.price)} >

@@ -191,7 +191,7 @@ export function signinUser( {email, password }) {
                //alert("push");
                 
                 const data = response.data.user;
-
+console.info('singin user data', data);
                 // const company = {
                 //     companyId: data.company.companyId,
                 //     name: data.company.name,
@@ -214,6 +214,18 @@ export function signinUser( {email, password }) {
                     type: types.AUTH_USER_INFO, 
                     payload: user
                 });
+
+                const company = {
+                    companyId: data.company.companyId,
+                    name: data.company.name,
+                    displayName: data.company.displayName
+                };
+                dispatch({ 
+                    type: types.LOAD_COMPANY,
+                    payload: company
+                });
+
+
                 browserHistory.push('/');
                 // if (data.officeId !== 0 && data.roleId !== USER_ROLE.ADMIN) {
                 //     const branch = {
@@ -253,7 +265,6 @@ export function userInfo() {
         dispatch({ type: types.AUTH_LOADING_START });
         return authApi.userInfo()
                 .then(response => {
-                    
                     const data = response.data.user;
                     localStorage.setItem('companyId', data.companyId);
 
@@ -303,28 +314,36 @@ export function userInfo() {
 
                     }else {//if (data.roleId == USER_ROLE.ADMIN){
                         if (data.branch) {
-                            //alert('hello ' + data.branch.length);
-                            const activeBranch = data.branch
-                                                        .filter((b, i) => {
-                                                            return b.branchId === localOffice;
-                                                        })
-                                                        .map((b,i) => {
-                                                            return {
-                                                                branchId: b.branchId,
-                                                                name: b.name,
-                                                                displayName: b.displayName,
-                                                                office: b.office,
-                                                                mobile: b.mobile,
-                                                                isActive: b.isActive
-                                                            };
-                                                        })[0];
+                            if (data.branch instanceof Array) {
+                                const activeBranch = data.branch
+                                                            .filter((b, i) => {
+                                                                return b.branchId === localOffice;
+                                                            })
+                                                            .map((b,i) => {
+                                                                return {
+                                                                    branchId: b.branchId,
+                                                                    name: b.name,
+                                                                    displayName: b.displayName,
+                                                                    office: b.office,
+                                                                    mobile: b.mobile,
+                                                                    isActive: b.isActive
+                                                                };
+                                                            })[0];
+                                localStorage.setItem('officeId', activeBranch.branchId);
+                                dispatch({
+                                    type: types.SWITCH_BRANCH,
+                                    payload: activeBranch
+                                });
+                            } else {
+                                localStorage.setItem('officeId', data.branch.branchId);
+                                dispatch({
+                                    type: types.SWITCH_BRANCH,
+                                    payload: data.branch
+                                });
+                            }
                             //dispatch({ type: types.LOAD_BRANCH });
                             //alert("now");
-                            localStorage.setItem('officeId', activeBranch.branchId);
-                            dispatch({
-                                type: types.SWITCH_BRANCH,
-                                payload: activeBranch
-                            });
+                            
 
                             // localStorage.setItem('officeId', branch.branchId);
                             // dispatch({ 
@@ -338,6 +357,7 @@ export function userInfo() {
                     }
                 })
                 .catch(error => {
+                    console.error('userInfo Action Error', error);
                     throw(error);
                 });
     };

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+//mongoose.Promise = global.Promise;
 
 // Define a model
 const categorySchema = new Schema({

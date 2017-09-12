@@ -5,7 +5,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 //         teal500 as accentColor1,
 //         grey100, grey300, grey500, darkBlack, white, fullBlack } from 'material-ui/styles/colors';
 import {teal700,
-    grey600,
+    grey400, grey600,
     pinkA100, pinkA200, pink700, pinkA400,
     fullWhite} from 'material-ui/styles/colors';
 import { fade } from 'material-ui/utils/colorManipulator';
@@ -46,7 +46,7 @@ const muiTheme = getMuiTheme({
         secondaryTextColor: fullWhite,
         alternateTextColor: fullWhite,
         canvasColor: '#303030', // the background color
-        borderColor: fullWhite,
+        borderColor: grey400,
         disabledColor: fade(fullWhite, 0.9),
         pickerHeaderColor: fullWhite,
         clockCircleColor: fade(fullWhite, 0.12),
