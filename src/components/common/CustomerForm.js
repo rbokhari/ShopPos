@@ -30,6 +30,7 @@ const CustomerForm = ( { customer, onChange, onSubmit, onCancel, errors } ) => {
             width: '100%',
             marginTop: 20
         }}>
+        {/* <CardHeader title="Customer Detail" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}/> */}
             <span>
                 <TextField name="carNumber" style={styles} floatingLabelText={customer.option==1 ? 'Car Number' : 'Table No'}  
                     onChange={onChange} value={customer.carNumber} />
@@ -44,7 +45,7 @@ const CustomerForm = ( { customer, onChange, onSubmit, onCancel, errors } ) => {
                         label="Dine In" />
                 </RadioButtonGroup>
             </span>
-            <RaisedButton backgroundColor="#a4c639" style={{marginLeft: 200, height: 70}} label="Send To Kitchen" primary={true}
+            <RaisedButton backgroundColor="#a4c639" style={{marginLeft: 200, height: 70}} label="Creat Customer" primary={true}
                 icon={<ContentSend />} onTouchTap={onSubmit} />
             <RaisedButton backgroundColor="#aaaa39" style={{marginLeft: 10, height: 70}} label="Clear" secondary={true}
                 icon={<ContentClear />} onTouchTap={onCancel} />

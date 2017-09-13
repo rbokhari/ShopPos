@@ -38,6 +38,11 @@ class AuthApi {
     static userInfo() {
         return Api.get('user');
     }
+
+    static changePassword(data) {
+        console.log('change password data', data);
+        return Api.post('user/changePassword', data);
+    }
 }
 
 export default AuthApi; 

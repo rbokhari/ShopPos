@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Branch = require('../models/office');
+const bcrypt = require('bcrypt-nodejs');
 
 exports.createUser = function(req, res, next) {
     const email = req.body.email;
@@ -38,6 +39,41 @@ exports.createUser = function(req, res, next) {
         });
     });
 
+};
+
+exports.changePassword = function(req, res, next) {
+    const email = req.body.email;
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+    const companyId = req.headers.companyid;
+
+    bcrypt.genSalt(10, function(err, salt) {
+        if (err) { return next(err); }
+        // hash(i.e.encrypt) password using the salt
+        bcrypt.hash(newPassword, salt, null, function(err, hash){
+            if (err) { return next(err); }
+
+            User.findOneAndUpdate( { $and: [ { email: email }, { companyId: companyId }] }, { $set: {password: hash }}, function(err, user) {
+                if (err) { return next(err); }
+        
+                res.sendStatus(200);
+            });
+        });
+    });
+
+//     User.findOne( { $and: [ { email: email }, { companyId: companyId }] }, function(err, user) {
+//         if (err) { return next(err); }
+// console.info('change get user', user);
+//         if (user) {
+//             user.password = newPassword;
+//             user.update({$set: {password: newPassword }}, function(err) {
+//                 if (err) return next(err);
+
+//                 console.log('password changed done');
+//                 res.sendStatus(200);
+//             });
+//         }
+//     });
 };
 
 exports.updateUser = function(req, res) {

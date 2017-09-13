@@ -40,6 +40,27 @@ userSchema.pre('save', function(next) {
     });
 });
 
+// userSchema.pre('update', function(next) {
+//     // get access to the user model
+//     let newPassword = this.getUpdate().$set.password;
+// console.log('user pre running', newPassword);
+//     // generate a salt then run callback
+//     bcrypt.genSalt(10, function(err, salt) {
+//         if (err) { return next(err); }
+//         console.log('user password for hash', newPassword);
+//         // hash(i.e.encrypt) password using the salt
+//         bcrypt.hash(newPassword, salt, null, function(err, hash){
+//             if (err) { return next(err); }
+
+//             // overwrite plain text password with encrypted password
+//             console.log('user pre salt', hash);
+//             //newPassword = hash;
+//             this.findOneAndUpdate({}, {$set: {password: hash}});
+//             next();
+//         });
+//     });
+// });
+
 userSchema.methods.comparePassword = function(candidatePassword, callback) {
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
         if (err) { return callback(err); }

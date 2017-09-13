@@ -5,20 +5,29 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import { materialTextField, materialCheckBox } from '../controls/index';
-import { closePasswordChangeDialog } from '../../actions';
+import { closePasswordChangeDialog, changePassword, successNotification, errorNotification } from '../../actions';
 
 class UserPasswordChange extends Component {
 
     constructor(props) { super(props); }
 
     handleFormSubmit(props) {
-        console.info('props', props);
+        const { changePassword, closePasswordChangeDialog, successNotification, errorNotification } = this.props;  
+        changePassword(props)
+            .then(res=> {
+                successNotification('Password change successfully !');
+                closePasswordChangeDialog();
+            })
+            .catch(err=> {
+                console.error('UserPasswordChange Error', err);
+                errorNotification('Something went wrong !');
+            });
         //this.props.createBranch({name, displayName, location, officeNo, mobileNo, status});
     }
 
     handleClose() {
-        //this.props.changeBranch();
-        this.props.closePasswordChangeDialog();
+        const { closePasswordChangeDialog } = this.props;  
+        closePasswordChangeDialog();
     }
 
     renderAlert() {
@@ -27,14 +36,12 @@ class UserPasswordChange extends Component {
                 <div>
                     <strong>
                         Oops ! 
-                    </strong> 
+                    </strong>
                     {this.props.errorMessage}
                 </div>
             );
         }
     }
-
-    
 
     render() {
         const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
@@ -50,15 +57,15 @@ class UserPasswordChange extends Component {
                         modal={true} open={this.props.open}
                         autoScrollBodyContent={true} >
                         
-                            <div>
-                                <Field name="oldPassword" type='password' component={materialTextField} label="Old Password" />
-                            </div>
-                            <div>
-                                <Field name="newPassword" type='password' component={materialTextField} label="New Password" />
-                            </div>
-                            <div>
-                                <Field name="confirmPassword" type='password' component={materialTextField} label="Confirm Password" />
-                            </div>
+                    <div>
+                        <Field name="password" type='password' component={materialTextField} label="Old Password" />
+                    </div>
+                    <div>
+                        <Field name="newPassword" type='password' component={materialTextField} label="New Password" />
+                    </div>
+                    <div>
+                        <Field name="confirmPassword" type='password' component={materialTextField} label="Confirm Password" />
+                    </div>
                 </Dialog>
             </form>
             
@@ -69,7 +76,10 @@ class UserPasswordChange extends Component {
 function mapStateToProps(state) {
     return { 
         errorMessage: state.auth.error,
-        open: state.isLoadPasswordDialog 
+        open: state.isLoadPasswordDialog,
+        initialValues: { 
+            email: state.auth.user.name, password: '', oldPassword: '', confirmPassword: '' 
+        }
     };
 }
 
@@ -97,8 +107,7 @@ UserPasswordChange = reduxForm({
 
 UserPasswordChange = connect(
     mapStateToProps, 
-    { closePasswordChangeDialog: closePasswordChangeDialog }
+    { closePasswordChangeDialog, changePassword, successNotification, errorNotification }
 )(UserPasswordChange);
-
 
 export default UserPasswordChange;

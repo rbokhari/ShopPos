@@ -54,6 +54,18 @@ export {
 //     };
 // }
 
+export function changePassword(obj) {
+    return function(dispatch) {
+        return authApi.changePassword(obj)
+            .then(res => {
+                
+            })
+            .catch(err => {
+                throw(err);
+            });
+    };
+}
+
 
 export function loadPasswordChangeDialog() {
     return function( dispatch) {
