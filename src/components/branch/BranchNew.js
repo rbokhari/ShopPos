@@ -48,7 +48,7 @@ class BranchNew extends Component {
 
         const dialogActions = [
             <RaisedButton type="submit" label="Create" primary={true} onClick={handleSubmit(this.handleFormSubmit.bind(this))} />,
-            <RaisedButton label="Cancel" secondary={true} onClick={this.handleClose.bind(this)} />
+            <RaisedButton label="Cancel" secondary={true} style={{marginLeft: 10}} onClick={this.handleClose.bind(this)} />
         ];
 
         return (

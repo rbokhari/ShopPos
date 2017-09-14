@@ -60,7 +60,7 @@ class CreateAccount extends Component {
                             <Field name="password" component={materialTextField} label="Password" type="password"  />
                         </div>
                         <div>
-                            <Field name="passwordConfirm" component={materialTextField} label="Confirm Password"  />
+                            <Field name="passwordConfirm" component={materialTextField} label="Confirm Password" type="password"  />
                         </div>
                     </CardText>
                     <CardActions>
@@ -73,15 +73,23 @@ class CreateAccount extends Component {
     }
 }
 
-function validate(formProps) {
+function validateForm(formProps) {
     const errors = {};
 
     if (!formProps.name) {
-        errors.name = 'Please enter Company Name';
+        errors.name = 'Please enter Company Name !';
+    }
+
+    if (!formProps.displayName) {
+        errors.displayName = 'Please enter Display Name !';
     }
 
     if (!formProps.email) {
-        errors.email = 'Please enter UserName';
+        errors.email = 'Please enter UserName !';
+    }
+
+    if (!formProps.password) {
+        errors.password = 'Please enter Password !';
     }
 
     if (formProps.password !== formProps.passwordConfirm) {
@@ -112,6 +120,7 @@ function mapStateToProps(state) {
 
 CreateAccount = reduxForm({
     form: 'signin',
+    validate: validateForm
 })(CreateAccount);
 
 CreateAccount = connect(

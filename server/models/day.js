@@ -19,6 +19,8 @@ const daySchema = new Schema({
     status: { type : Number },
     morningSale: { type: Number },
     eveningSale: { type: Number },
+    morningSalePhoneCard: { type: Number },
+    eveningSalePhoneCard: { type: Number },
     netSale: { type: Number },
     netPurchase: { type: Number },
     netExpense: { type: Number }

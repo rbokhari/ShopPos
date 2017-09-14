@@ -13,6 +13,7 @@ const router = require('./router');
 const config = require('./config');
 
 // DB Setup
+mongoose.Promise = global.Promise;
 mongoose.connect(config.mongoDBAddress);    //setting in config file
 
 // App Setup
@@ -28,7 +29,7 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, CompanyId, OfficeId, DayId");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD");
 
-    console.log("GOT REQUEST !", req.url);
+    //console.log("GOT REQUEST !", req.url);
     next();
 });
 

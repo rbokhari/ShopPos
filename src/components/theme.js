@@ -72,7 +72,8 @@ const Colors = {
     enabledColor: '#303030',
     // primaryColor,
     // primaryColor2,
-    primaryColor3: teal700
+    primaryColor3: teal700,
+    accent1Color: pink700
     //accentColor1
 };
 

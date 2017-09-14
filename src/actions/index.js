@@ -193,7 +193,11 @@ export function signinUser( {email, password }) {
                 // save the JWT token
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('companyId', response.data.user.companyId);
-                localStorage.setItem('officeId', response.data.user.officeId);
+                if (response.data.user.officeId == 0) {
+                    dispatch(loadBranch());
+                } else {
+                    localStorage.setItem('officeId', response.data.user.officeId);
+                }
 
                 // dispatch({ type: types.AUTH_USER });
                 // dispatch({ 
@@ -900,40 +904,40 @@ export function loadExpenseTransaction(fromDate, toDate) {
 
 export function loadExpenseDetailDownload(fromDate, toDate) {
     return function(dispatch) {
-        return reportApi.getDownloadExpenseDetail(fromDate, toDate)
-            .then( data => {
-                //return new Blob([data]);
-// var blob = new Blob([data], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
-//     var objectUrl = URL.createObjectURL(blob);
-//     window.open(objectUrl);
+        return reportApi.getDownloadExpenseDetail(fromDate, toDate);
+//             .then( data => {
+//                 //return new Blob([data]);
+// // var blob = new Blob([data], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+// //     var objectUrl = URL.createObjectURL(blob);
+// //     window.open(objectUrl);
 
-                var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                console.log('blob length', blob.length);
-                var csvURL = window.URL.createObjectURL(blob);
-                var tempLink = document.createElement('a');
-                tempLink.href = csvURL;
-                tempLink.setAttribute('download', 'filename.xlsx');
-                tempLink.click();
-                //console.log("data", data);
-                // var file = new Blob([data], {
-                //     type: 'application/xlsx'
-                // });
-                // var fileURL = URL.createObjectURL(file);
-                // var a = document.createElement('a');
-                // a.href = fileURL;
-                // a.target = '_blank';
-                // a.download = 'ItemList.xlsx';
-                // document.body.appendChild(a);
-                // a.click();
+//                 var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+//                 console.log('blob length', blob.length);
+//                 var csvURL = window.URL.createObjectURL(blob);
+//                 var tempLink = document.createElement('a');
+//                 tempLink.href = csvURL;
+//                 tempLink.setAttribute('download', 'filename.xlsx');
+//                 tempLink.click();
+//                 //console.log("data", data);
+//                 // var file = new Blob([data], {
+//                 //     type: 'application/xlsx'
+//                 // });
+//                 // var fileURL = URL.createObjectURL(file);
+//                 // var a = document.createElement('a');
+//                 // a.href = fileURL;
+//                 // a.target = '_blank';
+//                 // a.download = 'ItemList.xlsx';
+//                 // document.body.appendChild(a);
+//                 // a.click();
 
-                // dispatch( {
-                //     type: types.DOWNLOAD_EXPENSE_DETAIL_REPORT_SUCCESS
-                // });
-            // }).then( blob => {
-            //     FileSaver.saveAs(blob, 'filename.xlsx');
-            }).catch( error => {
-                throw (error);
-            });
+//                 // dispatch( {
+//                 //     type: types.DOWNLOAD_EXPENSE_DETAIL_REPORT_SUCCESS
+//                 // });
+//             // }).then( blob => {
+//             //     FileSaver.saveAs(blob, 'filename.xlsx');
+//             }).catch( error => {
+//                 throw (error);
+//             });
     };
 }
 

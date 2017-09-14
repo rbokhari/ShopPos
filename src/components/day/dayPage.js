@@ -6,7 +6,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import { connect } from 'react-redux';
 import { loadDays, printDay, successNotification, errorNotification } from '../../actions';
-import DayList from './DayList';
+import DayList from './dayList';
 
 const style = {
     marginTop: 40
@@ -15,9 +15,12 @@ const style = {
 class DayPage extends Component {
     constructor(props, context) {
         super(props, context);
-        this.props.loadDays();
 
         this.printThisDay = this.printThisDay.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.loadDays();
     }
 
     printThisDay(id) {

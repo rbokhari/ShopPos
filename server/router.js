@@ -112,6 +112,7 @@ module.exports = function(app, io) {
     app.get('/day/open', Day.getOpenDay);
     app.get('/day/byDates', Day.getDayBetweenDates);
     app.get('/day/excel', Day.getExcelBetweenDates);
+    //app.get('/excel/:id', Day.openExcelFile);
 
     // app.get('/', function(req, res, next) {
     //     res.send(['a', 'b', 'c']);

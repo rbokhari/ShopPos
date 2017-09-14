@@ -81,8 +81,7 @@ class Dashboard extends Component {
             }}>
                 <div style={{ display: 'flex', flexFlow:'row wrap'}}>
                     <h1 style={{flexGrow: 1}}>
-                        <span style={{color: Colors.primaryColor3}}> Sales Board : {Moment(this.props.day.today).format('dddd DD/MM/YYYY h:mm a')}</span>
-
+                        <span style={{color: Colors.primaryColor3}}> Sales Board : {Moment(this.props.day.today).format('dddd - DD MMMM, YYYY - h:mm a')}</span>
                     </h1>
                     <DayGrid style={{flexGrow: 1}} day={this.props.day} 
                         onCreateDay={this.handleCreateDay}

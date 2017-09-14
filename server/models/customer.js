@@ -3,10 +3,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Define a model
-
 const customerSchema = new Schema({
-    companyId: { type: Schema.ObjectId },
-    officeId: { type: Schema.ObjectId },
+    companyId: { type: Schema.ObjectId, ref: 'company' },
+    officeId: { type: Schema.ObjectId, ref: 'office' },
     billNo: { type: String },
     carNumber: { type: String },
     dayId: { type: Number },

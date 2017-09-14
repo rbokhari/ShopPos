@@ -20,7 +20,7 @@ class PurchasePage extends Component {
         super(props, context);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.loadPurchaseOrders();
         this.props.loadSuppliers();
     }

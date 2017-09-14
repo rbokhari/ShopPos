@@ -330,9 +330,9 @@ class SalesBoard extends Component {
                         <Card style={{flex: 2, marginLeft: 10, display: this.state.itemIndexNote > -1 ? 'none' : 'block'}}>
                             <CardHeader title="Category" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> </CardHeader>
 
-                            <CategoryGrid categories={this.props.categories} 
+                            {this.props.categories && this.props.categories.length > 0 && <CategoryGrid categories={this.props.categories} 
                                 loading={false} errors={this.state.errors}
-                                onCategorySelect={this.handleCategorySelect} />
+                                onCategorySelect={this.handleCategorySelect} />}
                             
                             <Divider />
                             <CardHeader title="Menu" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> </CardHeader>

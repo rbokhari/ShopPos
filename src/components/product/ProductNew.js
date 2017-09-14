@@ -19,7 +19,7 @@ import ContentClear from 'material-ui/svg-icons/content/clear';
 import ContentAdd from 'material-ui/svg-icons/content/add-circle';
 import {blue500, red500, greenA200} from 'material-ui/styles/colors';
 
-import { createProduct, loadItems, loadCategories } from '../../actions';
+import { createProduct, loadItems, loadCategories, successNotification, errorNotification } from '../../actions';
 
 import renderItems from './ProductItems';
 import ProductForm from './ProductForm';
@@ -57,12 +57,6 @@ class ProductNew extends Component {
         this.removeItem = this.removeItem.bind(this);
         this.onUpdateProductItem = this.onUpdateProductItem.bind(this);
         this.onUpdateProductQty = this.onUpdateProductQty.bind(this);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        // if (this.props.product._id != nextProps.product._id) {
-        //     this.setState({product: Object.assign({}. nextProps.product)});
-        // }
     }
 
     updateProductState(event) {
@@ -132,9 +126,10 @@ class ProductNew extends Component {
 
     saveProduct(props) {
         //console.log(`new value is ${this.state.item}`);
-        const product = this.props.product;
-        this.props.createProduct(this.state.product)
+        const { product, createProduct, successNotification, errorNotification } = this.props;
+        createProduct(this.state.product)
             .then(()=> {
+                successNotification('Product saved successfully !');
                 this.context.router.push('/product');
             }, (error) => {
                 console.error("Product", error);
@@ -259,7 +254,9 @@ function mapDispatchToProps(dispatch) {
      return {
          createProduct: bindActionCreators(createProduct, dispatch),
          loadItems: bindActionCreators(loadItems, dispatch),
-         loadCategories: bindActionCreators(loadCategories, dispatch)
+         loadCategories: bindActionCreators(loadCategories, dispatch),
+         successNotification: bindActionCreators(successNotification, dispatch),
+         errorNotification: bindActionCreators(errorNotification, dispatch)
      };
 }
 

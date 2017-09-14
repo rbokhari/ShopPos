@@ -9,6 +9,7 @@ var path = require('path');
 var mime = require('mime');
 var request = require('request');
 
+//const CONSTANTS = require('../../shared/constants');
 const Day = require('../models/day');
 const Customer = require('../models/customer');
 const Expense = require('../models/expense');
@@ -56,7 +57,7 @@ exports.closeDay = function(req, res, next) {
     const officeId = req.headers.officeid;
     const dayId = req.headers.dayid;
     const newDate = new Date();
-    console.log(companyId, officeId);
+    
     // var transporter = nodemailer.createTransport({
     //     service: 'Mailgun',
     //     auth: {
@@ -89,12 +90,14 @@ exports.closeDay = function(req, res, next) {
     Day.findOne({ '_id': dayId}, function(err, day){
 
         if (err) next(err);
-        console.log('day >> ', day);
+
         const today = new Date(day.today);
         var morningToday = day.today;
         var close = day.close;
         var morningSale = 0;
         var eveningSale = 0;
+        var morningSalePhoneCard = 0;
+        var eveningSalePhoneCard = 0;
         var netPurchases = 0;
         var netExpenses = 0;
 
@@ -103,8 +106,8 @@ exports.closeDay = function(req, res, next) {
             Purchase.aggregate([
                 { "$match": {
                     "$and": [
-                        // { "companyId": companyId },
-                        // { "officeId": officeId },
+                        { "companyId": companyId },
+                        { "officeId": officeId },
                         { "created": { "$gte": today, "$lte": newDate }},
                         //{ "created": { "$lte": newDate }}
                     ]
@@ -121,10 +124,10 @@ exports.closeDay = function(req, res, next) {
 	
         queries.push(function(cb) {
             Expense.aggregate([
-		{ "$match": {
+		        { "$match": {
                     "$and": [
-                        // { "companyId": companyId },
-                        // { "officeId": officeId },
+                        { "companyId": companyId },
+                        { "officeId": officeId },
                         { "created": { "$gte": today, "$lte": newDate }},
                         //{ "created": { "$lte": newDate }}
                     ]
@@ -143,19 +146,22 @@ exports.closeDay = function(req, res, next) {
         morningToday.setHours(15);
         morningToday.setMinutes(0);
 
-        // morning sale query
+        // morning sale query for NOT Phone type 
         queries.push(function(cb) {
             Customer.aggregate([
                 { $match: {
                     $and: [
-                        // { companyId: companyId },
-                        // { officeId: officeId },
+                        { companyId: companyId },
+                        { officeId: officeId },
                         { dayId: parseInt(dayId) },
                         { created: { "$lt" : morningToday } }
                     ]
                 }}, 
                 {
                     $unwind: "$products"
+                },
+                {
+                    $match: { "products.type" : { "$not": { $eq: 3 } } } 
                 },
                 { $group: {
                     _id: "$dayId",
@@ -167,19 +173,22 @@ exports.closeDay = function(req, res, next) {
             });
         });
 
-        // evening sale query
+        // evening sale query for not PHONE Card type
         queries.push(function(cb) {
             Customer.aggregate([
                 { "$match": {
                     "$and": [
-                        // { "companyId": companyId },
-                        // { "officeId": officeId },
+                        { "companyId": companyId },
+                        { "officeId": officeId },
                         { "dayId": parseInt(dayId) },
                         { "created": { "$gte" : morningToday } }
                     ]
                 }}, 
                 {
                     "$unwind": "$products"
+                },
+                {
+                    $match: { "products.type" : { "$not": { $eq: 3 } } }    // phone type not included
                 },
                 { "$group": {
                     "_id": "$dayId",
@@ -191,18 +200,79 @@ exports.closeDay = function(req, res, next) {
             });
         });
 
+        // morning sale query for PHONE Card type
+        queries.push(function(cb) {
+            Customer.aggregate([
+                { $match: {
+                    $and: [
+                        { companyId: companyId },
+                        { officeId: officeId },
+                        { dayId: parseInt(dayId) },
+                        { created: { "$lt" : morningToday } }
+                    ]
+                }}, 
+                {
+                    $unwind: "$products"
+                },
+                {
+                    $match: { "products.type": 3 }
+                },
+                { $group: {
+                    _id: "$dayId",
+                    total: { $sum: "$products.price"}
+                }},
+            ], function(err, morningSalePhoneCard) {
+                if (err) { throw cb(err); }
+                cb(null, morningSalePhoneCard);
+            });
+        });
+
+        // evening sale query for phone card type
+        queries.push(function(cb) {
+            Customer.aggregate([
+                { "$match": {
+                    "$and": [
+                        { "companyId": companyId },
+                        { "officeId": officeId },
+                        { "dayId": parseInt(dayId) },
+                        { "created": { "$gte" : morningToday } }
+                    ]
+                }}, 
+                {
+                    "$unwind": "$products"
+                },
+                {
+                    "$match": { "products.type": 3 }    // phone type not included
+                },
+                { "$group": {
+                    "_id": "$dayId",
+                    "total": { "$sum": "$products.price"}
+                }},
+            ], function(err, eveningSalePhoneCard) {
+                if (err) { cb(err); }
+                cb(null, eveningSalePhoneCard);
+            });
+        });
+
         // executing all queries at once
         async.parallel(queries, function(err, docs) {
-            if (err) { return next(err); }
+            if (err) { 
+                console.log("error queries", err);
+                return next(err); 
+            }
             const result1 = docs[0];
             const result2 = docs[1];
-            const result3 = docs[2];
-            const result4 = docs[3];
+            const result3 = docs[2];    // monring sale for Not Phone Card Type
+            const result4 = docs[3];    // evening sale for Not Phone Card Type
+            const result5 = docs[4];    // monring sale for Phone Card Type
+            const result6 = docs[5];    // evening sale for Phone Card Type
 
             if (result1.length > 0) { netPurchases = result1[0].total; }
             if (result2.length > 0) { netExpenses = result2[0].total; }
             if (result3.length > 0) { morningSale = result3[0].total; }
             if (result4.length > 0) { eveningSale = result4[0].total; }
+            if (result5.length > 0) { morningSalePhoneCard = result5[0].total; }
+            if (result6.length > 0) { eveningSalePhoneCard = result6[0].total; }
 
             Day.update( { $and: [ 
                                     { _id: dayId } , 
@@ -210,11 +280,14 @@ exports.closeDay = function(req, res, next) {
                                     { officeId: officeId }
                                 ] }, 
                             { 
+                                __v: 1,
                                 status: 1, 
                                 close: newDate, 
                                 morningSale: morningSale, 
                                 eveningSale: eveningSale, 
-                                netSale: morningSale + eveningSale,
+                                morningSalePhoneCard: morningSalePhoneCard, 
+                                eveningSalePhoneCard: eveningSalePhoneCard, 
+                                netSale: morningSale + eveningSale + morningSalePhoneCard + eveningSalePhoneCard,
                                 netPurchase: netPurchases,
                                 netExpense: netExpenses
                             }, 
@@ -224,7 +297,7 @@ exports.closeDay = function(req, res, next) {
                     console.log(err);
                     return next(err); 
                 }
-                res.send('Day close');
+                res.sendStatus(200);
                 next();
             });
 
@@ -370,16 +443,22 @@ exports.getExcelBetweenDates = function(req, res, next) {
     const eveningSaleRowNumber = startRow + 4;
     const eveningSaleRow = worksheet.getRow(eveningSaleRowNumber);
 
-    const totalSaleRowNumber = startRow + 5;
+    const morningSalePhoneCardRowNumber = startRow + 5;
+    const morningSalePhoneCardRow = worksheet.getRow(morningSalePhoneCardRowNumber);
+
+    const eveningSalePhoneCardRowNumber = startRow + 6;
+    const eveningSalePhoneCardRow = worksheet.getRow(eveningSalePhoneCardRowNumber);
+
+    const totalSaleRowNumber = startRow + 7;
     const totalSaleRow = worksheet.getRow(totalSaleRowNumber);
 
-    const netBalanceRowNumber = startRow + 6;
+    const netBalanceRowNumber = startRow + 8;
     const netBalanceRow = worksheet.getRow(netBalanceRowNumber);
 
-    const totalPurchaseRowNumber = startRow + 7;
+    const totalPurchaseRowNumber = startRow + 9;
     const totalPurchaseRow = worksheet.getRow(totalPurchaseRowNumber);
 
-    const expenseTotalRowNumber = startRow + 9;
+    const expenseTotalRowNumber = startRow + 10;
     const expenseTotalRow = worksheet.getRow(expenseTotalRowNumber);
 
     const expenseRow = expenseTotalRowNumber + 1;
@@ -409,6 +488,10 @@ exports.getExcelBetweenDates = function(req, res, next) {
     morningSaleRow.getCell(1).font = { bold: true };
     eveningSaleRow.getCell(1).value = 'Evening Sale';
     eveningSaleRow.getCell(1).font = { bold: true };
+    morningSalePhoneCardRow.getCell(1).value = 'Morning Sale Phone Card';
+    morningSalePhoneCardRow.getCell(1).font = { bold: true };
+    eveningSalePhoneCardRow.getCell(1).value = 'Evening Sale Phone Card';
+    eveningSalePhoneCardRow.getCell(1).font = { bold: true };
     totalSaleRow.getCell(1).value = 'Total Sale';
     totalSaleRow.getCell(1).font = { bold: true };
     netBalanceRow.getCell(1).value = 'Net';
@@ -451,33 +534,58 @@ exports.getExcelBetweenDates = function(req, res, next) {
     });
 
     queries.push(function(cb) {
-        Purchase.find({ "$and": [
-                    // { "companyId": companyId },
-                    // { "officeId": officeId },
-                    { "created": { "$gte": startDay, "$lte": endDay }},
-                    //{ "created": { "$lte": newDate }}
-                ]
-            }, function(err, purchases) {
+        Purchase.aggregate([
+            { "$match": 
+                {
+                    "$and": [
+                        { "companyId": companyId },
+                        { "officeId": officeId },
+                        { "created": { "$gte": startDay, "$lte": endDay }}
+                    ]
+                } 
+            },
+            {
+                "$unwind": "$amounts"
+            },
+            { "$project": 
+                {
+                    "_id": 1,
+                    "billNo" : 1,
+                    "total": "$amounts.amount",
+                    "created": "$amounts.date"
+                }
+            }
+        ], function(err, purchases) {
             if (err) { cb(err); }
             cb(null, purchases);
         });
+        // Purchase.find({ "$and": [
+        //             // { "companyId": companyId },
+        //             // { "officeId": officeId },
+        //             { "created": { "$gte": startDay, "$lte": endDay }},
+        //             //{ "created": { "$lte": newDate }}
+        //         ]
+        //     }, function(err, purchases) {
+        //     if (err) { cb(err); }
+        //     cb(null, purchases);
+        // });
     });
 
-    queries.push(function(cb) {
-        Customer.find({ "$and": [
-                    //{ "companyId": companyId },
-                    //{ "officeId": officeId },
-                    { "created": { "$gte": startDay } },
-                    { "finished": { "$lte": endDay } },
-                    { "products.type": 3 },
-                ]
-            }, function(err, customers) {
-            if (err) { cb(err); }
+    // queries.push(function(cb) {
+    //     Customer.find({ "$and": [
+    //                 //{ "companyId": companyId },
+    //                 //{ "officeId": officeId },
+    //                 { "created": { "$gte": startDay } },
+    //                 { "finished": { "$lte": endDay } },
+    //                 { "products.type": 3 },
+    //             ]
+    //         }, function(err, customers) {
+    //         if (err) { cb(err); }
 
-            console.log('customers', customers);
-            cb(null, customers);
-        });
-    });    
+    //         console.log('customers', customers);
+    //         cb(null, customers);
+    //     });
+    // });    
 
     async.parallel(queries, function(err, docs) {
         if (err) { next(err); }
@@ -485,9 +593,9 @@ exports.getExcelBetweenDates = function(req, res, next) {
         const days = docs[0];
         const expenses = docs[1];
         const purchases = docs[2];
-        const customers = docs[3];
+        //const customers = docs[3];
 
-        var filterDays = days.map(function(day,index){
+        var filterDays = days.map(function(day, index){
             return day._id;
         });
 
@@ -521,6 +629,10 @@ exports.getExcelBetweenDates = function(req, res, next) {
                 });
                 morningSaleRow.getCell(i+2).value = dayTotal.length === 1 ? dayTotal[0].morningSale : 0;
                 eveningSaleRow.getCell(i+2).value = dayTotal.length === 1 ? dayTotal[0].eveningSale : 0;
+                // New Phone card
+                morningSalePhoneCardRow.getCell(i+2).value = dayTotal.length === 1 ? dayTotal[0].morningSalePhoneCard : 0;
+                eveningSalePhoneCardRow.getCell(i+2).value = dayTotal.length === 1 ? dayTotal[0].eveningSalePhoneCard : 0;
+
                 totalSaleRow.getCell(i+2).value = dayTotal.length === 1 ? dayTotal[0].netSale : 0;
             }
 
@@ -560,6 +672,12 @@ exports.getExcelBetweenDates = function(req, res, next) {
         eveningSaleRow.getCell(totalDays + 3).value = 'Total Evening : ';
         eveningSaleRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + eveningSaleRowNumber + ':' + columnToLetter(totalDays+1) + eveningSaleRowNumber + ')'};
 
+        morningSalePhoneCardRow.getCell(totalDays + 3).value = 'Total Morning Phone Card : ';
+        morningSalePhoneCardRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + morningSalePhoneCardRowNumber + ':' + columnToLetter(totalDays+1) + morningSalePhoneCardRowNumber + ')'};
+
+        eveningSalePhoneCardRow.getCell(totalDays + 3).value = 'Total Evening Phone Card : ';
+        eveningSalePhoneCardRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + eveningSalePhoneCardRowNumber + ':' + columnToLetter(totalDays+1) + eveningSalePhoneCardRowNumber + ')'};
+
         totalSaleRow.getCell(totalDays + 3).value = 'Total Sale : ';
         totalSaleRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + totalSaleRowNumber + ':' + columnToLetter(totalDays+1) + totalSaleRowNumber + ')'};
 
@@ -589,8 +707,19 @@ exports.getExcelBetweenDates = function(req, res, next) {
                 .then(function() {
                     // done 
                     //res.setHeader('Content-Type', 'application/json');
-                    //res.sendFile('./excel/excel.xlsx');
                     console.log("excel file created");
+                    //res.sendStatus(200);
+                    res.setHeader('Content-Type', 'excel/xlsx');
+                    res.setHeader('Content-Disposition', 'attachment; filename=123.xlsx');
+                    //console.log("abs path", path.resolve(fullPath));
+                    res.sendFile(path.resolve(fullPath));
+                    res.end();
+                    // var file = fs.readFile(path.resolve(fullPath), 'binary');
+                    // res.setHeader('Content-Length', file.length);
+                    // res.setHeader('Content-Type', 'excel/xlsx');
+                    // res.setHeader('Content-Disposition', 'attachment; filename=123.xlsx');
+                    // res.write(file, 'binary');
+                    // res.end();
                 });
     });
 

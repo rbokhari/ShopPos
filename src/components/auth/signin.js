@@ -23,14 +23,12 @@ class SignIn extends Component {
     renderAlert() {
         if (this.props.errorMessage) {
             return (
-                <div>
-                    <strong>
-                        Oops ! 
-                    </strong> 
-                    {this.props.errorMessage}
-                </div>
+                <strong>
+                    Username or Password wrong !
+                    {/* {this.props.errorMessage} */}
+                </strong> 
             );
-        }0
+        }
     }
 
     render() {
@@ -39,7 +37,7 @@ class SignIn extends Component {
         
         return (
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
-                <Card style={{ margin: '0 auto',}} >
+                <Card style={{ margin: '0 auto', height: 350, width: 300}} >
                     <CardHeader title="Sign In" />
                     <CardText>
                         <div>
@@ -49,12 +47,8 @@ class SignIn extends Component {
                             <Field name="password" component={materialTextField} label="Password" type="password" />
                         </div>
                             {this.renderAlert()}
-                        <div>
-                            
-                        </div>
                     </CardText>
                     <CardActions>
-                        {this.renderAlert()}
                         <RaisedButton type="submit" primary={true} label='Sigin' ></RaisedButton>
                     </CardActions>
                 </Card>
@@ -67,12 +61,25 @@ SignIn.contextTypes = {
     router: PropTypes.object.isRequired
 }
 
+function validateForm(values) {
+    const errors = {};
+    if (!values.email) {
+        errors.email = 'Username cannot be blank';
+    }
+    if (!values.password) {
+        errors.password = 'Password cannot be blank !';
+    }
+    return errors;
+}
+
 function mapStateToProps(state) {
     return { errorMessage: state.auth.error };
 }
 
+
 SignIn = reduxForm({
     form: 'signin',
+    validate: validateForm
 })(SignIn);
 
 SignIn = connect(mapStateToProps, { signinUser })(SignIn);

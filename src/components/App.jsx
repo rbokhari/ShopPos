@@ -82,9 +82,8 @@ class App extends React.Component {
         };
 
         if (this.props.authenticated) {
-            console.info('inside auth');
             this.props.userInfo();
-        } else console.info('else auth');
+        }
 
         this._handleClick = this._handleClick.bind(this);
         this._handleClose = this._handleClose.bind(this);

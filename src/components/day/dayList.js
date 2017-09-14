@@ -52,9 +52,9 @@ const DayList = ({days, user, onPrintDay}) => {
                                     {day.status == 1 && <IconButton onClick={onPrintDay.bind(this, day._id)}>
                                         <Icons.ActionPrint />
                                     </IconButton>}
-                                    {day.status == 1 &&<IconButton>
+                                    <IconButton>
                                         <Icons.PersonPin />
-                                    </IconButton>}
+                                    </IconButton>
                                 </TableRowColumn>
                             </TableRow>
                         )}

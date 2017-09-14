@@ -14,7 +14,7 @@ import Moment from 'moment';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { loadExpenseDetailDownload } from '../../actions';
+import { loadExpenseDetailDownload, successNotification, errorNotification } from '../../actions';
 //import * as actions from '../../actions';
 
 class ExpenseDetailReport extends Component {
@@ -43,15 +43,36 @@ class ExpenseDetailReport extends Component {
     }
 
     getData() {
-        const { report } = this.props;
+        const { report, loadExpenseDetailDownload, successNotification, errorNotification } = this.props;
         report.fromDate.setHours(0,0,0);
         report.toDate.setHours(23,59,0);
-        this.props.loadExpenseDetailDownload(report.fromDate, report.toDate)
-            .then(data => {
-                alert('File created Successfully !');
+        loadExpenseDetailDownload(report.fromDate, report.toDate)
+            .then(res => {
+                //console.info('data', res);
+                successNotification('File Created Successfully !');
+                // let blob = new Blob([res.data], { type:   'application/xlsx' } );
+                // let link = document.createElement('a');
+                // link.href = window.URL.createObjectURL(blob);
+                // link.download = 'Report.xlsx';
+                // link.click();
+                // var blob = new Blob([data.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                // console.log('blob length', blob.length);
+                // var csvURL = window.URL.createObjectURL(blob);
+                // var tempLink = document.createElement('a');
+                // tempLink.href = csvURL;
+                // tempLink.setAttribute('download', 'filename.xlsx');
+                // tempLink.click();
+                // var blob = new Blob([data.data], {type: 'vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                // var downloadUrl = URL.createObjectURL(blob);
+                // var a = document.createElement("a");
+                // a.href = downloadUrl;
+                // a.download = "data.xls";
+                // document.body.appendChild(a);
+                // a.click();
             })
             .catch( error => {
                 console.info("error", error);
+                errorNotification('Something went wrong !');
             });
     }
 
@@ -88,7 +109,9 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        loadExpenseDetailDownload: bindActionCreators(loadExpenseDetailDownload, dispatch)
+        loadExpenseDetailDownload: bindActionCreators(loadExpenseDetailDownload, dispatch),
+        successNotification: bindActionCreators(successNotification, dispatch), 
+        errorNotification: bindActionCreators(errorNotification, dispatch)
     };
 }
 

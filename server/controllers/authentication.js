@@ -63,10 +63,10 @@ exports.signin = function(req, res, next) {
                         });
                     }else {
                         if (user.roleId === CONSTANT.USER_ROLE.ADMIN) {
-
+                            
                             Office.find({companyId: user.companyId}, function(err, existingBranches) {
                                 if (err) { return next(err); }
-                                if (existingBranches) {
+                                if (existingBranches && existingBranches.length > 0) {
                                     const branches = existingBranches.map(function(branch, i){
                                         return {
                                             branchId: branch._id,
@@ -80,6 +80,8 @@ exports.signin = function(req, res, next) {
                                     
                                     result = Object.assign({}, result, { branch: branches, officeId: branches[0].branchId });
                                     //res.send( { user: result });
+                                    res.send( { token: tokenForUser(user), user: result });
+                                } else {
                                     res.send( { token: tokenForUser(user), user: result });
                                 }
                             });
@@ -136,27 +138,30 @@ exports.user = function(req, res, next) {
             if (err) { return next(err); }
             const result1 = docs[0];
             const result2 = docs[1];
+            console.log('result2', result2);
             //const branch = JSON.get(result2);
             result = Object.assign({}, result, { 
                 company: { companyId: result1._id, name: result1.name, displayName: result1.displayName}
             });
             //console.log('instanceof', resu)
-            if (result2 instanceof Array) {
-                const branches = result2.map(function(branch, i){
-                    return {
-                        branchId: branch._id,
-                        name: branch.name,
-                        displayName: branch.displayName,
-                        office: branch.officeNo,
-                        mobile: branch.mobileNo,
-                        isActive: branch.isActive
-                    }; 
-                });
-                result = Object.assign({}, result, { branch: branches, officeId: branches[0].branchId });
-            } else {
-                result = Object.assign({}, result, { 
-                    branch: { branchId: result2._id, name: result2.name, displayName: result2.displayName, office: result2.officeNo, mobile: result2.mobileNo} 
-                });
+            if (result2.length > 0) {
+                if (result2 instanceof Array) {
+                    const branches = result2.map(function(branch, i){
+                        return {
+                            branchId: branch._id,
+                            name: branch.name,
+                            displayName: branch.displayName,
+                            office: branch.officeNo,
+                            mobile: branch.mobileNo,
+                            isActive: branch.isActive
+                        }; 
+                    });
+                    result = Object.assign({}, result, { branch: branches, officeId: branches[0].branchId });
+                } else {
+                    result = Object.assign({}, result, { 
+                        branch: { branchId: result2._id, name: result2.name, displayName: result2.displayName, office: result2.officeNo, mobile: result2.mobileNo} 
+                    });
+                }
             }
             res.send( { user: result });
         });
