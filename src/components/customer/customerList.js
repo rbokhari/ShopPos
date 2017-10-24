@@ -5,7 +5,7 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 import IconButton from 'material-ui/IconButton';
 import Moment from 'moment';
 
-import { USER_ROLE } from '../../../shared/constants';
+import { CUSTOMER_STATUS } from '../../../shared/constants';
 import { Icons } from '../theme';
 import BusyIndicator from '../common/BusyIndicator';
 
@@ -16,10 +16,11 @@ const cardStyle = {
 };
 
 
-const CustomerList = ({customers, user, onPrintCustomer}) => {
+const CustomerList = ({customers, day, onPrintCustomer}) => {
+    if (typeof day === 'undefined') return (<div>Loading...</div>);
     return (
-        <Card style={cardStyle} >
-            <CardHeader title="Days " subtitle="Listing" />
+        <Card style={cardStyle}>
+            <CardHeader title={`Customers of Day : ${Moment(day.today).format('DD/MM/YYYY, h:mm a')}`} subtitle="Listing" />
                 <Table selectable={false}>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
@@ -27,6 +28,7 @@ const CustomerList = ({customers, user, onPrintCustomer}) => {
                             <TableHeaderColumn>Date</TableHeaderColumn>
                             <TableHeaderColumn>Car No</TableHeaderColumn>
                             <TableHeaderColumn>Mobile</TableHeaderColumn>
+                            <TableHeaderColumn>Items</TableHeaderColumn>
                             <TableHeaderColumn>Status</TableHeaderColumn>
                             <TableHeaderColumn>Action</TableHeaderColumn>
                         </TableRow>
@@ -39,13 +41,14 @@ const CustomerList = ({customers, user, onPrintCustomer}) => {
                                     {customer.billNo}
                                 </TableRowColumn>
                                 <TableRowColumn>
-                                    {Moment(day.today).format('DD/MM/YYYY, h:mm a')} 
+                                    {Moment(customer.created).format('DD/MM/YYYY, h:mm a')} 
                                 </TableRowColumn>
                                 <TableRowColumn>{customer.carNumber}</TableRowColumn>
                                 <TableRowColumn>{customer.mobileNumber}</TableRowColumn>
-                                <TableRowColumn>{customer.status}</TableRowColumn>
+                                <TableRowColumn>{customer.products.length}</TableRowColumn>
+                                <TableRowColumn>{customer.status == CUSTOMER_STATUS.DELIVERED ? 'DELIVERED' : ''}</TableRowColumn>
                                 <TableRowColumn>
-                                    {day.status == 1 && <IconButton onClick={onPrintCustomer.bind(this, customer._id)}>
+                                    {customer.status == 3 && <IconButton onClick={onPrintCustomer.bind(this, customer._id)} tooltip='Print Customer'>
                                         <Icons.ActionPrint />
                                     </IconButton>}
                                 </TableRowColumn>

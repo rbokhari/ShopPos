@@ -20,6 +20,10 @@ class CustomerApi {
   static getAllCustomersByDayId(dayId) {
     return Api.get(`customer/${dayId}/day`);
   }
+
+  static printCustomersById(id, newStatus) {
+    return Api.get(`customer/${id}/${newStatus}/print`);
+  }
   
 }
 

@@ -27,7 +27,7 @@ class DayPage extends Component {
         const { printDay, successNotification, errorNotification } = this.props;
         printDay(id)
             .then(res => {
-                successNotification('Printing done !')
+                successNotification('Printing Send !');
             })
             .catch(err => {
                 errorNotification('Some error occured !');
@@ -52,7 +52,7 @@ DayPage.propTypes = {
 
 function mapStateToProps(state, ownProps) {
     return { 
-        days: state.day.all,
+        days: state.day.all || [],
         user: state.auth.user
     };
 }

@@ -3,6 +3,8 @@ var Excel = require('exceljs');
 var moment = require('moment');
 const nodemailer = require('nodemailer');
 
+var ObjectId = require('mongoose').Types.ObjectId;
+
 //var Q = require('q'); // We can now use promises!
 var async = require('async');
 var path = require('path');
@@ -57,7 +59,7 @@ exports.closeDay = function(req, res, next) {
     const officeId = req.headers.officeid;
     const dayId = req.headers.dayid;
     const newDate = new Date();
-    
+
     // var transporter = nodemailer.createTransport({
     //     service: 'Mailgun',
     //     auth: {
@@ -67,17 +69,17 @@ exports.closeDay = function(req, res, next) {
     //         domain: 'sandbox3249234.mailgun.org'
     //     }
     // });
- 
-    //     // setup e-mail data with unicode symbols 
+
+    //     // setup e-mail data with unicode symbols
     //     var mailOptions = {
-    //         from: '"Fred Foo " <rbokhari@gmail.com>', // sender address 
-    //         to: 'rahman_naveed@hotmail.com', // list of receivers 
-    //         subject: 'Hello ', // Subject line 
-    //         text: 'Hello world', // plaintext body 
-    //         html: '<b>Hello world</b>' // html body 
+    //         from: '"Fred Foo " <rbokhari@gmail.com>', // sender address
+    //         to: 'rahman_naveed@hotmail.com', // list of receivers
+    //         subject: 'Hello ', // Subject line
+    //         text: 'Hello world', // plaintext body
+    //         html: '<b>Hello world</b>' // html body
     //     };
-        
-    //     // send mail with defined transport object 
+
+    //     // send mail with defined transport object
     //     transporter.sendMail(mailOptions, function(error, info){
     //         if(error){
     //             return console.log(error);
@@ -90,8 +92,13 @@ exports.closeDay = function(req, res, next) {
     Day.findOne({ '_id': dayId}, function(err, day){
 
         if (err) next(err);
+        console.info('companyId', companyId);
+        console.info('officeId', officeId);
+        console.info('dayId', dayId);
+
 
         const today = new Date(day.today);
+
         var morningToday = day.today;
         var close = day.close;
         var morningSale = 0;
@@ -106,10 +113,9 @@ exports.closeDay = function(req, res, next) {
             Purchase.aggregate([
                 { "$match": {
                     "$and": [
-                        { "companyId": companyId },
-                        { "officeId": officeId },
+                        { "companyId": new ObjectId(companyId) },
+                        { "officeId": new ObjectId(officeId) },
                         { "created": { "$gte": today, "$lte": newDate }},
-                        //{ "created": { "$lte": newDate }}
                     ]
                 } },
                 { "$group": {
@@ -117,27 +123,32 @@ exports.closeDay = function(req, res, next) {
                     "total": { "$sum": "$total"}
                 }}
             ], function(err, purchases) {
-                if (err) { cb(err); }
+                if (err) {
+                    console.log('Purchase Error: ' + err);
+                    cb(err);
+                }
                 cb(null, purchases);
             });
         });
-	
+
         queries.push(function(cb) {
             Expense.aggregate([
 		        { "$match": {
                     "$and": [
-                        { "companyId": companyId },
-                        { "officeId": officeId },
+                        { "companyId": new ObjectId(companyId) },
+                        { "officeId": new ObjectId(officeId) },
                         { "created": { "$gte": today, "$lte": newDate }},
-                        //{ "created": { "$lte": newDate }}
                     ]
-                } },                
+                } },
                 { "$group": {
                     "_id": dayId,
                     "total": { "$sum": "$amount"}
                 }}
             ], function(err, expenses) {
-                if (err) { cb(err); }
+                if (err) {
+                    console.log('Expense Error: ' + err);
+                    cb(err);
+                }
                 cb(null, expenses);
             });
 
@@ -145,30 +156,34 @@ exports.closeDay = function(req, res, next) {
 
         morningToday.setHours(15);
         morningToday.setMinutes(0);
-
-        // morning sale query for NOT Phone type 
+        console.info('time', today, newDate, morningToday);
+        // morning sale query for NOT Phone type
         queries.push(function(cb) {
             Customer.aggregate([
                 { $match: {
                     $and: [
-                        { companyId: companyId },
-                        { officeId: officeId },
+                        { companyId: new ObjectId(companyId) },
+                        { officeId: new ObjectId(officeId) },
                         { dayId: parseInt(dayId) },
                         { created: { "$lt" : morningToday } }
                     ]
-                }}, 
+                }},
                 {
                     $unwind: "$products"
                 },
                 {
-                    $match: { "products.type" : { "$not": { $eq: 3 } } } 
+                    $match: { "products.type" : { "$not": { $eq: 3 } } }
                 },
                 { $group: {
                     _id: "$dayId",
                     total: { $sum: "$products.price"}
                 }},
             ], function(err, morningSale) {
-                if (err) { throw cb(err); }
+                if (err) {
+                    console.log('Customer Morning Error: ' + err);
+                    cb(err);
+                }
+                console.info('morning sale', morningSale);
                 cb(null, morningSale);
             });
         });
@@ -178,12 +193,12 @@ exports.closeDay = function(req, res, next) {
             Customer.aggregate([
                 { "$match": {
                     "$and": [
-                        { "companyId": companyId },
-                        { "officeId": officeId },
+                        { "companyId": new ObjectId(companyId) },
+                        { "officeId": new ObjectId(officeId) },
                         { "dayId": parseInt(dayId) },
-                        { "created": { "$gte" : morningToday } }
+                        //{ "created": { "$gte" : morningToday } }
                     ]
-                }}, 
+                }},
                 {
                     "$unwind": "$products"
                 },
@@ -195,7 +210,10 @@ exports.closeDay = function(req, res, next) {
                     "total": { "$sum": "$products.price"}
                 }},
             ], function(err, eveningSale) {
-                if (err) { cb(err); }
+                if (err) {
+                    console.log('Customer Evening Error: ' + err);
+                    cb(err);
+                }
                 cb(null, eveningSale);
             });
         });
@@ -205,12 +223,12 @@ exports.closeDay = function(req, res, next) {
             Customer.aggregate([
                 { $match: {
                     $and: [
-                        { companyId: companyId },
-                        { officeId: officeId },
+                        { companyId: new ObjectId(companyId) },
+                        { officeId: new ObjectId(officeId) },
                         { dayId: parseInt(dayId) },
                         { created: { "$lt" : morningToday } }
                     ]
-                }}, 
+                }},
                 {
                     $unwind: "$products"
                 },
@@ -222,7 +240,10 @@ exports.closeDay = function(req, res, next) {
                     total: { $sum: "$products.price"}
                 }},
             ], function(err, morningSalePhoneCard) {
-                if (err) { throw cb(err); }
+                if (err) {
+                    console.log('Customer Morning Phone card Error: ' + err);
+                    cb(err);
+                }
                 cb(null, morningSalePhoneCard);
             });
         });
@@ -232,12 +253,12 @@ exports.closeDay = function(req, res, next) {
             Customer.aggregate([
                 { "$match": {
                     "$and": [
-                        { "companyId": companyId },
-                        { "officeId": officeId },
+                        { "companyId": new ObjectId(companyId) },
+                        { "officeId": new ObjectId(officeId) },
                         { "dayId": parseInt(dayId) },
                         { "created": { "$gte" : morningToday } }
                     ]
-                }}, 
+                }},
                 {
                     "$unwind": "$products"
                 },
@@ -249,16 +270,19 @@ exports.closeDay = function(req, res, next) {
                     "total": { "$sum": "$products.price"}
                 }},
             ], function(err, eveningSalePhoneCard) {
-                if (err) { cb(err); }
+                if (err) {
+                    cb(err);
+                    console.log('Customer Evening Phone card Error: ' + err);
+                }
                 cb(null, eveningSalePhoneCard);
             });
         });
 
         // executing all queries at once
         async.parallel(queries, function(err, docs) {
-            if (err) { 
+            if (err) {
                 console.log("error queries", err);
-                return next(err); 
+                return next(err);
             }
             const result1 = docs[0];
             const result2 = docs[1];
@@ -266,6 +290,7 @@ exports.closeDay = function(req, res, next) {
             const result4 = docs[3];    // evening sale for Not Phone Card Type
             const result5 = docs[4];    // monring sale for Phone Card Type
             const result6 = docs[5];    // evening sale for Phone Card Type
+            console.log('result >>', docs);
 
             if (result1.length > 0) { netPurchases = result1[0].total; }
             if (result2.length > 0) { netExpenses = result2[0].total; }
@@ -274,28 +299,28 @@ exports.closeDay = function(req, res, next) {
             if (result5.length > 0) { morningSalePhoneCard = result5[0].total; }
             if (result6.length > 0) { eveningSalePhoneCard = result6[0].total; }
 
-            Day.update( { $and: [ 
-                                    { _id: dayId } , 
-                                    { companyId: companyId }, 
+            Day.update( { $and: [
+                                    { _id: dayId } ,
+                                    { companyId: companyId },
                                     { officeId: officeId }
-                                ] }, 
-                            { 
+                                ] },
+                            {
                                 __v: 1,
-                                status: 1, 
-                                close: newDate, 
-                                morningSale: morningSale, 
-                                eveningSale: eveningSale, 
-                                morningSalePhoneCard: morningSalePhoneCard, 
-                                eveningSalePhoneCard: eveningSalePhoneCard, 
-                                netSale: morningSale + eveningSale + morningSalePhoneCard + eveningSalePhoneCard,
+                                status: 1,
+                                close: newDate,
+                                morningSale: morningSale,
+                                eveningSale: eveningSale,
+                                morningSalePhoneCard: morningSalePhoneCard,
+                                eveningSalePhoneCard: eveningSalePhoneCard,
+                                netSale: morningSale + eveningSale,
                                 netPurchase: netPurchases,
                                 netExpense: netExpenses
-                            }, 
+                            },
                                 function(err, existing) {
 
-                if (err) { 
+                if (err) {
                     console.log(err);
-                    return next(err); 
+                    return next(err);
                 }
                 res.sendStatus(200);
                 next();
@@ -317,15 +342,15 @@ exports.printThisDay = function(req, res, next) {
     const dayId = req.params.id;
     var wstream = fs.createWriteStream('pdf/' + dayId + '.cld');    // take this extension in service to get proper report print
     wstream.end();
-    res.send(200);
+    res.sendStatus(200);
 };
 
 exports.getAll = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-    Day.find({ 
-        $and: [ 
-            { companyId: companyId }, 
+    Day.find({
+        $and: [
+            { companyId: companyId },
             { officeId: officeId }
         ]}, {}, { sort: {_id: -1} }, function(err, days) {
 
@@ -339,10 +364,10 @@ exports.getAll = function(req, res, next) {
 exports.getById = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-    Day.find({ 
-            $and: [ 
-                    { companyId: companyId }, 
-                    { officeId: officeId }, 
+    Day.find({
+            $and: [
+                    { companyId: companyId },
+                    { officeId: officeId },
                     { _id: req.params.id }
                 ]}, function(err, category){
 
@@ -357,10 +382,10 @@ exports.getOpenDay = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
     if (companyId != '0' && officeId != '0') {
-        Day.findOne({ 
-                $and: [ 
-                        { companyId: companyId }, 
-                        { officeId: officeId }, 
+        Day.findOne({
+                $and: [
+                        { companyId: companyId },
+                        { officeId: officeId },
                         { status: 0 }
                     ]}, function(err, day){
 
@@ -380,10 +405,10 @@ exports.getDayBetweenDates = function(req, res, next) {
     const fromDate = new Date(req.body.fromDate);
     const toDate = new Date(req.body.toDate);
 
-    Day.find({ 
-            $and: [ 
-                    { companyId: companyId }, 
-                    { officeId: officeId }, 
+    Day.find({
+            $and: [
+                    { companyId: companyId },
+                    { officeId: officeId },
                     { created: {
                         $gte: fromDate,
                         $lte: toDate
@@ -398,7 +423,6 @@ exports.getDayBetweenDates = function(req, res, next) {
 };
 
 exports.getExcelBetweenDates = function(req, res, next) {
-
     var startDay = new Date(req.query.fromDate);
     var endDay = new Date(req.query.toDate);
     var oneDay = 1000 * 60 * 60 * 24;
@@ -412,7 +436,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
     workbook.modified = new Date();
     workbook.lastPrinted = new Date(2016, 9, 27);
 
-    // Set workbook dates to 1904 date system 
+    // Set workbook dates to 1904 date system
     workbook.properties.date1904 = true;
 
     var worksheet = workbook.addWorksheet('Summary Report', {properties:{tabColor:{argb:'FFC0000'}}, views:[{xSplit: 100, ySplit:1}]});
@@ -420,14 +444,13 @@ exports.getExcelBetweenDates = function(req, res, next) {
     // worksheet.getCell('A1').value = 'I am merged';
     // worksheet.getCell('C1').value = 'I am not';
     // worksheet.getCell('C2').value = 'Neither am I';
-    //worksheet.getRow(2).commit(); // now rows 1 and two are committed. 
+    //worksheet.getRow(2).commit(); // now rows 1 and two are committed.
 
     //var startCol = worksheet.getColumn('C');
-
     var totalDays = Math.round((endDay - startDay)/oneDay);
     var dateHeader = startDay;
     var startRow = 2;
-    
+
     const titleRowNumber = startRow-1;
     const titleRow = worksheet.getRow(titleRowNumber);
 
@@ -443,25 +466,26 @@ exports.getExcelBetweenDates = function(req, res, next) {
     const eveningSaleRowNumber = startRow + 4;
     const eveningSaleRow = worksheet.getRow(eveningSaleRowNumber);
 
-    const morningSalePhoneCardRowNumber = startRow + 5;
-    const morningSalePhoneCardRow = worksheet.getRow(morningSalePhoneCardRowNumber);
-
-    const eveningSalePhoneCardRowNumber = startRow + 6;
-    const eveningSalePhoneCardRow = worksheet.getRow(eveningSalePhoneCardRowNumber);
-
-    const totalSaleRowNumber = startRow + 7;
+    const totalSaleRowNumber = startRow + 5;
     const totalSaleRow = worksheet.getRow(totalSaleRowNumber);
 
-    const netBalanceRowNumber = startRow + 8;
+    const netBalanceRowNumber = startRow + 6;
     const netBalanceRow = worksheet.getRow(netBalanceRowNumber);
 
-    const totalPurchaseRowNumber = startRow + 9;
+    const totalPurchaseRowNumber = startRow + 7;
     const totalPurchaseRow = worksheet.getRow(totalPurchaseRowNumber);
 
-    const expenseTotalRowNumber = startRow + 10;
+    const expenseTotalRowNumber = startRow + 8;
     const expenseTotalRow = worksheet.getRow(expenseTotalRowNumber);
 
-    const expenseRow = expenseTotalRowNumber + 1;
+    const morningSalePhoneCardRowNumber = startRow + 10;
+    const morningSalePhoneCardRow = worksheet.getRow(morningSalePhoneCardRowNumber);
+
+    const eveningSalePhoneCardRowNumber = startRow + 11;
+    const eveningSalePhoneCardRow = worksheet.getRow(eveningSalePhoneCardRowNumber);
+
+
+    const expenseRow = eveningSalePhoneCardRowNumber + 1;
 
     //worksheet.addRow();
     titleRow.getCell(1).value = 'Expense Detail Report';
@@ -483,7 +507,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
     for (i = 0; i<totalDays; i++ ){
         dayRow.getCell(i+2).value = moment(new Date(dateHeader.getTime() + (86400000 * i))).format('dddd') ;
     }
-    
+
     morningSaleRow.getCell(1).value = 'Morning Sale';
     morningSaleRow.getCell(1).font = { bold: true };
     eveningSaleRow.getCell(1).value = 'Evening Sale';
@@ -503,10 +527,10 @@ exports.getExcelBetweenDates = function(req, res, next) {
 
     var queries = [];
     queries.push(function(cb){
-        Day.find({ 
-            $and: [ 
-                    // { companyId: companyId }, 
-                    // { officeId: officeId }, 
+        Day.find({
+            $and: [
+                    // { companyId: companyId },
+                    // { officeId: officeId },
                     { today: {
                         $gte: startDay,
                         $lte: endDay
@@ -518,7 +542,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
     });
 
     queries.push(function(cb) {
-        Expense.find({ 
+        Expense.find({
             $and: [
                 // { companyId: companyId },
                 // { officeId: officeId },
@@ -535,19 +559,19 @@ exports.getExcelBetweenDates = function(req, res, next) {
 
     queries.push(function(cb) {
         Purchase.aggregate([
-            { "$match": 
+            { "$match":
                 {
                     "$and": [
                         { "companyId": companyId },
                         { "officeId": officeId },
                         { "created": { "$gte": startDay, "$lte": endDay }}
                     ]
-                } 
+                }
             },
             {
                 "$unwind": "$amounts"
             },
-            { "$project": 
+            { "$project":
                 {
                     "_id": 1,
                     "billNo" : 1,
@@ -585,7 +609,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
     //         console.log('customers', customers);
     //         cb(null, customers);
     //     });
-    // });    
+    // });
 
     async.parallel(queries, function(err, docs) {
         if (err) { next(err); }
@@ -686,7 +710,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
 
         totalPurchaseRow.getCell(totalDays + 3).value = 'Total Purchase : ';
         totalPurchaseRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + totalPurchaseRowNumber + ':' + columnToLetter(totalDays+1) + totalPurchaseRowNumber + ')'};
-        
+
         expenseTotalRow.getCell(totalDays + 3).value = 'Total Expense : ';
         expenseTotalRow.getCell(totalDays + 4).value = { formula: 'SUM(B' + expenseTotalRowNumber + ':' + columnToLetter(totalDays+1) + expenseTotalRowNumber + ')'};
         expenseTotalRow.getCell(totalDays + 4).font = { color: {argb: 'D21025'} };
@@ -705,7 +729,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
 //stream.pipe(workbook.csv.createInputStream());
         workbook.xlsx.writeFile(fullPath)
                 .then(function() {
-                    // done 
+                    // done
                     //res.setHeader('Content-Type', 'application/json');
                     console.log("excel file created");
                     //res.sendStatus(200);
@@ -735,8 +759,7 @@ function getRowNuber(worksheet, value) {
     return index;
 }
 
-function columnToLetter(column)
-{
+function columnToLetter(column){
   var temp, letter = '';
   while (column > 0)
   {
@@ -747,8 +770,7 @@ function columnToLetter(column)
   return letter;
 }
 
-function letterToColumn(letter)
-{
+function letterToColumn(letter){
   var column = 0, length = letter.length;
   for (var i = 0; i < length; i++)
   {

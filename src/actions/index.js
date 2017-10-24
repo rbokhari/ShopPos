@@ -7,6 +7,7 @@ import { USER_ROLE, PRODUCT_TYPE } from '../../shared/constants';
 
 import { hideNotification, successNotification, errorNotification } from './notification';
 import { loadOpenDay, loadCloseDay, createDay, loadDays, printDay } from './day';
+import { loadCustomerByDayId, printCustomer } from './customer';
 
 import { beginAjaxCall } from './ajaxStatusActions';
 
@@ -25,7 +26,8 @@ import dayApi from '../api/dayApi';
 
 export {
     hideNotification, successNotification, errorNotification,
-    loadOpenDay, loadCloseDay, createDay, loadDays, printDay
+    loadOpenDay, loadCloseDay, createDay, loadDays, printDay,
+    loadCustomerByDayId, printCustomer
 };
 
 // export function showNotification(message) {
@@ -693,7 +695,8 @@ export function loadCustomers() {
         });
     };
 }
- 
+
+
 // Purchase Order Actions
 export function createPurchaseOrderSuccess( po ) {
     return {

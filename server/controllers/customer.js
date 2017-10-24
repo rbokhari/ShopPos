@@ -83,6 +83,7 @@ exports.printReceipt = function(req, res, next) {
 // wstream.write('Another line\n');
         wstream.end();
         next();
+        //req.sendStatus(200);
 
 // var fontDescriptors = {
 //   Roboto: {
@@ -248,7 +249,7 @@ exports.getCustomersByDayId = function(req, res, next) {
             
 
             if (err) { return next(err); }
-            next();
+            //next();
             res.setHeader('Content-Type', 'application/json');
             res.json(customers);
         });

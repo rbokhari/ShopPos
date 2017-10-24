@@ -72,6 +72,9 @@ module.exports = function(app, io) {
                 (req, res, next) => { io.sockets.emit('customer', '1'); });
     app.get('/customer/:status', Customer.getAllByStatus); //, (req, res) => { console.log("socket emit here"); io.sockets.emit('customer', '1'); } );
     app.get('/customer/:dayId/day', Customer.getCustomersByDayId);
+    app.get('/customer/:id/:newStatus/print', 
+                Customer.printReceipt,
+                (req, res, next) => { res.sendStatus(200); });
 
     // Purchase Routes
     app.post('/purchase/create', Purchase.createPurchase);

@@ -49,12 +49,14 @@ const DayList = ({days, user, onPrintDay}) => {
                                 {user && (user.roleId === USER_ROLE.ADMIN) && <TableRowColumn>{day.netExpense && day.netExpense.toFixed(3)}</TableRowColumn>}
                                 {user && (user.roleId === USER_ROLE.ADMIN) && <TableRowColumn>{day.netPurchase && day.netPurchase.toFixed(3)}</TableRowColumn>}
                                 <TableRowColumn>
-                                    {day.status == 1 && <IconButton onClick={onPrintDay.bind(this, day._id)}>
+                                    <Link to={`day/${day._id}`}>
+                                        <IconButton>
+                                            <Icons.PersonPin />
+                                        </IconButton>
+                                    </Link>
+                                    {day.status == 1 && <IconButton onClick={onPrintDay.bind(this, day._id)} tooltip='Print Day Summary'>
                                         <Icons.ActionPrint />
                                     </IconButton>}
-                                    <IconButton>
-                                        <Icons.PersonPin />
-                                    </IconButton>
                                 </TableRowColumn>
                             </TableRow>
                         )}

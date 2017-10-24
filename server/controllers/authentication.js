@@ -138,7 +138,6 @@ exports.user = function(req, res, next) {
             if (err) { return next(err); }
             const result1 = docs[0];
             const result2 = docs[1];
-            console.log('result2', result2);
             //const branch = JSON.get(result2);
             result = Object.assign({}, result, { 
                 company: { companyId: result1._id, name: result1.name, displayName: result1.displayName}

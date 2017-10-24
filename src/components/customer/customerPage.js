@@ -5,8 +5,8 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import { connect } from 'react-redux';
-import { loadDays, printDay, successNotification, errorNotification } from '../../actions';
-import DayList from './DayList';
+import { loadDays, loadCustomerByDayId, printCustomer, successNotification, errorNotification } from '../../actions';
+import CustomerList from './CustomerList';
 
 const style = {
     marginTop: 40
@@ -15,16 +15,24 @@ const style = {
 class CustomerPage extends Component {
     constructor(props, context) {
         super(props, context);
-        this.props.loadDays();
 
-        this.printThisDay = this.printThisDay.bind(this);
+        this.printThisCustomer = this.printThisCustomer.bind(this);
     }
 
-    printThisDay(id) {
-        const { printDay, successNotification, errorNotification } = this.props;
-        printDay(id)
+    componentWillMount() {
+        const { dayId, day, loadDays, loadCustomerByDayId } = this.props;
+        
+        if (typeof day === 'undefined') {
+            loadDays();
+        } 
+        loadCustomerByDayId(dayId);
+    }
+
+    printThisCustomer(id) {
+        const { printCustomer, successNotification, errorNotification } = this.props;
+        printCustomer(id, 3)    // 3 = customerstatus.delivered
             .then(res => {
-                successNotification('Printing done !')
+                successNotification('Printing Send !');
             })
             .catch(err => {
                 errorNotification('Some error occured !');
@@ -32,11 +40,11 @@ class CustomerPage extends Component {
     }
 
     render() {
-        const { days, user } = this.props;
+        const { customers, day, user } = this.props;
 
         return (
             <div style={style}>
-                <DayList days={days} user={user} onPrintDay={this.printThisDay} />
+                <CustomerList customers={customers} day={day} onPrintCustomer={this.printThisCustomer } />
             </div>
         );
     }
@@ -48,10 +56,14 @@ CustomerPage.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
+    const dayId = ownProps.params.dayId;
+    const day = state.day.all.filter(d=> d._id == dayId)[0];
     return { 
-        days: state.day.all,
+        dayId: ownProps.params.dayId,
+        day: day,
+        customers: state.day.customers || [],
         user: state.auth.user
     };
 }
 
-export default connect(mapStateToProps, { loadDays, printDay, successNotification, errorNotification })(CustomerPage);
+export default connect(mapStateToProps, { loadDays, loadCustomerByDayId, printCustomer, successNotification, errorNotification })(CustomerPage);
