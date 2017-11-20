@@ -22,6 +22,7 @@ import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import ActionToday from 'material-ui/svg-icons/action/today';
 import ActionPrint from 'material-ui/svg-icons/action/print';
 import PersonPin from 'material-ui/svg-icons/maps/person-pin';
+import DateRange from 'material-ui/svg-icons/action/date-range';
         
 
 const muiTheme = getMuiTheme({
@@ -64,7 +65,8 @@ const Icons = {
     ActionFavorite,
     ActionToday,
     ActionPrint,
-    PersonPin
+    PersonPin,
+    DateRange
 };
 
 const Colors = {

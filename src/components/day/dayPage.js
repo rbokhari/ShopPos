@@ -52,7 +52,7 @@ DayPage.propTypes = {
 
 function mapStateToProps(state, ownProps) {
     return { 
-        days: state.day.all || [],
+        days: state.days.all,
         user: state.auth.user
     };
 }

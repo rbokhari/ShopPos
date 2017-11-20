@@ -13,6 +13,10 @@ const purchaseSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'office'
     },
+    dayId: { 
+        type: Number, 
+        ref: 'day'
+    },
     billNo: { type: String },
     billDate: { type: String },
     supplierId: { 

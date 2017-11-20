@@ -83,6 +83,7 @@ export const CREATE_DAY                                 = 'CREATE_DAY';
 export const CREATE_DAY_SUCCESS                         = 'CREATE_DAY_SUCCESS';
 export const LOAD_DAY_SUCCESS                           = 'LOAD_DAY_SUCCESS';
 export const LOAD_DAY_CUSTOMER_SUCCESS                  = 'LOAD_DAY_CUSTOMER_SUCCESS';
+export const LOAD_SINGLE_DAY_SUCCESS                    = 'LOAD_SINGLE_DAY_SUCCESS';
 
 export const DIALOG_CUSTOMER_DETAIL_OPEN                = 'DIALOG_CUSTOMER_DETAIL_OPEN';
 export const DIALOG_CUSTOMER_DETAIL_CLOSE               = 'DIALOG_CUSTOMER_DETAIL_CLOSE';

@@ -13,6 +13,10 @@ const expenseSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'office'
     },
+    dayId: { 
+        type: Number, 
+        ref: 'day'
+    },
     code : { type: String, unique: true, lowercase: true },
     created: { type: Date, default: Date.now },
     amount: { type: Number },

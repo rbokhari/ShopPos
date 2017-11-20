@@ -27,6 +27,7 @@ if (token) {
     store.dispatch(loadCustomers());
 }
 
+
 const socket = io('http://localhost:3090');
     //var socket = io('http://localhost', {transports: ['websocket', 'polling', 'flashsocket']});
 socket.on('customer', function(data) {

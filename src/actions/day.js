@@ -86,6 +86,20 @@ export function loadDays() {
     };
 }
 
+export function loadDayById(id) {
+    return function(dispatch) {
+        return dayApi.getDayById(id)
+            .then( res => {
+                dispatch({
+                    type: types.LOAD_SINGLE_DAY_SUCCESS,
+                    payload: res.data
+                });
+            }).catch (error => {
+                throw(error);
+            });
+    };
+}
+
 export function printDay(id) {
     return function(dispatch) {
         return dayApi.printDay(id);

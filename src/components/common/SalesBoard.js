@@ -138,7 +138,7 @@ class SalesBoard extends Component {
 
     handleDecreaseQty(index) {
         var customer = this.state.customer;
-        customer.products[index].qty -=1;
+        customer.products[index].qty -= 1;
         customer.products[index].price = customer.products[index].qty * customer.products[index].unitPrice;
         if (customer.products[index].qty === 0) {
             customer.products.splice(index, 1);
@@ -269,7 +269,6 @@ class SalesBoard extends Component {
     handleCustomerFormSubmit() {
         const { createCustomer, successNotification, errorNotification } = this.props;
         const customer = this.state.customer;
-        console.info('customer new', customer);
         createCustomer( customer )
             .then(res => {
                 successNotification('New Customer added !');
@@ -379,6 +378,7 @@ SalesBoard.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
+    console.info('state sales board', state);
     return {
         products: state.products,
         categories: state.categories,

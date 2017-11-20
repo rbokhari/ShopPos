@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import { USER_ROLE, PRODUCT_TYPE } from '../../shared/constants';
 
 import { hideNotification, successNotification, errorNotification } from './notification';
-import { loadOpenDay, loadCloseDay, createDay, loadDays, printDay } from './day';
+import { loadOpenDay, loadCloseDay, createDay, loadDays, printDay, loadDayById } from './day';
 import { loadCustomerByDayId, printCustomer } from './customer';
 
 import { beginAjaxCall } from './ajaxStatusActions';
@@ -27,7 +27,7 @@ import dayApi from '../api/dayApi';
 export {
     hideNotification, successNotification, errorNotification,
     loadOpenDay, loadCloseDay, createDay, loadDays, printDay,
-    loadCustomerByDayId, printCustomer
+    loadCustomerByDayId, printCustomer, loadDayById
 };
 
 // export function showNotification(message) {

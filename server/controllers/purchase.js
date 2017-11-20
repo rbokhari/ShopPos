@@ -17,6 +17,7 @@ exports.createPurchase = function(req, res, next) {
     const purchase = new Purchase({
         companyId: req.headers.companyid,
         officeId: req.headers.officeid,
+        dayId: req.headers.dayid,
         billNo: req.body.billNo,
         billDate: req.body.billDate,
         supplierId: req.body.supplierId,
@@ -85,10 +86,10 @@ exports.getByDate = function(req, res, next) {
         $and: [
             { companyId: companyId },
             { officeId: officeId },
-            { billDate: {
-                $gte: fromDate,
-                $lte: toDate
-            }}
+            // { billDate: {
+            //     $gte: fromDate,
+            //     $lte: toDate
+            // }}
         ] }, {}, { sort : {created: -1} }, function(err, purchases){
         
 

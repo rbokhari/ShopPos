@@ -11,8 +11,12 @@ export default {
         customer: {},   // single customer detail
     },
     isLoadPasswordDialog: false,
-    day: {
+    day: {},
+    days: {
         all: [],
+        day: {},
+        expenses: [],
+        purchases: [],
         customers: []
     },
     user: {},

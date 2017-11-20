@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 
 import Moment from 'moment';
 
@@ -54,11 +55,13 @@ class Dashboard extends Component {
     }
 
     handleCloseDay() {
+        const dayId = localStorage.getItem('dayId');
         if (confirm('Are you sure to close this day ?')) {
             this.props.loadCloseDay()
-                .then(res=>{
-                    this.setState({load: 3});
-                });
+            .then(res => {
+                browserHistory.push(`day/${dayId}`);
+                //this.setState({load: 3});
+            });
         }
     }
 

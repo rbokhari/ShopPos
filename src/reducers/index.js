@@ -21,6 +21,7 @@ import isLoadPasswordDialog from './passwordReducer';
 import dialogReducer from './dialogReducer';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 import notification from './notificationReducer';
+import days from './daysReducer';
 
 const rootReducer = combineReducers({
   form,
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   dialog: dialogReducer,
   ajaxCallsInProgress, 
   day,
+  days,
   isLoadPasswordDialog,
   items,
   categories,

@@ -57,11 +57,11 @@ CustomerPage.propTypes = {
 
 function mapStateToProps(state, ownProps) {
     const dayId = ownProps.params.dayId;
-    const day = state.day.all.filter(d=> d._id == dayId)[0];
+    const day = state.days.all.filter(d=> d._id == dayId)[0];
     return { 
         dayId: ownProps.params.dayId,
         day: day,
-        customers: state.day.customers || [],
+        customers: state.days.customers,
         user: state.auth.user
     };
 }

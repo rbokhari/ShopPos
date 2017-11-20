@@ -13,6 +13,7 @@ exports.createExpense = function(req, res, next) {
 
     const expense = new Expense({
         //code: code,
+        dayId: req.headers.dayid,
         created: created,
         description: description,
         amount: amount,

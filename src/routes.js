@@ -15,7 +15,7 @@ import { ExpensePage, ExpenseNew } from './components/expense';
 import { KitchenBoard, DispatchBoard } from './components/common';
 import { ReportPage } from './components/report';
 import { SignIn, Signout, CreateAccount, RequireAuth } from './components/auth';
-import { DayPage } from './components/day';
+import { DayPage, DaySummary } from './components/day';
 import { CustomerPage } from './components/customer';
 
 const routes = <Route path="/" component={App}>
@@ -46,8 +46,9 @@ const routes = <Route path="/" component={App}>
                 <Route path="supplier/:id/edit" component={SupplierNew} />
                 
                 <Route path="day" component={DayPage} />
-                <Route path="day/:dayId" component={CustomerPage} />
-
+                <Route path="day/:dayId/customer" component={CustomerPage} />
+                <Route path="day/:dayId" component={DaySummary} />
+                
                 <Route path="product" component={ProductPage} />
                 <Route path="product/new" component={ProductNew} />
                 <Route path="product/:id/edit" component={ProductNew} />

@@ -5,6 +5,10 @@ class DayApi {
         return Api.get('day');
     }
 
+    static getDayById(id) {
+        return Api.get(`day/${id}`);
+    }
+
     static createDay () {    
         return Api.post('day/create');
     }

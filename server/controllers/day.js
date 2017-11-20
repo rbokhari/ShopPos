@@ -92,10 +92,6 @@ exports.closeDay = function(req, res, next) {
     Day.findOne({ '_id': dayId}, function(err, day){
 
         if (err) next(err);
-        console.info('companyId', companyId);
-        console.info('officeId', officeId);
-        console.info('dayId', dayId);
-
 
         const today = new Date(day.today);
 
@@ -156,7 +152,6 @@ exports.closeDay = function(req, res, next) {
 
         morningToday.setHours(15);
         morningToday.setMinutes(0);
-        console.info('time', today, newDate, morningToday);
         // morning sale query for NOT Phone type
         queries.push(function(cb) {
             Customer.aggregate([
@@ -290,7 +285,7 @@ exports.closeDay = function(req, res, next) {
             const result4 = docs[3];    // evening sale for Not Phone Card Type
             const result5 = docs[4];    // monring sale for Phone Card Type
             const result6 = docs[5];    // evening sale for Phone Card Type
-            console.log('result >>', docs);
+            //console.log('result >>', docs);
 
             if (result1.length > 0) { netPurchases = result1[0].total; }
             if (result2.length > 0) { netExpenses = result2[0].total; }
@@ -364,18 +359,97 @@ exports.getAll = function(req, res, next) {
 exports.getById = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-    Day.find({
-            $and: [
+    const dayId = req.params.id;
+    var queries = [];
+
+    // Day.findOne({
+    //     $and: [
+    //             { companyId: companyId },
+    //             { officeId: officeId },
+    //             { _id: dayId }
+    //         ]}, function(err, day){
+
+    //     if (err) { cb(err); }
+        
+    //     const today = new Date(day.today);
+    //     const close = new Date(day.close);
+
+        queries.push(function(cb){
+            Day.findOne({
+                $and: [
+                        { companyId: companyId },
+                        { officeId: officeId },
+                        { _id: dayId }
+                    ]}, function(err, day){
+        
+                if (err) { cb(err); }
+                cb(null, day);
+            });
+        });
+
+        queries.push(function(cb){
+            Expense.find({ 
+                $and: [
                     { companyId: companyId },
                     { officeId: officeId },
-                    { _id: req.params.id }
-                ]}, function(err, category){
+                    { dayId: dayId }
+                    // { created: {
+                    //     $gte: today,
+                    //     $lte: close
+                    // }}
+                ] }, {}, { sort : {created: -1} }, function(err, expenses){
+                
+                if (err) { return cb(err); }
+                cb(null, expenses);
+            });
+        });
+    
+        queries.push(function(cb) {
+            Purchase.find({ 
+                $and: [
+                    { companyId: companyId },
+                    { officeId: officeId },
+                    { dayId: dayId }
+                    // { billDate: {
+                    //     $gte: today,
+                    //     $lte: close
+                    // }}
+                ] }, {}, { sort : {created: -1} }, function(err, purchases){
+                
+        
+                if (err) { cb(err); }
+                cb(null, purchases);
+            });        
+        });
 
-        if (err) { return next(err); }
+        async.parallel(queries, function(err, docs) {
+            if (err) {
+                console.log("error queries", err);
+                return next(err);
+            }
+            const day = docs[0];
+            const expenses = docs[1];
+            const purchases = docs[2];
 
-        res.setHeader('Content-Type', 'application/json');
-        res.json(category);
-    });
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ day: day, expenses: expenses, purchases: purchases });
+            
+        });
+        
+    //});
+
+    // Day.findOne({
+    //         $and: [
+    //                 { companyId: companyId },
+    //                 { officeId: officeId },
+    //                 { _id: dayId }
+    //             ]}, function(err, day){
+
+    //     if (err) { return next(err); }
+
+    //     res.setHeader('Content-Type', 'application/json');
+    //     res.json(day);
+    // });
 };
 
 exports.getOpenDay = function(req, res, next) {
@@ -387,7 +461,8 @@ exports.getOpenDay = function(req, res, next) {
                         { companyId: companyId },
                         { officeId: officeId },
                         { status: 0 }
-                    ]}, function(err, day){
+                    ]
+                }, function(err, day){
 
             if (err) { return next(err); }
 
