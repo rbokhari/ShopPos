@@ -9,9 +9,11 @@ const LocalStrategy = require('passport-local');
 const localOptions = { usernameField: 'email' };
 const localLogin = new LocalStrategy(localOptions, function(email, password, done) {
     // verify this username and password, call done with that user
+    console.log('local here', email);
     User.findOne( {email: email })
         //.populate('companies company')
         .exec(function(err, user) {
+            console.log('local user', user);
             if (err) { return done(err); }
             if (!user) { return done(null, false); }    // if user not found
             // compare passwords
@@ -35,6 +37,7 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done) {  //payloa
     // see if user id in the payload exists in out database
     // if it does, call 'done' with that 
     // else call 'done' without user object
+    console.log('jwtLogin here');
     User.findById(payload.sub, function(err, user) {
         if (err) return done(err, false); 
 

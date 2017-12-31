@@ -13,6 +13,7 @@ function tokenForUser(user) {
 }
 
 exports.signin = function(req, res, next) {
+    console.log('singin', req);
     // user already authenticated, just give token now
     // const user = {
     //     id: req.user._id,
@@ -30,6 +31,7 @@ exports.signin = function(req, res, next) {
         companyId: user.companyId,
         officeId: user.officeId ? user.officeId : 0
     };
+    console.info("user", user);
     if (user) {
         if (user.companyId) {
             Company.findById(user.companyId, function(err, company) {

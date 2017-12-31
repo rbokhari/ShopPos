@@ -25,7 +25,9 @@ class ExpensePage extends Component {
 
     constructor(props, context) {
         super(props, context);
-
+    }
+    
+    componentDidMount() {
         this.props.loadExpenses();
     }
 
@@ -40,7 +42,8 @@ class ExpensePage extends Component {
 
         return (
             <div>
-                <FloatingActionButton style={fabStyle} secondary={true} onTouchTap={() => browserHistory.push('/expense/new')} 
+                <FloatingActionButton style={fabStyle} secondary={true} 
+                    onTouchTap={() => browserHistory.push('/expense/new')} 
                     disabled={day==null} >
                     <ContentAdd />
                 </FloatingActionButton>
@@ -56,8 +59,6 @@ ExpensePage.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
-    //var day = { _id:'0', today: '' };
-    console.info('day', state.day);
     return { 
         day: state.day,
         expenses: state.expenses

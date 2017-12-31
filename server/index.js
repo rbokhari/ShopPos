@@ -14,7 +14,8 @@ const config = require('./config');
 
 // DB Setup
 mongoose.Promise = global.Promise;
-mongoose.connect(config.mongoDBAddress);    //setting in config file
+//mongoose.connect(config.mongoDBAddress, { useMongoClient: true });    //setting in config file
+mongoose.connection.openUri(config.mongoDBAddress);
 
 // App Setup
 //app.use(morgan('combined'));

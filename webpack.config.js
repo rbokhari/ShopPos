@@ -18,7 +18,7 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoEmitOnErrorsPlugin()
     ],
     module: {
         loaders: [
@@ -28,12 +28,12 @@ module.exports = {
                     path.join(__dirname, 'src'),
                     path.join(__dirname, 'shared')
                 ],
-                loader: 'babel'
+                loader: 'babel-loader'
             },
             {
                 test: /\.scss$/,
                 include: path.join(__dirname, 'src'),
-                loader: 'style!css!sass'
+                loader: 'style-loader!css-loader!sass-loader'
             }
         ]
     },

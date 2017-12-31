@@ -16,6 +16,7 @@ const Day = require('../models/day');
 const Customer = require('../models/customer');
 const Expense = require('../models/expense');
 const Purchase = require('../models/purchase');
+const Items = require('../models/item');
 
 exports.createDay = function(req, res, next) {
     const companyId = req.headers.companyid;
@@ -191,7 +192,7 @@ exports.closeDay = function(req, res, next) {
                         { "companyId": new ObjectId(companyId) },
                         { "officeId": new ObjectId(officeId) },
                         { "dayId": parseInt(dayId) },
-                        //{ "created": { "$gte" : morningToday } }
+                        { "created": { "$gte" : morningToday } }
                     ]
                 }},
                 {
@@ -505,11 +506,11 @@ exports.getExcelBetweenDates = function(req, res, next) {
     const officeId = req.headers.officeid;
 
     var workbook = new Excel.Workbook();
-    workbook.creator = 'Me';
-    workbook.lastModifiedBy = 'Her';
-    workbook.created = new Date(1985, 8, 30);
+    workbook.creator = 'VE Coffeeshop system';
+    workbook.lastModifiedBy = 'VE';
+    workbook.created = new Date();
     workbook.modified = new Date();
-    workbook.lastPrinted = new Date(2016, 9, 27);
+    workbook.lastPrinted = new Date();
 
     // Set workbook dates to 1904 date system
     workbook.properties.date1904 = true;
@@ -604,8 +605,8 @@ exports.getExcelBetweenDates = function(req, res, next) {
     queries.push(function(cb){
         Day.find({
             $and: [
-                    // { companyId: companyId },
-                    // { officeId: officeId },
+                    { companyId: new ObjectId(companyId) },
+                    { officeId: new ObjectId(officeId) },
                     { today: {
                         $gte: startDay,
                         $lte: endDay
@@ -619,8 +620,8 @@ exports.getExcelBetweenDates = function(req, res, next) {
     queries.push(function(cb) {
         Expense.find({
             $and: [
-                // { companyId: companyId },
-                // { officeId: officeId },
+                { companyId: new ObjectId(companyId) },
+                { officeId: new ObjectId(officeId) },
                 { created: {
                     $gte: startDay,
                     $lte: endDay
@@ -637,9 +638,9 @@ exports.getExcelBetweenDates = function(req, res, next) {
             { "$match":
                 {
                     "$and": [
-                        { "companyId": companyId },
-                        { "officeId": officeId },
-                        { "created": { "$gte": startDay, "$lte": endDay }}
+                        { "companyId": new ObjectId(companyId) },
+                        { "officeId": new ObjectId(officeId) },
+                        { "billDate": { "$gte": startDay, "$lte": endDay }}
                     ]
                 }
             },
@@ -651,11 +652,20 @@ exports.getExcelBetweenDates = function(req, res, next) {
                     "_id": 1,
                     "billNo" : 1,
                     "total": "$amounts.amount",
-                    "created": "$amounts.date"
+                    "created": { $ifNull: ["$amounts.date", "no date" ] }, //"$amounts.date",
+                    "items": "$items"
                 }
             }
+            // ,
+            // {
+            //     "$match": 
+            //     {
+            //         "created": {"$gte": startDay, "$lte": endDay } 
+            //     }
+            // }
         ], function(err, purchases) {
-            if (err) { cb(err); }
+            if (err) { console.log('error purchase', err);  cb(err); }
+            console.log('purchase', purchases);
             cb(null, purchases);
         });
         // Purchase.find({ "$and": [
@@ -668,6 +678,13 @@ exports.getExcelBetweenDates = function(req, res, next) {
         //     if (err) { cb(err); }
         //     cb(null, purchases);
         // });
+    });
+
+    queries.push(function(cb) {
+        Items.find({}, function(err, items) {
+            if (err) cb(err);
+            cb(null, items);
+        });
     });
 
     // queries.push(function(cb) {
@@ -692,6 +709,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
         const days = docs[0];
         const expenses = docs[1];
         const purchases = docs[2];
+        const items = docs[3];
         //const customers = docs[3];
 
         var filterDays = days.map(function(day, index){
