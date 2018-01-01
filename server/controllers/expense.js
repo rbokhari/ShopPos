@@ -60,16 +60,30 @@ exports.updateExpense = function(req, res, next) {
 exports.getAll = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-    Expense.find({ 
+    const query = Expense.find({ 
         $and: [ 
             { companyId: companyId }, 
             { officeId: officeId }
-        ]}, {}, { sort : {created: -1} }, function(err, expenses){
-            
+        ]})
+        .sort({created: -1})
+        .limit(200);
+
+    query.find(function(err, expenses) {
         if (err) { return next(err);     }
         res.setHeader('Content-Type', 'application/json');
         res.json(expenses);
     });
+
+    // Expense.find({ 
+    //     $and: [ 
+    //         { companyId: companyId }, 
+    //         { officeId: officeId }
+    //     ]}, {}, { sort : {created: -1} }, function(err, expenses){
+            
+    //     if (err) { return next(err);     }
+    //     res.setHeader('Content-Type', 'application/json');
+    //     res.json(expenses);
+    // });
 };
 
 exports.getById = function(req, res, next) {

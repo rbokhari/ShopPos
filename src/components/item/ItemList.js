@@ -37,7 +37,7 @@ const ItemList = ({items}) => {
                             <TableRow key={item._id} >
                                 <TableRowColumn>{item.code}</TableRowColumn>
                                 <TableRowColumn>{item.name}</TableRowColumn>
-                                <TableRowColumn>{item.stock}</TableRowColumn>
+                                <TableRowColumn>{item.stock.toFixed(2)}</TableRowColumn>
                                 <TableRowColumn>{item.status ? <ActionDone color={greenA700} /> : <ContentBlock color={red500} />}</TableRowColumn>
                                 <TableRowColumn>
                                     <Link to={'item/'+item._id+'/edit'}> <ImageEdit color={blueA700} /></Link>

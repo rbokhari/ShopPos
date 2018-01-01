@@ -34,7 +34,7 @@ exports.update = function(req, res, next) {
 };
 
 exports.getAll = function(req, res, next) {
-    ExpenseMaster.find({}, {}, { }, function(err, expenseMasters){
+    ExpenseMaster.find({}, {}, { sort: { name: 1} }, function(err, expenseMasters){
             
         if (err) { return next(err);     }
         res.setHeader('Content-Type', 'application/json');

@@ -344,16 +344,28 @@ exports.printThisDay = function(req, res, next) {
 exports.getAll = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-    Day.find({
-        $and: [
-            { companyId: companyId },
-            { officeId: officeId }
-        ]}, {}, { sort: {_id: -1} }, function(err, days) {
-
+    var query = Day.find({
+                        $and: [
+                            { companyId: companyId },
+                            { officeId: officeId }
+                        ]
+                    })
+                    .sort({ _id: -1 })
+                    .limit(30);
+    query.exec(function(err, days) {
         if (err) { return next(err); }
-        //res.setHeader('Content-Type', 'application/json');
         res.json(days);
     });
+    // Day.find({
+    //     $and: [
+    //         { companyId: companyId },
+    //         { officeId: officeId }
+    //     ]}, {}, { sort: {_id: -1} }, function(err, days) {
+
+    //     if (err) { return next(err); }
+    //     //res.setHeader('Content-Type', 'application/json');
+    //     res.json(days);
+    // });
 };
 
 
@@ -561,7 +573,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
     const eveningSalePhoneCardRow = worksheet.getRow(eveningSalePhoneCardRowNumber);
 
 
-    const expenseRow = eveningSalePhoneCardRowNumber + 1;
+    const expenseRow = eveningSalePhoneCardRowNumber + 3;
 
     //worksheet.addRow();
     titleRow.getCell(1).value = 'Expense Detail Report';
@@ -583,7 +595,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
     for (i = 0; i<totalDays; i++ ){
         dayRow.getCell(i+2).value = moment(new Date(dateHeader.getTime() + (86400000 * i))).format('dddd') ;
     }
-
+    
     morningSaleRow.getCell(1).value = 'Morning Sale';
     morningSaleRow.getCell(1).font = { bold: true };
     eveningSaleRow.getCell(1).value = 'Evening Sale';
@@ -598,9 +610,11 @@ exports.getExcelBetweenDates = function(req, res, next) {
     netBalanceRow.getCell(1).font = { bold: true };
     totalPurchaseRow.getCell(1).value = "Total Purchase";
     totalPurchaseRow.getCell(1).font = { bold: true };
-    expenseTotalRow.getCell(1).value = 'Total of Expanses';
+    expenseTotalRow.getCell(1).value = 'Total Expanses';
     expenseTotalRow.getCell(1).font = { bold: true };
-
+    worksheet.getRow(expenseRow -1).getCell(1).value = "Expense Detail";
+    worksheet.getRow(expenseRow -1).font = { bold: true, color: { argb: 'FF5722' } };
+    
     var queries = [];
     queries.push(function(cb){
         Day.find({
@@ -626,7 +640,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
                     $gte: startDay,
                     $lte: endDay
                 }}
-            ] }, {}, { sort : {created: 1} }, function(err, expenses){
+            ] }, {}, { sort : {categoryName: 1} }, function(err, expenses){
 
             if (err) { cb(err); }
             cb(null, expenses);
@@ -640,7 +654,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
                     "$and": [
                         { "companyId": new ObjectId(companyId) },
                         { "officeId": new ObjectId(officeId) },
-                        { "billDate": { "$gte": startDay, "$lte": endDay }}
+                        //{ "billDate": { "$gte": startDay, "$lte": endDay }}
                     ]
                 }
             },
@@ -652,20 +666,18 @@ exports.getExcelBetweenDates = function(req, res, next) {
                     "_id": 1,
                     "billNo" : 1,
                     "total": "$amounts.amount",
-                    "created": { $ifNull: ["$amounts.date", "no date" ] }, //"$amounts.date",
+                    "created": "$amounts.date", //{ $ifNull: ["$amounts.date", "no date" ] }, 
                     "items": "$items"
                 }
+            },
+            {
+                "$match": 
+                {
+                    "created": {"$gte": startDay, "$lte": endDay } 
+                }
             }
-            // ,
-            // {
-            //     "$match": 
-            //     {
-            //         "created": {"$gte": startDay, "$lte": endDay } 
-            //     }
-            // }
         ], function(err, purchases) {
             if (err) { console.log('error purchase', err);  cb(err); }
-            console.log('purchase', purchases);
             cb(null, purchases);
         });
         // Purchase.find({ "$and": [
@@ -681,27 +693,11 @@ exports.getExcelBetweenDates = function(req, res, next) {
     });
 
     queries.push(function(cb) {
-        Items.find({}, function(err, items) {
+        Items.find({}, {}, { sort : {name: 1} }, function(err, items) {
             if (err) cb(err);
             cb(null, items);
         });
     });
-
-    // queries.push(function(cb) {
-    //     Customer.find({ "$and": [
-    //                 //{ "companyId": companyId },
-    //                 //{ "officeId": officeId },
-    //                 { "created": { "$gte": startDay } },
-    //                 { "finished": { "$lte": endDay } },
-    //                 { "products.type": 3 },
-    //             ]
-    //         }, function(err, customers) {
-    //         if (err) { cb(err); }
-
-    //         console.log('customers', customers);
-    //         cb(null, customers);
-    //     });
-    // });
 
     async.parallel(queries, function(err, docs) {
         if (err) { next(err); }
@@ -716,12 +712,39 @@ exports.getExcelBetweenDates = function(req, res, next) {
             return day._id;
         });
 
-        for (i=0; i<expenses.length; i++){
-            worksheet.getRow(expenseRow+i).getCell(1).value = expenses[i].categoryName;
+        // create list of all category names from expense array
+        var expenseCategoryNames = expenses.map(function(expense,i) {
+            return expense.categoryName.toUpperCase();
+        });
+
+        // get unique category to show in first column of excel file
+        var uniqueCategories = expenseCategoryNames.filter(onlyUnique).sort();
+        for (i=0; i< uniqueCategories.length; i++) {
+            worksheet.getRow(expenseRow + i).getCell(1).value = uniqueCategories[i];
+        }
+
+        // for (i=0; i<expenses.length; i++){
+        //     let rowExpense = expenseRow;
+        //     if (i === 0) {
+        //         worksheet.getRow(rowExpense).getCell(1).value = expenses[i].categoryName;
+        //     }
+        //     console.info('expense', expenses[i].categoryName, expenses[i-1].categoryName, expenses[i].categoryName !== expenses[i-1].categoryName);
+        //     if (i>0 && expenses[i].categoryName !== expenses[i-1].categoryName) {
+        //         worksheet.getRow(rowExpense).getCell(1).value = expenses[i].categoryName;
+        //     }
+        //     rowExpense += 1;
+        // }
+
+        let itemsRow = expenseRow + uniqueCategories.length + 1;
+        worksheet.getRow(itemsRow).getCell(1).value = "Purchase Detail";
+        worksheet.getRow(itemsRow).font = { bold: true, color: { argb: 'FF5722' } };
+        itemsRow +=1;
+        for (i=0; i<items.length; i++) {
+            worksheet.getRow(itemsRow + i).getCell(1).value = items[i].name;
         }
 
         for (i = 0; i< totalDays; i++ ){
-            expenseTotalRow.getCell(i+2).value = { formula: 'SUM(' + columnToLetter(i+2) + expenseRow + ':'+ columnToLetter(i+2) + (expenseRow + expenses.length - 1) + ')'};
+            expenseTotalRow.getCell(i+2).value = { formula: 'SUM(' + columnToLetter(i+2) + expenseRow + ':'+ columnToLetter(i+2) + (expenseRow + uniqueCategories.length - 1) + ')'};
             // var col = worksheet.getColumn(i+2);
             // col.dataValidation = {
             //     type: 'date',
@@ -764,6 +787,18 @@ exports.getExcelBetweenDates = function(req, res, next) {
                     purchaseTotal = purchaseTotal + parseFloat(purchaseId[k].total);
                 }
                 totalPurchaseRow.getCell(i+2).value = purchaseTotal;
+
+
+                // here show all items with dates and amount
+                for (j=0; j< purchaseId.length; j++) {
+                    console.log('purchaseId', purchaseId);
+                    purchaseId[j].items.forEach(function(item, k) {
+                        console.log('items', item);
+                        var row1 = worksheet.getRow(getRowNuber(worksheet, item._id));
+                        //row1.getCell(i+2).value = item.
+                    });
+                    //var row1 = worksheet.getRow(getRowNuber(worksheet, purchaseId[j].categoryName.toUpperCase()));
+                }
             }
 
             var expenseId = expenses.filter(function(item, index) {
@@ -772,7 +807,7 @@ exports.getExcelBetweenDates = function(req, res, next) {
             });
             if (expenseId.length > 0) {
                 for (j=0; j< expenseId.length; j++) {
-                    var row1 = worksheet.getRow(getRowNuber(worksheet, expenseId[j].categoryName)); // worksheet.getRow(10 + i);
+                    var row1 = worksheet.getRow(getRowNuber(worksheet, expenseId[j].categoryName.toUpperCase())); // worksheet.getRow(10 + i);
                     // row1.getCell(i+2).font = {
                     //     color: {argb: 'D21025'}
                     // };
@@ -870,4 +905,8 @@ function letterToColumn(letter){
     column += (letter.charCodeAt(i) - 64) * Math.pow(26, length - i - 1);
   }
   return column;
+}
+
+function onlyUnique(value, index, self) { 
+    return self.indexOf(value) === index;
 }

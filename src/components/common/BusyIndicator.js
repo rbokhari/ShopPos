@@ -3,7 +3,8 @@ import LinearProgress from 'material-ui/LinearProgress';
 
 const BusyIndicator = () => {
     return (
-        <LinearProgress mode='indeterminate' />
+        // <LinearProgress mode='indeterminate' />
+        <span>Loading...</span>
     );
 };
 

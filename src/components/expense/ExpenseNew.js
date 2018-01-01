@@ -77,7 +77,7 @@ class ExpenseNew extends Component {
                     </CardText>
                     <CardActions>
                         <RaisedButton type='submit' icon={<ContentSave />} label={this.props.expense._id === '0' ? 'Save' : 'Update'} primary={true} />
-                        <RaisedButton icon={<ContentClear />} label="Cancel" containerElement={<Link to="/expense" />}/>
+                        <RaisedButton icon={<ContentClear />} label="Cancel" secondary={true} containerElement={<Link to="/expense" />}/>
                     </CardActions>
                 </Card>
             </form>
