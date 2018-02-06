@@ -15,7 +15,6 @@ const cardStyle = {
   flexGrow: 1
 };
 
-
 const CustomerList = ({customers, day, onPrintCustomer}) => {
     if (typeof day === 'undefined') return (<div>Loading...</div>);
     return (

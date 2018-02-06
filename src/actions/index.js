@@ -209,7 +209,6 @@ export function signinUser( {email, password }) {
                //alert("push");
                 
                 const data = response.data.user;
-console.info('singin user data', data);
                 // const company = {
                 //     companyId: data.company.companyId,
                 //     name: data.company.name,

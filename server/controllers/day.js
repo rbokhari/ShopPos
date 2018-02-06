@@ -791,7 +791,6 @@ exports.getExcelBetweenDates = function(req, res, next) {
 
                 // here show all items with dates and amount
                 for (j=0; j< purchaseId.length; j++) {
-                    console.log('purchaseId', purchaseId);
                     purchaseId[j].items.forEach(function(item, k) {
                         console.log('items', item);
                         var row1 = worksheet.getRow(getRowNuber(worksheet, item._id));
