@@ -83,8 +83,8 @@ class PurchaseTransactionReport extends Component {
                             <TableHeader displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={false}>
                                 <TableRow>
                                     <TableHeaderColumn style={{width: 5}}>Sr.</TableHeaderColumn>
-                                    <TableHeaderColumn>Bill No</TableHeaderColumn>
-                                    <TableHeaderColumn>Date</TableHeaderColumn>
+                                    <TableHeaderColumn style={{minWidth: 15}}>Bill No</TableHeaderColumn>
+                                    <TableHeaderColumn style={{minWidth: 15}}>Date</TableHeaderColumn>
                                     <TableHeaderColumn>Amount</TableHeaderColumn>
                                     <TableHeaderColumn>Description</TableHeaderColumn>
                                 </TableRow>
@@ -95,11 +95,11 @@ class PurchaseTransactionReport extends Component {
                                         <TableRowColumn style={{width: 5}}>
                                             {i+1}
                                         </TableRowColumn>
-                                        <TableRowColumn style={{width: 20}}>{purchase.billNo}</TableRowColumn>
+                                        <TableRowColumn style={{minWidth: 20}}>{purchase.billNo}</TableRowColumn>
                                         <TableRowColumn>
                                             {Moment(purchase.billDate).format('DD/MM/YYYY')}
                                         </TableRowColumn>
-                                        <TableRowColumn>{purchase.total}</TableRowColumn>
+                                        <TableRowColumn>{purchase.total && purchase.total.toFixed(3)}</TableRowColumn>
                                         <TableRowColumn>{purchase.notes}</TableRowColumn>
                                     </TableRow>
                                 )}
@@ -108,7 +108,7 @@ class PurchaseTransactionReport extends Component {
                                 <TableRow>
                                     <TableRowColumn></TableRowColumn>
                                     <TableRowColumn>Total : </TableRowColumn>
-                                    <TableRowColumn>{this.props.amount}</TableRowColumn>
+                                    <TableRowColumn>{this.props.amount.toFixed(3)}</TableRowColumn>
                                 </TableRow>
                             </TableFooter>
                     </Table>

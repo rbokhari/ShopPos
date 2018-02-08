@@ -94,7 +94,6 @@ module.exports = function(app, io) {
     app.put('/expensemaster/:id/update', ExpenseMaster.update);
     app.get('/expensemaster/', ExpenseMaster.getAll);
     app.get('/expensemaster/:id', ExpenseMaster.getById);
-
     // Expense Routes
     app.post('/expense/create', Expense.createExpense);
     app.put('/expense/:id/update', Expense.updateExpense);
@@ -105,6 +104,7 @@ module.exports = function(app, io) {
     app.get('/customer/transaction/bydate', Customer.getTransaction);
     app.get('/expense/transaction/bydate', Expense.getByDate);
     app.get('/purchase/transaction/bydate', Purchase.getByDate);
+    app.get('/purchase/item/bydate', Purchase.getPurchaseItemByDate);
 
     // Days Routes
     app.post('/day/create', Day.createDay);

@@ -92,9 +92,32 @@ exports.getByDate = function(req, res, next) {
             // }}
         ] }, {}, { sort : {created: -1} }, function(err, purchases){
         
-
         if (err) { return next(err); }
         res.setHeader('Content-Type', 'application/json');
+        res.json(purchases);
+    });
+};
+
+exports.getPurchaseItemByDate = function(req, res, next) {
+    const fromDate = new Date(req.query.fromDate);
+    const toDate = new Date(req.query.toDate);
+    //const itemId = req.query.itemId;
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+    //res.setHeader('Content-Type', 'application/json');
+    //res.json({hello: 'world'});
+    Purchase.find({ 
+        $and: [
+            { companyId: companyId },
+            { officeId: officeId },
+            // { billDate: {
+            //     $gte: fromDate,
+            //     $lte: toDate
+            // }}
+        ] }, {}, { sort : {created: -1} }, function(err, purchases) {
+        
+        if (err) { return next(err); }
+        // res.setHeader('Content-Type', 'application/json');
         res.json(purchases);
     });
 };

@@ -11,6 +11,7 @@ class PurchaseOrderApi {
   static savePurchaseOrder( purchaseOrder ) {
     return Api.post('purchase/create', purchaseOrder);
   }
+
 }
 
 export default PurchaseOrderApi;

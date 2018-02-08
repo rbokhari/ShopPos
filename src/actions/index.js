@@ -878,15 +878,30 @@ export function createExpense( expense ) {  // this becomes action to send to re
 //  Report Actions
 export function loadCustomerTransaction(fromDate, toDate) {
     return function(dispatch) {
-        return reportApi.getCustomerTransaction(fromDate, toDate)
-            .then( data => {
-                dispatch( {
-                    type: types.LOAD_REPORT_CUSTOMER_DATE_DATA_SUCCESS,
-                    payload: data.data
-                });
-            }).catch( error => {
-                throw (error);
-            });
+        return reportApi.getCustomerTransaction(fromDate, toDate);
+        // return new Promise((resolve, reject) => {
+        //     reportApi.getCustomerTransaction(fromDate, toDate)
+        //         .then( data => {
+        //             dispatch( {
+        //                 type: types.LOAD_REPORT_CUSTOMER_DATE_DATA_SUCCESS,
+        //                 payload: data.data
+        //             });
+        //             console.info('action data', data);
+        //             resolve(data.data);
+        //         }).catch( error => {
+        //             //throw (error);
+        //             reject(error);
+        //         });
+        // });
+        // return reportApi.getCustomerTransaction(fromDate, toDate)
+        //     .then( data => {
+        //         dispatch( {
+        //             type: types.LOAD_REPORT_CUSTOMER_DATE_DATA_SUCCESS,
+        //             payload: data.data
+        //         });
+        //     }).catch( error => {
+        //         throw (error);
+        //     });
     };
 }
 
@@ -947,6 +962,19 @@ export function loadExpenseDetailDownload(fromDate, toDate) {
 export function loadPurchaseTransaction(fromDate, toDate) {
     return function(dispatch) {
         return reportApi.getPurchaseTransaction(fromDate, toDate)
+            .then( data => {
+                dispatch( {
+                    type: types.LOAD_REPORT_PURCHASE_DATE_DATA_SUCCESS,
+                    payload: data.data
+                });
+            }).catch( error => {
+                throw (error);
+            });
+    };
+}
+export function loadPurchaseItemTransaction(fromDate, toDate) {
+    return function(dispatch) {
+        return reportApi.getPurchaseItemTransaction(fromDate, toDate)
             .then( data => {
                 dispatch( {
                     type: types.LOAD_REPORT_PURCHASE_DATE_DATA_SUCCESS,
