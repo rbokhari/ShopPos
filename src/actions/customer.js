@@ -27,3 +27,9 @@ export function printCustomer(id, newStatus) {
             });
     };
 }
+
+export function loadCustomerTransactionByProductAndDate(params) {
+    return function(dispatch) {
+        return CustomerApi.getCustomerTransactionByProductAndDate(params);
+    };
+}

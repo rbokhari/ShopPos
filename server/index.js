@@ -1,5 +1,4 @@
 // Main starting point of application
-
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
@@ -29,7 +28,6 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Credentials', false);
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, CompanyId, OfficeId, DayId");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD");
-
     //console.log("GOT REQUEST !", req.url);
     next();
 });

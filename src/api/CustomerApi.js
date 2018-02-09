@@ -24,6 +24,10 @@ class CustomerApi {
   static printCustomersById(id, newStatus) {
     return Api.get(`customer/${id}/${newStatus}/print`);
   }
+
+  static getCustomerTransactionByProductAndDate(params) { // params : { fromDate, toDate, productId }
+    return Api.get(`customer/transaction/productbydate`, params);
+  }
   
 }
 

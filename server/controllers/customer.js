@@ -1,3 +1,5 @@
+const ObjectId = require('mongoose').Types.ObjectId;
+
 //const pdfMake = require('pdfmake');
 var fs = require('fs');
 var path = require('path');
@@ -309,6 +311,51 @@ exports.getTransaction = function(req, res, next) {
         } else {
             res.json({});
         }
+    });
+
+};
+
+exports.getCustomerProductByDate = function(req, res, next) {
+    const fromDate = new Date(req.query.fromDate);
+    const toDate = new Date(req.query.toDate);
+    const productId = req.query.productId;
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+    
+    Customer.aggregate([
+        { 
+            "$match":
+                {
+                    "$and": [
+                        { companyId: ObjectId(companyId) },
+                        { officeId: ObjectId(officeId) },
+                        { finished: { '$gte': fromDate, '$lte': toDate } }
+                        //{ "_id": ObjectId('591781594369bc0934c21f78') },
+                    ]
+                }
+        },
+        {
+            "$unwind": "$products"
+        },
+        { "$project":
+            {
+                "_id": 1,
+                "billNo" : 1,
+                "finished": 1,
+                //"total": "$amounts.amount",
+                //"created": "$amounts.date", //{ $ifNull: ["$amounts.date", "no date" ] },
+                "products": "$products"
+            }
+        },
+        {
+            "$match":
+            {
+                "products.productId": ObjectId(productId) 
+            }
+        }
+    ], function(err, products) {
+        if (err) return next(err); 
+        res.status(200).json(products);
     });
 
 };

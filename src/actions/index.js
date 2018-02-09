@@ -7,7 +7,7 @@ import { USER_ROLE, PRODUCT_TYPE } from '../../shared/constants';
 
 import { hideNotification, successNotification, errorNotification } from './notification';
 import { loadOpenDay, loadCloseDay, createDay, loadDays, printDay, loadDayById } from './day';
-import { loadCustomerByDayId, printCustomer } from './customer';
+import { loadCustomerByDayId, printCustomer, loadCustomerTransactionByProductAndDate } from './customer';
 
 import { beginAjaxCall } from './ajaxStatusActions';
 
@@ -27,7 +27,8 @@ import dayApi from '../api/dayApi';
 export {
     hideNotification, successNotification, errorNotification,
     loadOpenDay, loadCloseDay, createDay, loadDays, printDay,
-    loadCustomerByDayId, printCustomer, loadDayById
+    loadCustomerByDayId, printCustomer, loadDayById,
+    loadCustomerTransactionByProductAndDate
 };
 
 // export function showNotification(message) {

@@ -378,7 +378,6 @@ SalesBoard.propTypes = {
 }
 
 function mapStateToProps(state, ownProps) {
-    console.info('state sales board', state);
     return {
         products: state.products,
         categories: state.categories,

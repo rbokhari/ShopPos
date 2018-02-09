@@ -1,8 +1,8 @@
 const Purchase = require('../models/purchase');
 const Item = require('../models/item');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 function updateItemStock(itemId, qty) {
-
     Item.findOne({ _id: itemId } , function(err, item) {
         if (err) { console.error("err", err);}
         const totalUpdate = item.uomCount * qty;
@@ -31,7 +31,7 @@ exports.createPurchase = function(req, res, next) {
     purchase.save(function(err){
         if (err) { return next(err); }
         //next();
-        purchase.items.forEach(function(item) {  
+        purchase.items.forEach(function(item) {
             updateItemStock(item.itemId, item.qty);
         });
         res.setHeader('Content-Type', 'application/json');
@@ -43,8 +43,8 @@ exports.getAll = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
     Purchase.find({
-        $and: [ 
-            { companyId: companyId }, 
+        $and: [
+            { companyId: companyId },
             { officeId: officeId }
         ]
     }, {}, { sort : {created: -1} }, function(err, purchases){
@@ -82,7 +82,7 @@ exports.getByDate = function(req, res, next) {
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
 
-    Purchase.find({ 
+    Purchase.find({
         $and: [
             { companyId: companyId },
             { officeId: officeId },
@@ -91,7 +91,7 @@ exports.getByDate = function(req, res, next) {
             //     $lte: toDate
             // }}
         ] }, {}, { sort : {created: -1} }, function(err, purchases){
-        
+
         if (err) { return next(err); }
         res.setHeader('Content-Type', 'application/json');
         res.json(purchases);
@@ -101,23 +101,44 @@ exports.getByDate = function(req, res, next) {
 exports.getPurchaseItemByDate = function(req, res, next) {
     const fromDate = new Date(req.query.fromDate);
     const toDate = new Date(req.query.toDate);
-    //const itemId = req.query.itemId;
+    const itemId = req.query.itemId;
     const companyId = req.headers.companyid;
     const officeId = req.headers.officeid;
-    //res.setHeader('Content-Type', 'application/json');
-    //res.json({hello: 'world'});
-    Purchase.find({ 
-        $and: [
-            { companyId: companyId },
-            { officeId: officeId },
-            // { billDate: {
-            //     $gte: fromDate,
-            //     $lte: toDate
-            // }}
-        ] }, {}, { sort : {created: -1} }, function(err, purchases) {
-        
-        if (err) { return next(err); }
-        // res.setHeader('Content-Type', 'application/json');
-        res.json(purchases);
+
+    Purchase.aggregate([
+        { "$match":
+            {
+                "$and": [
+                    { companyId: ObjectId(companyId) },
+                    { officeId: ObjectId(officeId) },
+                    { created: { '$gte': fromDate, '$lte': toDate } }
+                    //{ "_id": ObjectId('591781594369bc0934c21f78') },
+                ]
+            }
+        },
+        {
+            "$unwind": "$items"
+        },
+        { "$project":
+            {
+                "_id": 1,
+                "billNo" : 1,
+                "billDate": 1,
+                //"total": "$amounts.amount",
+                //"created": "$amounts.date", //{ $ifNull: ["$amounts.date", "no date" ] },
+                "items": "$items"
+            }
+        },
+        {
+            "$match":
+            {
+                //"items": { $elemMatch: { 'itemId':  ObjectId(itemId) } }
+                "items.itemId": ObjectId(itemId) 
+            }
+        }
+    ], function(err, purchases) {
+        if (err) { console.log('error purchase', err);  next(err); }
+
+        res.status(200).json(purchases);
     });
 };

@@ -19,7 +19,6 @@ import { loadCustomerTransaction,loadCustomerDetailDialog  } from '../../actions
 import jsPDF from 'jspdf';
 require('jspdf-autotable');
 
-
 //import * as actions from '../../actions';
 
 class CustomerTransactionReport extends Component {
@@ -166,7 +165,7 @@ class CustomerTransactionReport extends Component {
                         },
                         addPageContent: pageContent
                     };
-                    let rows = data.data.map((d,i) => {
+                    let rows = data.data.constructor === Array && data.data.map((d,i) => {
                         return {
                             'sr': i+1,
                             'created': Moment(d.created).format('DD/MM/YYYY HH:mm'),
@@ -175,30 +174,33 @@ class CustomerTransactionReport extends Component {
                             'items': d.products.length, // + ':' + this.getProductDetail(d.products),
                             'amount': this.getAmount(d.products)
                         };
-                    });
-                    rows.push({
-                        'sr': '',
-                        'created': '',
-                        'billNo': '',
-                        'carNumber': 'Grand Total',
-                        'items': this.getTotalItems(data.data),
-                        'amount': this.getTotalPrice(data.data)
-                    });
-                    // Total page number plugin only available in jspdf v1.0+
-                    if (typeof doc.putTotalPages === 'function') {
-                        doc.putTotalPages(totalPagesExp);
+                    }) || [];
+                    if (rows.length > 0) {
+                        rows.push({
+                            'sr': '',
+                            'created': '',
+                            'billNo': '',
+                            'carNumber': 'Grand Total',
+                            'items': this.getTotalItems(data.data),
+                            'amount': this.getTotalPrice(data.data)
+                        });
+                    
+                        // Total page number plugin only available in jspdf v1.0+
+                        if (typeof doc.putTotalPages === 'function') {
+                            doc.putTotalPages(totalPagesExp);
+                        }
+                        doc.autoTable(columns, rows, options);
+                        //doc.autoPrint();
+                        doc.save(`Customer Transaction ${Moment().format('DD/MM/YYYY HH:mm')}.pdf`);
+                        // let pdfData = doc.output('datauristring');
+                        // console.info('pdfdata', pdfData);
+                        // this.refs.out1.src = pdfData; // doc.output('datauristring');
+                        // const iframe = '<iframe width="100%" height="100%" src="' + pdfData + '"></iframe>';
+                        // let x = window.open();
+                        // x.document.open();
+                        // x.document.write(iframe);
+                        // x.document.close();
                     }
-                    doc.autoTable(columns, rows, options);
-                    //doc.autoPrint();
-                    doc.save(`Customer Transaction ${Moment().format('DD/MM/YYYY HH:mm')}.pdf`);
-                    // let pdfData = doc.output('datauristring');
-                    // console.info('pdfdata', pdfData);
-                    // this.refs.out1.src = pdfData; // doc.output('datauristring');
-                    // const iframe = '<iframe width="100%" height="100%" src="' + pdfData + '"></iframe>';
-                    // let x = window.open();
-                    // x.document.open();
-                    // x.document.write(iframe);
-                    // x.document.close();
                 }
             });
     }
@@ -225,7 +227,7 @@ class CustomerTransactionReport extends Component {
     getTotalPrice(customers=[]) {
         let amount = 0;
         if (typeof customers !== undefined) {
-            customers.map((customer, i) => {
+            customers.constructor === Array && customers.map((customer, i) => {
                 customer.products.map((product, index) => {
                     amount += product.price;
                 });
@@ -237,7 +239,7 @@ class CustomerTransactionReport extends Component {
     getTotalItems(customers=[]) {
         let count = 0;
         if (typeof customers !== undefined) {
-            customers.map((customer, i) => {
+            customers.constructor === Array && customers.map((customer, i) => {
                 customer.products.map((product, index) => {
                     count += product.qty;
                 });

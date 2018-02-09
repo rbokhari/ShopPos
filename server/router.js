@@ -102,9 +102,10 @@ module.exports = function(app, io) {
 
     // Reports Routes 
     app.get('/customer/transaction/bydate', Customer.getTransaction);
+    app.get('/customer/transaction/productbydate', Customer.getCustomerProductByDate);
     app.get('/expense/transaction/bydate', Expense.getByDate);
     app.get('/purchase/transaction/bydate', Purchase.getByDate);
-    app.get('/purchase/item/bydate', Purchase.getPurchaseItemByDate);
+    app.get('/purchase/transaction/itembydate', Purchase.getPurchaseItemByDate);
 
     // Days Routes
     app.post('/day/create', Day.createDay);
@@ -121,5 +122,4 @@ module.exports = function(app, io) {
     // app.get('/', function(req, res, next) {
     //     res.send(['a', 'b', 'c']);
     // });
-
 };
