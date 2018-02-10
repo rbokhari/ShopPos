@@ -106,7 +106,7 @@ module.exports = function(app, io) {
     app.get('/expense/transaction/bydate', Expense.getByDate);
     app.get('/purchase/transaction/bydate', Purchase.getByDate);
     app.get('/purchase/transaction/itembydate', Purchase.getPurchaseItemByDate);
-
+    
     // Days Routes
     app.post('/day/create', Day.createDay);
     app.put('/day/close', Day.closeDay, Day.printCloseDay);

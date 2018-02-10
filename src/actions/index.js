@@ -959,7 +959,6 @@ export function loadExpenseDetailDownload(fromDate, toDate) {
     };
 }
 
-
 export function loadPurchaseTransaction(fromDate, toDate) {
     return function(dispatch) {
         return reportApi.getPurchaseTransaction(fromDate, toDate)
@@ -973,16 +972,15 @@ export function loadPurchaseTransaction(fromDate, toDate) {
             });
     };
 }
-export function loadPurchaseItemTransaction(fromDate, toDate) {
+
+export function loadPurchaseItemTransaction(params) {
     return function(dispatch) {
-        return reportApi.getPurchaseItemTransaction(fromDate, toDate)
-            .then( data => {
-                dispatch( {
-                    type: types.LOAD_REPORT_PURCHASE_DATE_DATA_SUCCESS,
-                    payload: data.data
-                });
-            }).catch( error => {
-                throw (error);
-            });
+        return reportApi.getPurchaseItemTransaction(params);
+    };
+}
+
+export function loadCustomerProductTransaction(params) {
+    return function(dispatch) {
+        return reportApi.getCustomerProductTransaction(params);
     };
 }

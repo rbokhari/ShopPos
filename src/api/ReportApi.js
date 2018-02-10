@@ -20,9 +20,12 @@ class ReportApi {
         return Api.get('day/excel', { fromDate: fromDate, toDate: toDate } );
     }
 
-    static getPurchaseItemTransaction(fromDate, toDate) {
-        return Api.get('purchase/item/bydate', { fromDate: fromDate, toDate: toDate });
-        //return Api.get('purchase/item/bydate', params);
+    static getPurchaseItemTransaction(params) { // params: fromDate, toDate, itemId
+        return Api.get('purchase/transaction/itembydate', params);
+    }
+
+    static getCustomerProductTransaction(params) {  // params: fromDate, toDate, productId
+        return Api.get('customer/transaction/productbydate', params);
     }
 
 }
