@@ -908,15 +908,7 @@ export function loadCustomerTransaction(fromDate, toDate) {
 
 export function loadExpenseTransaction(fromDate, toDate) {
     return function(dispatch) {
-        return reportApi.getExpenseTransaction(fromDate, toDate)
-            .then( data => {
-                dispatch( {
-                    type: types.LOAD_REPORT_EXPENSE_DATE_DATA_SUCCESS,
-                    payload: data.data
-                });
-            }).catch( error => {
-                throw (error);
-            });
+        return reportApi.getExpenseTransaction(fromDate, toDate);
     };
 }
 
@@ -961,15 +953,7 @@ export function loadExpenseDetailDownload(fromDate, toDate) {
 
 export function loadPurchaseTransaction(fromDate, toDate) {
     return function(dispatch) {
-        return reportApi.getPurchaseTransaction(fromDate, toDate)
-            .then( data => {
-                dispatch( {
-                    type: types.LOAD_REPORT_PURCHASE_DATE_DATA_SUCCESS,
-                    payload: data.data
-                });
-            }).catch( error => {
-                throw (error);
-            });
+        return reportApi.getPurchaseTransaction(fromDate, toDate);
     };
 }
 

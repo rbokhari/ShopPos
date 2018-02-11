@@ -7,19 +7,23 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Print from 'material-ui/svg-icons/action/print';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
 import {List, ListItem, makeSelectable} from 'material-ui/List';
 
 import Moment from 'moment';
 
-import CustomerTransactionReport from './CustomerTransactionReport';
-import ExpenseTransactionReport from './ExpenseTransactionReport';
-import PurchaseTransactionReport from './PurchaseTransactionReport';
-import ExpenseDetailReport from './ExpenseDetailReport';
+// import CustomerTransactionReport from './CustomerTransactionReport';
+// import ExpenseTransactionReport from './ExpenseTransactionReport';
+// import PurchaseTransactionReport from './PurchaseTransactionReport';
+// import ExpenseDetailReport from './ExpenseDetailReport';
 
 import jsPDF from 'jspdf';
 require('jspdf-autotable');
 
-import { loadCustomerTransaction, loadPurchaseItemTransaction, loadCustomerProductTransaction, loadProducts, loadItems } from '../../actions';
+import { loadCustomerTransaction, loadPurchaseItemTransaction, loadCustomerProductTransaction, 
+        loadExpenseTransaction, loadPurchaseTransaction, loadExpenseDetailDownload,
+        loadProducts, loadItems,
+        successNotification, errorNotification } from '../../actions';
 
 class ReportPage extends Component {
 
@@ -41,6 +45,7 @@ class ReportPage extends Component {
         this.props.loadItems();
     }
 
+    // Customer Transaction START 
     getCustomerTransactionData() {
         const { loadCustomerTransaction, company } = this.props;
         // report.fromDate.setHours(0,0,0);
@@ -57,7 +62,6 @@ class ReportPage extends Component {
                         { 'title': 'Bill No', 'dataKey': 'billNo' },
                         { 'title': 'Customer', 'dataKey': 'carNumber' },
                         { 'title': 'Items', 'dataKey': 'items' },
-                        // {'title': 'Items', 'dataKey': 'products', parse: function(d) { console.info('d', d); return d.length; }},
                         { 'title': 'Amount', 'dataKey': 'amount' }
                     ];
                     var doc = new jsPDF('p', 'pt');
@@ -82,7 +86,6 @@ class ReportPage extends Component {
                 
                         // FOOTER
                         var str = "Page " + data.pageCount;
-                        //console.info(data);
                         // Total page number plugin only available in jspdf v1.0+
                         if (typeof doc.putTotalPages === 'function') {
                             str = str; // + " of " + totalPagesExp;;
@@ -155,7 +158,6 @@ class ReportPage extends Component {
                         //doc.autoPrint();
                         doc.save(`Customer Transaction ${Moment().format('DD/MM/YYYY HH:mm')}.pdf`);
                         // let pdfData = doc.output('datauristring');
-                        // console.info('pdfdata', pdfData);
                         // this.refs.out1.src = pdfData; // doc.output('datauristring');
                         // const iframe = '<iframe width="100%" height="100%" src="' + pdfData + '"></iframe>';
                         // let x = window.open();
@@ -198,6 +200,9 @@ class ReportPage extends Component {
         return count;
     }
 
+    // Customer Transaction END
+
+    // Item Wise Transaction START 
     getItemWisePurchase() {
         const params = { fromDate: this.state.fromDate, toDate: this.state.toDate, itemId: this.state.itemId };
         const { loadPurchaseItemTransaction, company, items } = this.props;
@@ -237,7 +242,6 @@ class ReportPage extends Component {
                 
                         // FOOTER
                         var str = "Page " + data.pageCount;
-                        //console.info(data);
                         // Total page number plugin only available in jspdf v1.0+
                         if (typeof doc.putTotalPages === 'function') {
                             str = str; // + " of " + totalPagesExp;;
@@ -304,7 +308,6 @@ class ReportPage extends Component {
                         if (typeof doc.putTotalPages === 'function') {
                             doc.putTotalPages(totalPagesExp);
                         }
-                        console.info('rows', rows);
                         doc.autoTable(columns, rows, options);
                         //doc.autoPrint();
                         doc.save(`Item wise Purchase Transaction ${Moment().format('DD/MM/YYYY HH:mm')}.pdf`);
@@ -316,7 +319,9 @@ class ReportPage extends Component {
     getItemQty(data) {
         let qty = 0;
         data.map(d => {
-            qty += d.items.qty;
+            if (!isNaN(d.items.qty)) {
+                qty += d.items.qty;
+            }
         });
         return qty;
     }
@@ -324,11 +329,15 @@ class ReportPage extends Component {
     getItemPrice(data) {
         let price = 0;
         data.map(d => {
+            if (!isNaN(d.items.price))
             price += d.items.price;
         });
         return price.toFixed(3);
     }
-        
+
+    // Item Wise Transaction END
+
+    // Product Wise Transaction START         
     getProductWiseSale() {
         const params = { fromDate: this.state.fromDate, toDate: this.state.toDate, productId: this.state.productId };
         const { products, company } = this.props;
@@ -370,7 +379,6 @@ class ReportPage extends Component {
                 
                         // FOOTER
                         var str = "Page " + data.pageCount;
-                        //console.info(data);
                         // Total page number plugin only available in jspdf v1.0+
                         if (typeof doc.putTotalPages === 'function') {
                             str = str; // + " of " + totalPagesExp;;
@@ -434,8 +442,8 @@ class ReportPage extends Component {
                             'date': 'Totals : ',
                             'category': '',
                             'item': '',
-                            'qty': 0,
-                            'unitPrice': this.getProductQty(data.data),
+                            'qty': this.getProductQty(data.data),
+                            'unitPrice': 0,
                             'price': this.getProductPrice(data.data)
                         });
                     
@@ -443,7 +451,6 @@ class ReportPage extends Component {
                         if (typeof doc.putTotalPages === 'function') {
                             doc.putTotalPages(totalPagesExp);
                         }
-                        console.info('rows', rows);
                         doc.autoTable(columns, rows, options);
                         //doc.autoPrint();
                         doc.save(`Item wise Purchase Transaction ${Moment().format('DD/MM/YYYY HH:mm')}.pdf`);
@@ -468,30 +475,307 @@ class ReportPage extends Component {
         });
         return price.toFixed(3);
     }
+    // Product Wise Transaction END
 
+    // Expense Transaction Start
+    getExpenseTransaction() {
+        const { fromDate, toDate, isBusy } = this.state;
+        const { loadExpenseTransaction, company } = this.props;
+        this.setState({ isBusy: true});
+        loadExpenseTransaction(fromDate, toDate)
+            .then(data => {
+                if (data.status === 200) {
+                    const columns = [
+                        { 'title': 'SN.', 'dataKey': 'sr' },
+                        { 'title': 'Code', 'dataKey': 'code' },
+                        { 'title': 'Date', 'dataKey': 'date' },
+                        { 'title': 'Category', 'dataKey': 'category' },
+                        { 'title': 'Amount', 'dataKey': 'amount' },
+                        { 'title': 'Notes', 'dataKey': 'notes' }
+                    ];
+                    var doc = new jsPDF('p', 'pt');
+                    var totalPagesExp = "{total_pages_count_string}";
+                    var page = 1;
+                    doc.setProperties({
+                        title: company.displayName,
+                        subject: 'Expense Transaction List',		
+                        author: 'Syed Rahman Bokhari',
+                        // keywords: 'report, customer, transaction',
+                        creator: 'Syed Rahman Bokhari'
+                    });
+                    var pageContent = function (data) {
+                        //console.log(data.pageCount);
+                        // HEADER
+                        doc.setFontSize(20);
+                        //doc.setTextColor(40);
+                        doc.setTextColor(36, 113, 163);
+                        doc.setFontStyle('normal');
+                        //doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 15, 10, 10);
+                        doc.text(`${company.displayName} - Expense Transaction`, data.settings.margin.left, 25);
+                
+                        // FOOTER
+                        var str = "Page " + data.pageCount;
+                        // Total page number plugin only available in jspdf v1.0+
+                        if (typeof doc.putTotalPages === 'function') {
+                            str = str; // + " of " + totalPagesExp;;
+                        }
+                        doc.setFontSize(10);
+                        doc.setTextColor(40);
+                        doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 20);
+                        doc.text(`Dates between (${Moment(fromDate).format('DD/MM/YYYY')} ~ ${Moment(toDate).format('DD/MM/YYYY')})`, data.settings.margin.left + 50, doc.internal.pageSize.height - 20);
+                    };
+
+                    const options = {
+                        // Styling 
+                        theme: 'striped', // 'striped', 'grid' or 'plain' 
+                        styles: {
+                            overflow: 'linebreak'   // visible, hidden, ellipsize or linebreak
+                        },
+                        headerStyles: {},
+                        bodyStyles: {},
+                        alternateRowStyles: {},
+                        columnStyles: {},
+                    
+                        // Properties 
+                        startY: 75, // false (indicates margin top value) or a number 
+                        margin: 40,  //a number, array or object
+                        pageBreak: 'auto', // 'auto', 'avoid' or 'always' 
+                        tableWidth: 'auto', // 'auto', 'wrap' or a number,  
+                    
+                        // Hooks 
+                        createdHeaderCell: function (cell, data) {},
+                        createdCell: function (cell, data) {},
+                        drawHeaderRow: function (row, data) {
+                            row.height = 30;
+                        },
+                        drawHeaderCell: function (cell, data) {},
+                        drawCell: function (cell, data) {},
+                        drawRow: function (row, data) {
+                            if (row.index === data.table.rows.length - 1) {
+                                doc.setTextColor(36, 113, 163);
+                                doc.setFontStyle('bold');
+                                doc.setFontSize(50);
+                            }
+                        },
+                        addPageContent: pageContent
+                    };
+                    let rows = data.data.constructor === Array && data.data.map((d,i) => {
+                        return {
+                            'sr': i+1,
+                            'code': d.code,
+                            'date': Moment(d.created).format('DD/MM/YYYY'),
+                            'category': d.categoryName,
+                            'amount': d.amount && d.amount.toFixed(3),
+                            'notes': d.description
+                        };
+                    }) || [];
+                    if (rows.length > 0) {
+                        rows.push({
+                            'sr': '',
+                            'code': '',
+                            'date': '',
+                            'category': 'Totals : ',
+                            'amount': this.getExpenseAmount(data.data),
+                            'notes': '',
+                        });
+                    
+                        // Total page number plugin only available in jspdf v1.0+
+                        if (typeof doc.putTotalPages === 'function') {
+                            doc.putTotalPages(totalPagesExp);
+                        }
+                        doc.autoTable(columns, rows, options);
+                        //doc.autoPrint();
+                        doc.save(`Expense Transaction ${Moment().format('DDMMYYYYHHmm')}.pdf`);
+                    }
+                }
+                this.setState({ isBusy: false});
+            });
+
+    }
+    
+    getExpenseAmount(data) {
+        let price = 0;
+        data.map(d => {
+            price += d.amount;
+        });
+        return price.toFixed(3);
+    }
+    // Expense Transaction End
+
+    // Purchase Transaction Start
+    getPurchaseTransaction() {
+        const { fromDate, toDate, isBusy } = this.state;
+        const { loadPurchaseTransaction, company } = this.props;
+        this.setState({ isBusy: true});
+        loadPurchaseTransaction(fromDate, toDate)
+            .then(data => {
+                if (data.status === 200) {
+                    const columns = [
+                        { 'title': 'SN.', 'dataKey': 'sr' },
+                        { 'title': 'Bill No', 'dataKey': 'billNo' },
+                        { 'title': 'Bill Date', 'dataKey': 'billDate' },
+                        { 'title': 'Items', 'dataKey': 'items' },
+                        { 'title': 'Total', 'dataKey': 'total' },
+                        { 'title': 'Notes', 'dataKey': 'notes' }
+                    ];
+                    var doc = new jsPDF('p', 'pt');
+                    var totalPagesExp = "{total_pages_count_string}";
+                    var page = 1;
+                    doc.setProperties({
+                        title: company.displayName,
+                        subject: 'Purchase Transaction List',		
+                        author: 'Syed Rahman Bokhari',
+                        // keywords: 'report, customer, transaction',
+                        creator: 'Syed Rahman Bokhari'
+                    });
+                    var pageContent = function (data) {
+                        //console.log(data.pageCount);
+                        // HEADER
+                        doc.setFontSize(20);
+                        //doc.setTextColor(40);
+                        doc.setTextColor(36, 113, 163);
+                        doc.setFontStyle('normal');
+                        //doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 15, 10, 10);
+                        doc.text(`${company.displayName} - Purchase Transaction`, data.settings.margin.left, 25);
+                
+                        // FOOTER
+                        var str = "Page " + data.pageCount;
+                        // Total page number plugin only available in jspdf v1.0+
+                        if (typeof doc.putTotalPages === 'function') {
+                            str = str; // + " of " + totalPagesExp;;
+                        }
+                        doc.setFontSize(10);
+                        doc.setTextColor(40);
+                        doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 20);
+                        doc.text(`Dates between (${Moment(fromDate).format('DD/MM/YYYY')} ~ ${Moment(toDate).format('DD/MM/YYYY')})`, data.settings.margin.left + 50, doc.internal.pageSize.height - 20);
+                    };
+
+                    const options = {
+                        // Styling 
+                        theme: 'striped', // 'striped', 'grid' or 'plain' 
+                        styles: {
+                            overflow: 'linebreak'   // visible, hidden, ellipsize or linebreak
+                        },
+                        headerStyles: {},
+                        bodyStyles: {},
+                        alternateRowStyles: {},
+                        columnStyles: {},
+                    
+                        // Properties 
+                        startY: 75, // false (indicates margin top value) or a number 
+                        margin: 40,  //a number, array or object
+                        pageBreak: 'auto', // 'auto', 'avoid' or 'always' 
+                        tableWidth: 'auto', // 'auto', 'wrap' or a number,  
+                    
+                        // Hooks 
+                        createdHeaderCell: function (cell, data) {},
+                        createdCell: function (cell, data) {},
+                        drawHeaderRow: function (row, data) {
+                            row.height = 30;
+                        },
+                        drawHeaderCell: function (cell, data) {},
+                        drawCell: function (cell, data) {},
+                        drawRow: function (row, data) {
+                            if (row.index === data.table.rows.length - 1) {
+                                doc.setTextColor(36, 113, 163);
+                                doc.setFontStyle('bold');
+                                doc.setFontSize(50);
+                            }
+                        },
+                        addPageContent: pageContent
+                    };
+                    let rows = data.data.constructor === Array && data.data.map((d,i) => {
+                        return {
+                            'sr': i+1,
+                            'billNo': d.billNo,
+                            'billDate': Moment(d.billDate).format('DD/MM/YYYY'),
+                            'items': d.items && d.items.length,
+                            'total': d.total && d.total.toFixed(3),
+                            'notes': d.notes
+                        };
+                    }) || [];
+                    if (rows.length > 0) {
+                        rows.push({
+                            'sr': '',
+                            'billNo': '',
+                            'billDate': 'Totals : ',
+                            'items': this.getPurchaseQty(data.data),
+                            'total': this.getPurchasePrice(data.data),
+                            'notes': '',
+                        });
+                    
+                        // Total page number plugin only available in jspdf v1.0+
+                        if (typeof doc.putTotalPages === 'function') {
+                            doc.putTotalPages(totalPagesExp);
+                        }
+                        doc.autoTable(columns, rows, options);
+                        //doc.autoPrint();
+                        doc.save(`Purchase Transaction ${Moment().format('DDMMYYYYHHmm')}.pdf`);
+                    }
+                }
+                this.setState({ isBusy: false});
+            });
+    }
+
+    getPurchaseQty(data) {
+        let qty = 0;
+        data.map(d => {
+            qty += d.items && d.items.length;
+        });
+        return qty;
+    }
+
+    getPurchasePrice(data) {
+        let price = 0;
+        data.map(d => {
+            price += d.total;
+        });
+        return price.toFixed(3);
+    }
+    // Purchase Transaction End
+
+    // Excel File Start
+    getExcelDetail() {
+        const { fromDate, toDate } = this.state;
+        fromDate.setHours(0,0,0);
+        toDate.setHours(23,59,0);
+        const { loadExpenseDetailDownload, successNotification, errorNotification } = this.props;
+        loadExpenseDetailDownload(fromDate, toDate)
+            .then(res=> successNotification('File Created Successfully !'))
+            .catch( error => {
+                errorNotification('Something went wrong !');
+            });
+    }
+    // Exel file End
 
     handleReportClick() {
         const { loadPurchaseItemTransaction } = this.props;
         if (this.state.reportIndex === 1) {
             this.getCustomerTransactionData();
         }else if (this.state.reportIndex === 2) {
-            
+            this.getExpenseTransaction();
         }else if (this.state.reportIndex === 3) {
+            this.getPurchaseTransaction();
         }else if (this.state.reportIndex === 4) {
             this.getItemWisePurchase();
         }else if (this.state.reportIndex === 5) {
             this.getProductWiseSale();
-            // loadPurchaseItemTransaction(this.state.fromDate, this.state.toDate)
-            //     .then(res => console.info('report data', res));                        
         }else if (this.state.reportIndex === 6) {
-            
+            this.getExcelDetail();
+        }
+    }
+
+    selectedClassName(index) {
+        let className = '';
+        if (this.state.reportIndex == index) {
+            className = ''
         }
     }
 
     render() {
         const { items, products } = this.props;
-
-        const selectedClassName = "backgroundColor: 'gray'";
+        const { reportIndex } = this.state;
+        const selectedListStyle = { backgroundColor: 'gray'};
 
         return (
             <div>
@@ -504,21 +788,28 @@ class ReportPage extends Component {
                     <CardText expandable={false}>
                         <div style={{display: 'flex', flexFlow: 'col wrap'}}>
                             <div style={{flex: 1, marginRight: 50}}>
-                            index : {this.state.reportIndex}
                                 <List>
-                                    <ListItem primaryText="Customer Transaction" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 1})} className={ (this.state.reportIndex == 1 ? selectedClassName : '') } />
-                                    <ListItem primaryText="Expense Transaction" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 2})} />
-                                    <ListItem primaryText="Purchase Order" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 3})} />
-                                    <ListItem primaryText="Item Wise Purchase" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 4})} />
-                                    <ListItem primaryText="Product Wise Sale" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 5})} />
-                                    <ListItem primaryText="Detail Excel" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 6})} />
+                                    <ListItem primaryText="Customer Transaction" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 1})} 
+                                        style={ (reportIndex === 1 ? selectedListStyle : {}) } />
+                                    <ListItem primaryText="Expense Transaction" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 2})}
+                                        style={ (reportIndex === 2 ? selectedListStyle : {}) } />
+                                    <ListItem primaryText="Purchase Order" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 3})}
+                                        style={ (reportIndex === 3 ? selectedListStyle : {}) } />
+                                    <Divider />
+                                    <ListItem primaryText="Item Wise Purchase" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 4})}
+                                        style={ (reportIndex === 4 ? selectedListStyle : {}) } />
+                                    <ListItem primaryText="Product Wise Sale" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 5})}
+                                        style={ (reportIndex === 5 ? selectedListStyle : {}) } />
+                                    <Divider />
+                                    <ListItem primaryText="Detail Excel" leftIcon={<Print />} onClick={() => this.setState({reportIndex: 6})}
+                                        style={ (reportIndex === 6 ? selectedListStyle : {}) } />
                                 </List>
                             </div>
                             <div style={{flex: 1}}>
                                 <DatePicker name='fromDate' floatingLabelText="From Date" autoOk={true} 
-                                    container="inline" mode="landscape" onChange={(e,d) => this.setState({fromDate: d})} style={{display: 'inline-block'}} />&nbsp;&nbsp;&nbsp;&nbsp;
+                                    container="inline" mode="landscape" onChange={(e,d) => this.setState({fromDate: d})} style={{display: 'inline-block'}} />
                                 <DatePicker name='toDate' floatingLabelText="To Date" autoOk={true} 
-                                    container="inline" mode="landscape" onChange={(e,d) => this.setState({toDate: d})} style={{display: 'inline-block'}} />&nbsp;&nbsp;&nbsp;&nbsp;
+                                    container="inline" mode="landscape" onChange={(e,d) => this.setState({toDate: d})} style={{display: 'inline-block'}} />
                                 {this.state.reportIndex == 4 && <SelectField name='itemId' floatingLabelText="Item" underlineShow={true} 
                                     value={this.state.itemId} onChange={(e,i,v) => this.setState({itemId: v})}>
                                     {items.map(item=>
@@ -531,11 +822,13 @@ class ReportPage extends Component {
                                         <MenuItem key={product._id} value={product._id} primaryText={product.name} />
                                     )}
                                 </SelectField>}
+                                <br />
+                                <br />
                                 <RaisedButton type='button' disabled={this.state.isBusy} 
                                     icon={<Print />} label='Show Report' secondary={true} onClick={this.handleReportClick} />
                             </div>
                             <div style={{flex: 4}}>
-                                <iframe id='output' ref='out1' style={{ width: '100%', height: '80vh'}}></iframe>
+                                {/* <iframe id='output' ref='out1' style={{ width: '100%', height: '80vh'}}></iframe> */}
                             </div>
                         </div>
                     </CardText>
@@ -556,6 +849,8 @@ function mapStateToProps(state, ownProps) {
 //export default ReportPage;
 export default connect(mapStateToProps, { 
     loadCustomerTransaction, loadPurchaseItemTransaction, loadCustomerProductTransaction, 
-    loadProducts, loadItems 
+    loadExpenseTransaction, loadPurchaseTransaction, loadExpenseDetailDownload,
+    loadProducts, loadItems,
+    successNotification, errorNotification
 })(ReportPage);
 //export default connect(mapStateToProps, mapDispatchToProps)(Report);

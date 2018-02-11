@@ -105,6 +105,7 @@ class ExpenseTransactionReport extends Component {
                                         <TableRowColumn>{expense.description}</TableRowColumn>
                                     </TableRow>
                                 )}
+                                
                             </TableBody>
                             <TableFooter>
                                 <TableRow>
