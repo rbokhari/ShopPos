@@ -142,3 +142,53 @@ exports.getPurchaseItemByDate = function(req, res, next) {
         res.status(200).json(purchases);
     });
 };
+
+exports.getPurchaseSummaryByDate = function(req, res, next) {
+    const fromDate = new Date(req.query.fromDate);
+    const toDate = new Date(req.query.toDate);
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+
+    Purchase.aggregate([
+        { "$match":
+            {
+                "$and": [
+                    { companyId: ObjectId(companyId) },
+                    { officeId: ObjectId(officeId) },
+                    { created: { '$gte': fromDate, '$lte': toDate } }
+                ]
+            }
+        },
+        {
+            "$unwind": "$items"
+        },
+        // { "$project":
+        //     {
+        //         // "_id": 1,
+        //         // "billNo" : 1,
+        //         // "billDate": 1,
+        //         //"total": "$amounts.amount",
+        //         //"created": "$amounts.date", //{ $ifNull: ["$amounts.date", "no date" ] },
+        //         "items": "$items"
+        //     }
+        // },
+        { "$group": {
+            "_id": "$items.itemId",
+            // "item": "$items.itemId",
+            "qty": { "$sum": "$items.qty" },
+            "total": { "$sum": "$items.price"}
+        }}
+    ], function(err, purchases) {
+        if (err) { console.log('error purchase', err);  next(err); }
+
+        Item.find({"$and": [
+            { companyId: ObjectId(companyId) },
+            { officeId: ObjectId(officeId) }
+        ]}, function(err, items) {
+            const result = purchases.map(purchase => {
+                return Object.assign({}, purchase, { item: items.filter(item => item._id.equals(purchase._id))[0] });
+            });
+            res.status(200).json(result);
+        });
+    });
+};

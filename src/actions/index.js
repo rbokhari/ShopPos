@@ -963,8 +963,20 @@ export function loadPurchaseItemTransaction(params) {
     };
 }
 
+export function loadPurchaseSummaryTransaction(params) {
+    return function(dispatch) {
+        return reportApi.getPurchaseItemSummaryTransaction(params);
+    };
+}
+
 export function loadCustomerProductTransaction(params) {
     return function(dispatch) {
         return reportApi.getCustomerProductTransaction(params);
+    };
+}
+
+export function loadSaleSummaryTransaction(params) {
+    return function(dispatch) {
+        return reportApi.getSaleSummaryTransaction(params);
     };
 }

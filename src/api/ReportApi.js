@@ -24,8 +24,16 @@ class ReportApi {
         return Api.get('purchase/transaction/itembydate', params);
     }
 
+    static getPurchaseItemSummaryTransaction(params) { // params: fromDate, toDate, itemId
+        return Api.get('purchase/transactionsummary/itembydate', params);
+    }
+
     static getCustomerProductTransaction(params) {  // params: fromDate, toDate, productId
         return Api.get('customer/transaction/productbydate', params);
+    }
+
+    static getSaleSummaryTransaction(params) {  // params: fromDate, toDate, productId
+        return Api.get('customer/transactionsummary/productbydate', params);
     }
 
 }

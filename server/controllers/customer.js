@@ -359,3 +359,39 @@ exports.getCustomerProductByDate = function(req, res, next) {
     });
 
 };
+
+exports.getCustomerProductSummaryByDate = function(req, res, next) {
+    const fromDate = new Date(req.query.fromDate);
+    const toDate = new Date(req.query.toDate);
+    const companyId = req.headers.companyid;
+    const officeId = req.headers.officeid;
+    
+    Customer.aggregate([
+        { 
+            "$match":
+                {
+                    "$and": [
+                        { companyId: ObjectId(companyId) },
+                        { officeId: ObjectId(officeId) },
+                        { finished: { '$gte': fromDate, '$lte': toDate } }
+                    ]
+                }
+        },
+        {
+            "$unwind": "$products"
+        },
+        { "$group": {
+            "_id": { 
+                "id": "$products.productId",
+                "name": "$products.productName",
+                "category": "$products.categoryName",
+            },
+            "qty": { "$sum": "$products.qty" },
+            "total": { "$sum": "$products.price"}
+        }}
+    ], function(err, products) {
+        if (err) return next(err); 
+        res.status(200).json(products);
+    });
+
+};

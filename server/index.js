@@ -16,6 +16,7 @@ mongoose.Promise = global.Promise;
 //mongoose.connect(config.mongoDBAddress, { useMongoClient: true });    //setting in config file
 mongoose.connection.openUri(config.mongoDBAddress);
 
+app.disable('x-powered-by');    // used by hackers , 
 // App Setup
 //app.use(morgan('combined'));
 app.use(cors());

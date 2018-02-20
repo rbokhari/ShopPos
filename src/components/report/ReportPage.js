@@ -20,7 +20,8 @@ import Moment from 'moment';
 import jsPDF from 'jspdf';
 require('jspdf-autotable');
 
-import { loadCustomerTransaction, loadPurchaseItemTransaction, loadCustomerProductTransaction, 
+import { loadCustomerTransaction, loadPurchaseItemTransaction, loadPurchaseSummaryTransaction, 
+        loadCustomerProductTransaction, loadSaleSummaryTransaction,
         loadExpenseTransaction, loadPurchaseTransaction, loadExpenseDetailDownload,
         loadProducts, loadItems,
         successNotification, errorNotification } from '../../actions';
@@ -334,8 +335,119 @@ class ReportPage extends Component {
         });
         return price.toFixed(3);
     }
-
     // Item Wise Transaction END
+
+    getItemWiseSummaryPurchase() {
+        const params = { fromDate: this.state.fromDate, toDate: this.state.toDate, itemId: this.state.itemId };
+        const { loadPurchaseSummaryTransaction, company, items } = this.props;
+        const { fromDate, toDate } = this.state;
+        this.setState({ isBusy: true });
+        loadPurchaseSummaryTransaction(params)
+            .then(data => {
+                this.setState({ isBusy: false });
+                if (data.status === 200) {
+                    const columns = [
+                        { 'title': 'Sn', 'dataKey': 'sr' },
+                        { 'title': 'Item', 'dataKey': 'itemName' },
+                        { 'title': 'Stock', 'dataKey': 'stock' },
+                        { 'title': 'Quantity', 'dataKey': 'qty' },
+                        { 'title': 'Price', 'dataKey': 'price' }
+                    ];
+                    var doc = new jsPDF('p', 'pt');
+                    var totalPagesExp = "{total_pages_count_string}";
+                    var page = 1;
+                    doc.setProperties({
+                        title: company.displayName,
+                        subject: 'Purchase Summary List',		
+                        author: 'Syed Rahman Bokhari',
+                        // keywords: 'report, customer, transaction',
+                        creator: 'Syed Rahman Bokhari'
+                    });
+                    var pageContent = function (data) {
+                        //console.log(data.pageCount);
+                        // HEADER
+                        doc.setFontSize(20);
+                        //doc.setTextColor(40);
+                        doc.setTextColor(36, 113, 163);
+                        doc.setFontStyle('normal');
+                        //doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 15, 10, 10);
+                        doc.text(`${company.displayName} - Purchase Summary Report`, data.settings.margin.left, 25);
+                
+                        // FOOTER
+                        var str = "Page " + data.pageCount;
+                        // Total page number plugin only available in jspdf v1.0+
+                        if (typeof doc.putTotalPages === 'function') {
+                            str = str; // + " of " + totalPagesExp;;
+                        }
+                        doc.setFontSize(10);
+                        doc.setTextColor(40);
+                        doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 20);
+                        doc.text(`Dates between (${Moment(fromDate).format('DD/MM/YYYY')} ~ ${Moment(toDate).format('DD/MM/YYYY')})`, data.settings.margin.left + 50, doc.internal.pageSize.height - 20);
+                    };
+
+                    const options = {
+                        // Styling 
+                        theme: 'striped', // 'striped', 'grid' or 'plain' 
+                        styles: {
+                            overflow: 'linebreak'   // visible, hidden, ellipsize or linebreak
+                        },
+                        headerStyles: {},
+                        bodyStyles: {},
+                        alternateRowStyles: {},
+                        columnStyles: {},
+                    
+                        // Properties 
+                        startY: 75, // false (indicates margin top value) or a number 
+                        margin: 40,  //a number, array or object
+                        pageBreak: 'auto', // 'auto', 'avoid' or 'always' 
+                        tableWidth: 'auto', // 'auto', 'wrap' or a number,  
+                    
+                        // Hooks 
+                        createdHeaderCell: function (cell, data) {},
+                        createdCell: function (cell, data) {},
+                        drawHeaderRow: function (row, data) {
+                            row.height = 30;
+                        },
+                        drawHeaderCell: function (cell, data) {},
+                        drawCell: function (cell, data) {},
+                        drawRow: function (row, data) {
+                            if (row.index === data.table.rows.length - 1) {
+                                doc.setTextColor(36, 113, 163);
+                                doc.setFontStyle('bold');
+                                doc.setFontSize(50);
+                            }
+                        },
+                        addPageContent: pageContent
+                    };
+                    let rows = data.data.constructor === Array && data.data.map((d,i) => {
+                        return {
+                            'sr': i+1,
+                            'itemName': `${d.item.name.toUpperCase()} (${d.item.code})`,
+                            'stock': Number(d.item.stock).toFixed(3),
+                            'qty': Number(d.qty).toFixed(3),
+                            'price': Number(d.total).toFixed(3)
+                        };
+                    }) || [];
+                    if (rows.length > 0) {
+                        // rows.push({
+                        //     'sr': '',
+                        //     'billNo': '',
+                        //     'billDate': 'Totals : ',
+                        //     'qty': this.getItemQty(data.data),
+                        //     'price': this.getItemPrice(data.data)
+                        // });
+                    
+                        // Total page number plugin only available in jspdf v1.0+
+                        if (typeof doc.putTotalPages === 'function') {
+                            doc.putTotalPages(totalPagesExp);
+                        }
+                        doc.autoTable(columns, rows, options);
+                        // //doc.autoPrint();
+                        doc.save(`Summary Purchase Transaction ${Moment().format('DD/MM/YYYY HH:mm')}.pdf`);
+                    }
+                }
+            });
+        }
 
     // Product Wise Transaction START         
     getProductWiseSale() {
@@ -476,6 +588,122 @@ class ReportPage extends Component {
         return price.toFixed(3);
     }
     // Product Wise Transaction END
+
+    getProductWiseSummarySale() {
+        const params = { fromDate: this.state.fromDate, toDate: this.state.toDate, productId: this.state.productId };
+        const { products, company, loadSaleSummaryTransaction } = this.props;
+        const { fromDate, toDate } = this.state;
+
+        loadSaleSummaryTransaction(params)
+            .then(data => {
+                this.setState({ isBusy: false });
+                if (data.status === 200) {
+                    const columns = [
+                        { 'title': 'Sn', 'dataKey': 'sr' },
+                        { 'title': 'Category', 'dataKey': 'category' },
+                        { 'title': 'Product', 'dataKey': 'product' },
+                        { 'title': 'Qty', 'dataKey': 'qty' },
+                        { 'title': 'Price', 'dataKey': 'price' }
+                    ];
+                    var doc = new jsPDF('p', 'pt');
+                    var totalPagesExp = "{total_pages_count_string}";
+                    var page = 1;
+                    doc.setProperties({
+                        title: company.displayName,
+                        subject: 'Product wise Summary Sale List',		
+                        author: 'Syed Rahman Bokhari',
+                        // keywords: 'report, customer, transaction',
+                        creator: 'Syed Rahman Bokhari'
+                    });
+                    var pageContent = function (data) {
+                        //console.log(data.pageCount);
+                        // HEADER
+                        doc.setFontSize(20);
+                        //doc.setTextColor(40);
+                        doc.setTextColor(36, 113, 163);
+                        doc.setFontStyle('normal');
+                        //doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 15, 10, 10);
+                        doc.text(`${company.displayName} - Product Sale Summary Report`, data.settings.margin.left, 25);
+                
+                        // FOOTER
+                        var str = "Page " + data.pageCount;
+                        // Total page number plugin only available in jspdf v1.0+
+                        if (typeof doc.putTotalPages === 'function') {
+                            str = str; // + " of " + totalPagesExp;;
+                        }
+                        doc.setFontSize(10);
+                        doc.setTextColor(40);
+                        doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 20);
+                        doc.text(`Dates between (${Moment(fromDate).format('DD/MM/YYYY')} ~ ${Moment(toDate).format('DD/MM/YYYY')})`, data.settings.margin.left + 50, doc.internal.pageSize.height - 20);
+                    };
+
+                    const options = {
+                        // Styling 
+                        theme: 'striped', // 'striped', 'grid' or 'plain' 
+                        styles: {
+                            overflow: 'linebreak'   // visible, hidden, ellipsize or linebreak
+                        },
+                        headerStyles: {},
+                        bodyStyles: {},
+                        alternateRowStyles: {},
+                        columnStyles: {},
+                    
+                        // Properties 
+                        startY: 75, // false (indicates margin top value) or a number 
+                        margin: 40,  //a number, array or object
+                        pageBreak: 'auto', // 'auto', 'avoid' or 'always' 
+                        tableWidth: 'auto', // 'auto', 'wrap' or a number,  
+                    
+                        // Hooks 
+                        createdHeaderCell: function (cell, data) {},
+                        createdCell: function (cell, data) {},
+                        drawHeaderRow: function (row, data) {
+                            row.height = 30;
+                        },
+                        drawHeaderCell: function (cell, data) {},
+                        drawCell: function (cell, data) {},
+                        drawRow: function (row, data) {
+                            if (row.index === data.table.rows.length - 1) {
+                                doc.setTextColor(36, 113, 163);
+                                doc.setFontStyle('bold');
+                                doc.setFontSize(50);
+                            }
+                        },
+                        addPageContent: pageContent
+                    };
+                    let rows = data.data.constructor === Array && data.data.map((d,i) => {
+                        return {
+                            'sr': i+1,
+                            'category': d._id.category,
+                            'product': d._id.name,
+                            'qty': d.qty,
+                            'price': d.total.toFixed(3)
+                        };
+                    }) || [];
+                    if (rows.length > 0) {
+                        // rows.push({
+                        //     'sr': '',
+                        //     'billNo': '',
+                        //     'date': 'Totals : ',
+                        //     'category': '',
+                        //     'item': '',
+                        //     'qty': this.getProductQty(data.data),
+                        //     'unitPrice': 0,
+                        //     'price': this.getProductPrice(data.data)
+                        // });
+                    
+                        // Total page number plugin only available in jspdf v1.0+
+                        if (typeof doc.putTotalPages === 'function') {
+                            doc.putTotalPages(totalPagesExp);
+                        }
+                        doc.autoTable(columns, rows, options);
+                        //doc.autoPrint();
+                        doc.save(`Product_Sale_Summary_Transaction_${Moment().format('DD/MM/YYYY_HH:mm')}.pdf`);
+                    }
+                }
+            });
+
+    }
 
     // Expense Transaction Start
     getExpenseTransaction() {
@@ -757,9 +985,18 @@ class ReportPage extends Component {
         }else if (this.state.reportIndex === 3) {
             this.getPurchaseTransaction();
         }else if (this.state.reportIndex === 4) {
-            this.getItemWisePurchase();
+            console.info(this.state, this.state.itemId === 0);
+            if (this.state.itemId === 0) {
+                this.getItemWiseSummaryPurchase();
+            } else {
+                this.getItemWisePurchase();
+            }
         }else if (this.state.reportIndex === 5) {
-            this.getProductWiseSale();
+            if (this.state.productId === 0) {
+                this.getProductWiseSummarySale()
+            }else {
+                this.getProductWiseSale();
+            }
         }else if (this.state.reportIndex === 6) {
             this.getExcelDetail();
         }
@@ -841,15 +1078,15 @@ class ReportPage extends Component {
 function mapStateToProps(state, ownProps) {
     return {
         company: state.company,
-        items: state.items,
-        products: state.products.sort(p=>p.name)
+        items: state.items.sort((a, b)=> a.name.toUpperCase() <= b.name.toUpperCase() ? -1 : 1 ),
+        products: state.products.sort((a, b)=> a.name.toUpperCase() <= b.name.toUpperCase() ? -1 : 1 )
     };
 }
 
 //export default ReportPage;
 export default connect(mapStateToProps, { 
-    loadCustomerTransaction, loadPurchaseItemTransaction, loadCustomerProductTransaction, 
-    loadExpenseTransaction, loadPurchaseTransaction, loadExpenseDetailDownload,
+    loadCustomerTransaction, loadPurchaseItemTransaction, loadPurchaseSummaryTransaction, loadCustomerProductTransaction, 
+    loadExpenseTransaction, loadPurchaseTransaction, loadExpenseDetailDownload, loadSaleSummaryTransaction,
     loadProducts, loadItems,
     successNotification, errorNotification
 })(ReportPage);
