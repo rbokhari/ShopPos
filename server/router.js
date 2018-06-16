@@ -1,6 +1,7 @@
 const Authentication = require('./controllers/authentication');
 const passportService = require('./services/passport');
 const passport = require('passport');
+const path = require('path');
 
 const Item = require('./controllers/item');
 const Company = require('./controllers/company');
@@ -125,4 +126,9 @@ module.exports = function(app, io) {
     // app.get('/', function(req, res, next) {
     //     res.send(['a', 'b', 'c']);
     // });
+
+    app.get('*', function (req, res) {
+        res.sendFile(path.resolve(__dirname, 'public/index.html'));
+    });
+    
 };

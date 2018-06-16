@@ -7,7 +7,6 @@ const morgan = require('morgan');
 const app = express();
 const mongoose = require('mongoose');
 const socket = require('socket.io');
-
 const router = require('./router');
 const config = require('./config');
 
@@ -20,7 +19,12 @@ app.disable('x-powered-by');    // used by hackers ,
 // App Setup
 //app.use(morgan('combined'));
 app.use(cors());
-//app.use(express.static('excel'));
+// viewed at http://localhost:3090
+// app.get('/', function(req, res) {
+//     res.sendFile(path.join(__dirname, 'public/index.html'));
+// });
+app.use('/public', express.static(__dirname + '/public'));
+app.use(express.static('public'));
 app.use(bodyParser.json({ type: '*/*' }));
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");

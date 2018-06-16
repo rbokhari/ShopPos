@@ -174,6 +174,10 @@ class ReportPage extends Component {
         let amount = 0;
         products.map((product, i) => {
             amount += product.price;
+            if (product.addons.length > 0) {
+                let addonAmount = product.addons.reduce((a,b) => a + b.price, 0);
+                amount += addonAmount;
+            }
         });
         return amount.toFixed(3);
     }
@@ -182,6 +186,11 @@ class ReportPage extends Component {
         if (typeof customers !== undefined) {
             customers.constructor === Array && customers.map((customer, i) => {
                 customer.products.map((product, index) => {
+                    console.info('addons', product.addons.length);
+                    if (product.addons.length > 0) {
+                        let addonAmount = product.addons.reduce((a,b) => a + b.price, 0);
+                        amount += addonAmount;
+                    }
                     amount += product.price;
                 });
             });
