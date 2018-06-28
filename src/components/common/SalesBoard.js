@@ -303,7 +303,7 @@ class SalesBoard extends Component {
                         display: 'flex',
                         flexFlow: 'row wrap'
                     }}>
-                        <Card style={{flex: 3}}>
+                        <Card style={{flex: 2}}>
                             <CardHeader title="Customer Order" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}/>
                             
                             <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total} rowSelectIndex={this.state.itemIndexNote}

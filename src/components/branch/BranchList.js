@@ -82,7 +82,7 @@ class BranchList extends Component {
                         </CardActions>
                     </Card>
                 )}
-                <Card key={-1} style={style.card} containerStyle={style.deactiveBg} >
+                {/* <Card key={-1} style={style.card} containerStyle={style.deactiveBg} >
                     <CardHeader style={{width:400}}
                         title={
                             <span style={{fontWeight: 'bold', color: '#3F51B5'}}>
@@ -98,7 +98,7 @@ class BranchList extends Component {
                         <IconButton onClick={()=> this.props.showCreateBranch()} tooltip='Add Branch'><Icons.Add /></IconButton>
                         <IconButton tooltip='Import Branch'><Icons.Undo /></IconButton>
                     </CardActions>
-                </Card>
+                </Card> */}
             </div>
         );
     }

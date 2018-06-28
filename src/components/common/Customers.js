@@ -12,15 +12,13 @@ import ContentAddCircle from 'material-ui/svg-icons/content/add-circle-outline';
 import ActionDoneAll from 'material-ui/svg-icons/action/done-all';
 import DeviceAccessTime from 'material-ui/svg-icons/device/access-time';
 
-import {grey400, darkBlack, lightBlack, blue500, teal500, yellow50} from 'material-ui/styles/colors';
+import {blue500, teal500, yellow50} from 'material-ui/styles/colors';
 
 import * as actions from '../../actions';
 import { CUSTOMER_STATUS } from '../../../shared/constants';
 
 import RaisedButton from 'material-ui/RaisedButton';
-import IconButton from 'material-ui/IconButton';
 import Subheader from 'material-ui/Subheader';
-import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';

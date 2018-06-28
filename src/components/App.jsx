@@ -239,7 +239,7 @@ class App extends React.Component {
                         {/* <BranchListDialog open={false} /> */}
                         <BranchCreateDialog open={false} />
                         <UserPasswordChange open={false} />
-                        <CustomerDetailDialog open={true} />
+                        <CustomerDetailDialog open={false} />
                         <NotificationBar notification={notification} onHideHandle={hideNotification} />
                         <div id="first" style={{
                                 display: 'flex',
@@ -274,7 +274,7 @@ class App extends React.Component {
     }
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     const branch = state.branch == undefined ? '' : state.branch.current.displayName; 
     const displayTitle = state.company === undefined ? '' : state.company.displayName + ' - ' + branch;
     return {

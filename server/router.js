@@ -127,8 +127,9 @@ module.exports = function(app, io) {
     //     res.send(['a', 'b', 'c']);
     // });
 
-    app.get('*', function (req, res) {
-        res.sendFile(path.resolve(__dirname, 'public/index.html'));
-    });
+    // When running from node even client
+    // app.get('*', function (req, res) {
+    //     res.sendFile(path.resolve(__dirname, 'public/index.html'));
+    // });
     
 };

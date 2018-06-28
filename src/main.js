@@ -8,7 +8,6 @@ import routes from './routes';
 
 import { userInfo, loadCustomers} from './actions/index';
 import { AUTH_USER } from './actions/types';
-//import reducers from './reducers';
 import configureStore from './store/configureStore';
 
 require('./main.scss');
@@ -28,11 +27,11 @@ if (token) {
 }
 
 
-const socket = io('http://localhost:3090');
-    //var socket = io('http://localhost', {transports: ['websocket', 'polling', 'flashsocket']});
-socket.on('customer', function(data) {
-    store.dispatch(loadCustomers());
-});
+// const socket = io(); // io('http://0.0.0.0:3090');
+//     //var socket = io('http://localhost', {transports: ['websocket', 'polling', 'flashsocket']});
+// socket.on('customer', function(data) {
+//     store.dispatch(loadCustomers());
+// });
 
 ReactDOM.render(
     <Provider store={store}>

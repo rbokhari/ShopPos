@@ -7,7 +7,7 @@
     "start": "node_modules/.bin/webpack-dev-server --port 9081",
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "webpack --watch --progress --colors",
-    "production": "webpack --progress --colors --production"
+    "production": "webpack --progress --colors -p"
   },
   "author": "Syed Rahman Bokhari",
   "license": "ISC",

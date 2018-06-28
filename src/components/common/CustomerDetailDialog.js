@@ -52,7 +52,7 @@ class CustomerDetailDialog extends Component {
             title="Customer Detail" actions={actions} onRequestClose={()=>{ }}
             modal={true} open={customerDialog}
             autoScrollBodyContent={false} >
-                    <Customer customer={customer} />
+                    {customer && <Customer customer={customer} />}
             </Dialog>);
     }
 }

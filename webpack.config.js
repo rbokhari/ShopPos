@@ -6,15 +6,16 @@ module.exports = {
     devtool: '#eval-source-map',
     entry: {
         main: [
-            'webpack-dev-server/client?http://localhost:9081',
+            'webpack-dev-server/client?http://0.0.0.0:3090',
             'webpack/hot/only-dev-server',
             './src/main.js'
         ]
     },
     output: {
         filename: '[name].js',
-        path: path.join(__dirname, 'public'),
-        publicPath: '/public/'
+        path: path.join(__dirname, 'server/public'),
+        // publicPath: 'server/public/'
+        publicPath: 'public/'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),

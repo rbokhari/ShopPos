@@ -1,9 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
-
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-
 import { connect } from 'react-redux';
 import { loadDays, loadCustomerByDayId, printCustomer, successNotification, errorNotification } from '../../actions';
 import CustomerList from './CustomerList';
@@ -40,7 +35,7 @@ class CustomerPage extends Component {
     }
 
     render() {
-        const { customers, day, user } = this.props;
+        const { customers, day } = this.props;
 
         return (
             <div style={style}>
