@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const  API_URL = 'http://localhost:3090'; // 'http://192.168.1.2:3090';  
+const  API_URL = ''; // 'http://localhost:3090'; // 'http://192.168.1.2:3090';  
 
 class Api {
     

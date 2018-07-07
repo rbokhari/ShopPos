@@ -128,8 +128,8 @@ module.exports = function(app, io) {
     // });
 
     // When running from node even client
-    // app.get('*', function (req, res) {
-    //     res.sendFile(path.resolve(__dirname, 'public/index.html'));
-    // });
+    app.get('*', function (req, res) {
+        res.sendFile(path.resolve(__dirname, 'public/index.html'));
+    });
     
 };

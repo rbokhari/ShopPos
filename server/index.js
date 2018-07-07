@@ -27,8 +27,8 @@ app.use(cors());
 
 // When running from node even client
 // START
-// app.use('/public', express.static(__dirname + '/public'));
-// app.use(express.static('public'));
+app.use('/public', express.static(__dirname + '/public'));
+app.use(express.static('public'));
 // END
 app.use(bodyParser.json({ type: '*/*' }));
 app.use(function(req, res, next) {

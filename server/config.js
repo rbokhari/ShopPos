@@ -4,7 +4,7 @@ module.exports = {
 
     secret: 'abcasdfkjaslkdfj',
     serverListeningPort: 3090,
-    mongoDBAddress: 'mongodb://127.0.0.1:27017/Coffeeshop',
+    mongoDBAddress: 'mongodb://127.0.0.1:27017/KarakExpress',
     socketIOAddress: '*http://0.0.0.0:3090',
     // role: {
     //     'ADMIN': 1,

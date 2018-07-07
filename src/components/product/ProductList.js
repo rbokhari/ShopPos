@@ -41,7 +41,7 @@ const ProductList = ({products, showName}) => {
                                 <TableRowColumn>{product.name}</TableRowColumn>
                                 <TableRowColumn>{product.categoryName}</TableRowColumn>
                                 <TableRowColumn>{showName(product.type)}</TableRowColumn>
-                                <TableRowColumn>{product.price}</TableRowColumn>
+                                <TableRowColumn>{product.pric && product.price.toFixed(3)}</TableRowColumn>
                                 <TableRowColumn>{product.status ? <ActionDone color={greenA700} /> : <ActionNotInterested color={red500} />}</TableRowColumn>
                                 <TableRowColumn>
                                     <Link to={'product/'+product._id+'/edit'}> <ImageEdit color={blueA700} /></Link>

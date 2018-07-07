@@ -74,10 +74,9 @@ class ItemNew extends Component {
                                 <MenuItem key={ITEM_UOM.CARTON} value={ITEM_UOM.CARTON} primaryText={ITEM_UOM_LABEL.CARTON} />
                             </Field>
                         </div>
-                        
-                        {this.props.user && this.props.user.roleId == 1 && <div>
+                        <div>
                             <Field name="uomCount" component={materialTextField} label="Count"/>
-                        </div>}
+                        </div>
                         <div>
                             <Field name="description" component={materialTextField} label="Description" multiLine={true} rows={2} rowsMax={4}  />
                         </div>
