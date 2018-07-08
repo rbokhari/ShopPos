@@ -54,9 +54,10 @@ server.listen(port, '0.0.0.0', function() {
 //const io = socket(server);
 //io.set( 'origins', config.socketIOAddress );    // setting in config file
 //io.set( 'Credentials', 'false' );
-io.on('connection', function(socket){
-  console.log('a user connected');
-});
+// io.on('connection', function(socket){
+//   console.log('a user connected');
+// });
 //io.socket.emit('customer', '1');
 
 router(app, io);
+//router(app);

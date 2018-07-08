@@ -52,6 +52,9 @@ const muiTheme = getMuiTheme({
         pickerHeaderColor: fullWhite,
         clockCircleColor: fade(fullWhite, 0.12),
     },
+    prepareStyles: {
+        
+    }
 });
 
 const Icons = {

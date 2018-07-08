@@ -44,10 +44,10 @@ const Customer = ({customer}) => {
                     title={
                         <span style={{fontWeight: 'bold', color: '#3F51B5'}}>
                             Bill : {customer.billNo} @ {Moment(customer.created).format('DD/MM/YYYY h:mm')}&nbsp; 
-                            {customer.option==='1' ? 
-                                <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>Take Away </span> : 
-                                <span style={{backgroundColor:blue500, padding:2, color:yellow50}}>Dine In </span>
-                            }</span>
+                            {customer.option==='1' && <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>Take Away </span>}
+                            {customer.option==='2' && <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>Dine In </span>}
+                            {customer.option==='3' && <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>Delivery </span>}
+                            </span>
                     } 
                     subtitle={<p>{customer.option==='1' ? 'Car/Mobile' : 'Table'} : {customer.carNumber == '' || undefined ? customer.mobileNumber : customer.carNumber}</p>} />
                 <List>

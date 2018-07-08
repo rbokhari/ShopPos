@@ -3,13 +3,12 @@ import {connect} from 'react-redux';
 import { Link } from 'react-router';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 
 import Divider from 'material-ui/Divider';
 import Drawer from 'material-ui/Drawer';
 import CircularProgress from 'material-ui/CircularProgress';
+
 
 import * as actions from '../actions';
 import { USER_ROLE } from '../../shared/constants';
@@ -21,8 +20,6 @@ import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import DeviceHub from 'material-ui/svg-icons/hardware/device-hub';
-import ContentLink from 'material-ui/svg-icons/content/link';
-import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 import Person from 'material-ui/svg-icons/social/person';
 import ActionReceipt from 'material-ui/svg-icons/action/receipt';
 import ActionPrint from 'material-ui/svg-icons/action/print';
@@ -40,7 +37,6 @@ import { muiTheme, Icons } from './theme';
 import BranchCreateDialog from './branch/BranchNew';
 import UserPasswordChange from './user/UserPasswordChange';
 import CustomerDetailDialog from './common/CustomerDetailDialog';
-import LoadingDots from './common/LoadingDots';
 import NotificationBar from './common/NotificationBar';
 
 //var ThemeManager = new mui.styles.getMuiTheme();
@@ -204,9 +200,11 @@ class App extends React.Component {
     render() {
         const { user, branch, displayTitle, authLoading, notification, hideNotification } = this.props;
         if (authLoading) return (
+            <MuiThemeProvider muiTheme={muiTheme}>
                 <div id="mydiv" className={style.container}>
-                    Loading...
+                    <CircularProgress size={80} thickness={5} />
                 </div>
+            </MuiThemeProvider>
             );
         if (user) {
             return (

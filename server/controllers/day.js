@@ -1,6 +1,7 @@
 var fs = require('fs');
 var Excel = require('exceljs');
 var moment = require('moment');
+const { exec } = require('child_process');
 const nodemailer = require('nodemailer');
 
 var ObjectId = require('mongoose').Types.ObjectId;
@@ -333,6 +334,16 @@ exports.printCloseDay = function(req, res, next) {
     wstream.end();
     next();
 };
+
+exports.takeFullBackup = function(req, res, next) {
+    exec('MongoBackup.bat', (err, stdout, stderr) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log(stdout);
+      });
+}
 
 exports.printThisDay = function(req, res, next) {
     const dayId = req.params.id;

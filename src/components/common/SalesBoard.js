@@ -303,7 +303,7 @@ class SalesBoard extends Component {
                         display: 'flex',
                         flexFlow: 'row wrap'
                     }}>
-                        <Card style={{flex: 2}}>
+                        <Card style={{flex: 1}}>
                             <CardHeader title="Customer Order" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}/>
                             
                             <CustomerItems products={this.state.customer.products} totalBill={this.state.customer.total} rowSelectIndex={this.state.itemIndexNote}
@@ -334,7 +334,7 @@ class SalesBoard extends Component {
                                 onCategorySelect={this.handleCategorySelect} />}
                             
                             <Divider />
-                            <CardHeader title="Menu" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> </CardHeader>
+                            <CardHeader title="Menu Items" style={{fontStyle: 'italic', fontWeight: 'bold', color: 'blue'}}> </CardHeader>
                             <ProductGrid products={this.state.filterProducts} 
                                 loading={false} errors={this.state.errors}
                                 onProductSelect={this.handleProductSelect} />

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
 
 import routes from './routes';
 

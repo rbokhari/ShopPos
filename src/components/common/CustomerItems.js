@@ -19,36 +19,32 @@ const styles = {
 const CustomerItems = ( { products, totalBill, onHandleIncrease, onHandleDecrease, onHandleDelete, onHandleNote, onHandleRowSelection, onHandleQuantity, rowSelectIndex, errors } ) => {
     
         return (
-            <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 1000 }} selectable={true} onRowSelection={onHandleRowSelection.bind(this)}>
-                <TableHeader  displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={true}>
+            <Table height={'400px'} fixedHeader={true} fixedFooter={true} style={{ width: 800 }} selectable={true} onRowSelection={onHandleRowSelection.bind(this)}>
+                <TableHeader  displaySelectAll={false} multiSelectable={false} enableSelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
-                        <TableHeaderColumn style={{width: 5}} >Sr</TableHeaderColumn>
-                        <TableHeaderColumn style={{width: 200}}>Name</TableHeaderColumn>
-                        <TableHeaderColumn style={{width: 100}}>Category</TableHeaderColumn>
-                        <TableHeaderColumn style={{width: 50}}>QTY</TableHeaderColumn>
-                        <TableHeaderColumn style={{width: 50}}>Price</TableHeaderColumn>
-                        <TableHeaderColumn style={{width: 150}}>Action</TableHeaderColumn>
+                        <TableHeaderColumn style={{width: 160}}>Menu Item</TableHeaderColumn>
+                        {/* <TableHeaderColumn style={{width: 100}}>Category</TableHeaderColumn> */}
+                        <TableHeaderColumn style={{width: 20}}>QTY</TableHeaderColumn>
+                        <TableHeaderColumn style={{width: 30}}>Price</TableHeaderColumn>
+                        <TableHeaderColumn style={{width: 100}}>Action</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
-                <TableBody displayRowCheckbox={true} deselectOnClickaway={false}>
+                <TableBody displayRowCheckbox={false} deselectOnClickaway={false}>
                     {products.map((item, index) =>
                         <TableRow key={index} selected={index === rowSelectIndex}>
-                            <TableRowColumn style={{width: 5}}>
-                                {index+1} 
+                            <TableRowColumn style={{width: 160}}>
+                            {index+1}.&nbsp;&nbsp;{item.productName} ({item.unitPrice.toFixed(3)}) {item.addons.length == 0 ? '' : <ActionSpeakerNote color={blue500} />}
                             </TableRowColumn>
-                            <TableRowColumn style={{width: 200}}>
-                                {item.productName} ({item.unitPrice}) {item.addons.length == 0 ? '' : <ActionSpeakerNote color={blue500} />}
-                            </TableRowColumn>
-                            <TableRowColumn style={{width: 100}}>
+                            {/* <TableRowColumn style={{width: 100}}>
                                 {item.categoryName}
-                            </TableRowColumn>
-                            <TableRowColumn style={{width: 50}}>
+                            </TableRowColumn> */}
+                            <TableRowColumn style={{width: 30}}>
                                 <Badge badgeContent={item.qty} secondary={true} style={{marginTop: 10}} onClick={onHandleQuantity.bind(this, index)} />
                             </TableRowColumn>
-                            <TableRowColumn style={{width: 50}}>
+                            <TableRowColumn style={{width: 40}}>
                                 {item.price}
                             </TableRowColumn>
-                            <TableRowColumn style={{width: 150}}>
+                            <TableRowColumn style={{width: 100}}>
                                 <IconButton style={styles} onClick={onHandleIncrease.bind(this, index)}><ArrowUp color={greenA200} /></IconButton>
                                 <IconButton style={styles} onClick={onHandleDecrease.bind(this, index)}><ArrowDown color={red500} /></IconButton>
                                 <IconButton style={styles} onClick={onHandleNote.bind(this, index)}><ActionNoteAdd color={grey500} /></IconButton>

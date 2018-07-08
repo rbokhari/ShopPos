@@ -7,12 +7,12 @@ const style = {
     height: 60
 };
 
-const ProductGrid = ( { products, onProductSelect, loading, errors } ) => {
+const ProductGrid = ( { products, onProductSelect } ) => {
     return (
         <div>
             {products.map(product=>
                 <RaisedButton id={product._id} name={product._id} key={product._id} 
-                    label={product.name} secondary={true} style={style}
+                    label={`${product.name} - ${product.price.toFixed(3)}`} secondary={true} style={style}
                     onTouchTap={onProductSelect.bind(this, product._id, product.name, product.nameAr, product.categoryId, product.categoryName, 1, product.price, product.type, product.items)} />
             )}
         </div>

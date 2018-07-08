@@ -113,7 +113,7 @@ module.exports = function(app, io) {
     
     // Days Routes
     app.post('/day/create', Day.createDay);
-    app.put('/day/close', Day.closeDay, Day.printCloseDay);
+    app.put('/day/close', Day.closeDay, Day.printCloseDay, Day.takeFullBackup);
     app.get('/day/:id/print', Day.printThisDay);
     app.get('/day/', Day.getAll);
     //app.get('/day/:id', Day.getById);

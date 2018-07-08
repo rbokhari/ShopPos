@@ -43,7 +43,7 @@ exports.createCustomer = function(req, res, next) {
                     if (index === customer.products.length-1 && i === product.items.length -1) {
                         customer.save(function(err){
                             if (err) { return next(err); }
-                            next();
+                            //next();
                             res.setHeader('Content-Type', 'application/json');
                             res.json(customer);
                         });

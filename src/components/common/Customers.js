@@ -82,10 +82,10 @@ class Customers extends React.Component {
                             title={
                                 <span style={{fontWeight: 'bold', color: yellow50}}>
                                     Bill : {customer.billNo} @ {Moment(customer.created).format('dddd h:mm')}&nbsp;
-                                    {customer.option==='1' ? 
-                                        <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>Take Away </span> : 
-                                        <span style={{backgroundColor:blue500, padding:2, color:yellow50}}>Dine In </span>
-                                    }</span>
+                                    {customer.option==='1' && <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>TAKE AWAY </span>}
+                                    {customer.option==='2' && <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>DINE IN </span>}
+                                    {customer.option==='3' && <span style={{backgroundColor:teal500, padding:2, color:yellow50}}>DELIVERY </span>}
+                                    </span>
                             } 
                             subtitle={<p>{customer.option==='1' ? 'Car/Mobile' : 'Table'} : {customer.carNumber == '' || undefined ? customer.mobileNumber : customer.carNumber}</p>} />
                         <List>
