@@ -1,0 +1,91 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\rahma\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js install
+
+PATH: 
+  C:\Users\rahma\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\rahma\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn;C:\Program Files\Microsoft SQL Server\140\Tools\Binn;C:\Program Files\Microsoft SQL Server\140\DTS\Binn;C:\WINDOWS\System32\OpenSSH;C:\Program Files\Microsoft SQL Server\130\Tools\Binn;C:\Program Files\dotnet;C:\Program Files (x86)\Microsoft SQL Server\150\DTS\Binn;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\nodejs;C:\Program Files (x86)\dotnet;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Users\rahma\AppData\Local\Microsoft\WindowsApps;C:\Program Files\SQL Operations Studio\bin;C:\Users\rahma\.dotnet\tools;C:\Users\rahma\AppData\Local\Microsoft\WindowsApps;C:\Users\rahma\AppData\Roaming\npm;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
+
+Yarn version: 
+  1.22.4
+
+Node version: 
+  12.13.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz: ESOCKETTIMEDOUT
+      at ClientRequest.<anonymous> (C:\Users\rahma\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141375:19)
+      at Object.onceWrapper (events.js:299:28)
+      at ClientRequest.emit (events.js:210:5)
+      at TLSSocket.emitRequestTimeout (_http_client.js:690:9)
+      at Object.onceWrapper (events.js:299:28)
+      at TLSSocket.emit (events.js:210:5)
+      at TLSSocket.Socket._onTimeout (net.js:468:8)
+      at listOnTimeout (internal/timers.js:531:17)
+      at processTimers (internal/timers.js:475:7)
+
+npm manifest: 
+  {
+    "name": "coffeeshop",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "start": "node_modules/.bin/webpack-dev-server --port 9081",
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "webpack": "webpack --watch --progress --colors",
+      "production": "webpack --progress --colors -p"
+    },
+    "author": "Syed Rahman Bokhari",
+    "license": "ISC",
+    "devDependencies": {
+      "babel": "^6.5.2",
+      "babel-core": "^6.9.0",
+      "babel-eslint": "^6.0.4",
+      "babel-loader": "^6.2.4",
+      "babel-preset-es2015": "^6.9.0",
+      "babel-preset-react": "^6.5.0",
+      "babel-preset-stage-0": "^6.5.0",
+      "css-loader": "^0.26.1",
+      "jscs": "^3.0.7",
+      "jshint": "^2.9.2",
+      "node-sass": "^4.9.0",
+      "react-hot-loader": "^1.3.1",
+      "sass-loader": "^6.0.3",
+      "style-loader": "^0.13.1",
+      "webpack": "^3.10.0",
+      "webpack-cli": "^3.0.3",
+      "webpack-dev-server": "^2.1.1"
+    },
+    "dependencies": {
+      "axios": "^0.13.1",
+      "file-saver": "^1.3.3",
+      "firebase": "^2.2.9",
+      "jspdf": "^1.3.5",
+      "jspdf-autotable": "^2.3.2",
+      "lodash": "^4.14.0",
+      "material-ui": "^0.16.3",
+      "moment": "^2.15.1",
+      "react": "^15.4.0",
+      "react-dom": "^15.4.1",
+      "react-loading": "0.0.9",
+      "react-redux": "^5.0.1",
+      "react-router": "^2.0.1",
+      "react-tap-event-plugin": "^2.0.0",
+      "redux": "^3.6.0",
+      "redux-form": "^6.5.0",
+      "redux-form-material-ui": "^4.1.2",
+      "redux-logger": "^2.7.4",
+      "redux-thunk": "^2.1.0",
+      "socket.io": "^1.4.8",
+      "socket.io-client": "^1.4.8",
+      "trim": "0.0.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

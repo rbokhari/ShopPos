@@ -1,0 +1,9 @@
+
+mongorestore mongodb+srv://clusterve-fpnnh.mongodb.net/coffee_shop -d coffee_shop --username admin --drop --dir d:\MyData\MyProjects\CoffeeShopNakhal\
+
+
+
+
+mongorestore mongodb+srv://clusterve-fpnnh.mongodb.net/rig_monitor -d rig_monitor --username admin --drop --dir D:\MyData\MyProjects\MiningMonitor\mongobackup\RigMonitor
+
+

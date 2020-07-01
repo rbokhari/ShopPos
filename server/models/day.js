@@ -5,7 +5,10 @@ const Schema = mongoose.Schema;
 // Define a model
 
 const daySchema = new Schema({
-    _id: { type: Number, unique: true },
+    _id: { 
+        type: Number, 
+        //unique: true 
+    },
     companyId: { 
         type: Schema.ObjectId,
         ref: 'company'

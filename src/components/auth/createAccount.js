@@ -32,14 +32,13 @@ class CreateAccount extends Component {
     }
 
     render() {
-
         //const { handleSubmit, fields: { name, displayName, location, contactNo, email, password, passwordConfirm }} = this.props;
         const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
 
         return (            
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                 <Card style={{ flexGrow: 1, margin: '0 auto',}} >
-                    <CardHeader title="Create Account" />
+                    <CardHeader title="Create Account 123" />
                     <CardText>
                         <div>
                             <Field name="name" component={materialTextField} label="Company Name" autoFocus />

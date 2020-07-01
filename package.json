@@ -9,7 +9,7 @@
     "webpack": "webpack --watch --progress --colors",
     "production": "webpack --progress --colors -p"
   },
-  "author": "Syed Rahman Bokhari",
+  "author": "Rahman Bokhari",
   "license": "ISC",
   "devDependencies": {
     "babel": "^6.5.2",

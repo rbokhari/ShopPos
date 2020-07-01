@@ -1,0 +1,23 @@
+version: '3.4'
+networks:
+        pos_network:
+                driver: bridge
+services:
+        server:
+                image: rbokhari/pos-api
+                container_name: pos_api
+                ports:
+                        -  "9001:80"
+                networks:
+                        - pos_network
+        web:
+                image: rbokhari/pos-web
+                container_name: pos_web
+                environment:
+                        -  RIG_SERVER=server
+                ports:
+                        -  "9003:80"
+                networks:
+                        - pos_network
+                depends_on:
+                        - server

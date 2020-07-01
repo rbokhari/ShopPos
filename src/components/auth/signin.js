@@ -34,11 +34,10 @@ class SignIn extends Component {
     render() {
         //const { handleSubmit, fields: {email, password}} = this.props;
         const {handleSubmit, pristine, reset, submitting, touched, error, warning }  = this.props;
-        
         return (
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                 <Card style={{ margin: '0 auto', height: 350, width: 300}} >
-                    <CardHeader title="Sign In" />
+                    <CardHeader title="Sign In 123" />
                     <CardText>
                         <div>
                             <Field name="email" component={materialTextField} label="User Name" autoFocus />

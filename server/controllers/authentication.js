@@ -257,7 +257,7 @@ exports.createAccount = function(req, res, next) {
 
     const email = req.body.email;
     const password = req.body.password;
-
+    console.info('email', email);
     if (!email || !password) {
         return res.status(422).send({ error: 'Request required body are missing !'});
     }
@@ -278,12 +278,15 @@ exports.createAccount = function(req, res, next) {
             contactNo: contactNo,
             status: 1
         });
-
+        console.info('company', company);
         company.save(function(err) {
             if (err) { return next(err); }
 
             User.findOne({email: email }, function(err, existingUser) {
-                if (err) { return next(err); }
+                if (err) {
+                    console.error('company error', err); 
+                    return next(err); 
+                }
 
                 if (existingUser) {
                     return res.status(422).send({ error: 'User already exists !' });     //422 = not 

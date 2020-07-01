@@ -14,7 +14,11 @@ const config = require('./config');
 // DB Setup
 mongoose.Promise = global.Promise;
 //mongoose.connect(config.mongoDBAddress, { useMongoClient: true });    //setting in config file
-mongoose.connection.openUri(config.mongoDBAddress);
+//mongoose.connection.openUri(config.mongoDBAddress, { useNewUrlParser: true });
+mongoose.connect(config.mongoDBAddress, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 app.disable('x-powered-by');    // used by hackers , 
 // App Setup
